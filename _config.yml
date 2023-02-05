@@ -1,5 +1,8 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-slate
 
 title: Welcome to my homepage !
 
-description: I will add more useful information soon ...
+description: ""
+
+url: "tqv-notes.github.io"
+github_username:  tqv-notes
