@@ -48,4 +48,4 @@ z^{(t)} &= y - H \hat{x}^{(t)} + \frac{1}{\alpha} z^{(t-1)} \left\langle \eta'_{
 \end{align*}
 $$
 
-where, \\( \langle x \rangle = \frac{1}{N} \sum_{i=1}^{N} x_i\\) and \\( \eta'_{t-1} \\) is the derivative of \\( \eta_{t-1} \\).
+where, \\( \langle x \rangle = \frac{1}{N} \sum_{i=1}^{N} x_i \\) and \\( \eta'_{t-1} \\) is the derivative of \\( \eta_{t-1} \\) .
