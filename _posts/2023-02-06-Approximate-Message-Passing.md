@@ -33,7 +33,9 @@ z^{(t)} &= y - H \hat{x}^{(t)} \\
 \end{align*}
 $$
 
-where, \\(\eta\left(x,\lambda\right) = \text{sign}(x) \text{max}\left(\left|x\right|, \lambda\right)\\).
+where, 
+
+$$ \eta\left(x,\lambda\right) = \text{sign}(x) \text{max}\left(\left|x\right|, \lambda\right) $$
 
 ## Approximate Message Passing
 
