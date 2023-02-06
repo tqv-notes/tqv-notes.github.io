@@ -60,3 +60,15 @@ $$
         &= \lim_{\beta\rightarrow \infty} \int x \frac{1}{Z_\beta} \exp\left( -\beta \left( \frac{1}{2} \| y - H x\|_2^2 + \lambda \|x\|_1 \right) \right)
 \end{align*}
 $$
+
+The probability term in the integration could be seen as the combination of two terms:
+
+- likelihood term:
+
+$$ q(y|x)  \propto \exp\left( -\frac{\beta}{2} \| y - H x\|_2^2  \right)$$
+
+- prior term:
+
+$$ q(x) \propto \exp\left( -\beta \lambda \|x\|_1  \right)$$
+
+![factor graph](https://user-images.githubusercontent.com/4943215/55412536-edbba180-5567-11e9-9c70-6d33bca3f8ed.jpg)
