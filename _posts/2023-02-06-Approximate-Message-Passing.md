@@ -71,6 +71,6 @@ $$ q(y|x)  \propto \exp\left( -\frac{\beta}{2} \| y - H x\|_2^2  \right)$$
 
 $$ q(x) \propto \exp\left( -\beta \lambda \|x\|_1  \right)$$
 
-The relation between variables \\( \{x_i\}_{i=1}^{N} \\) to constraints \\( \{q(y_a|.)\}_{a=1}^{M} \\) could be visualized via fractor graph below:
+The relation between variables \\( x_i \\) to constraints \\( q(y_a|.) \\) could be visualized via fractor graph below:
 
 ![factor graph](/images/factor_graph.PNG){:height="70%" width="70%"}
