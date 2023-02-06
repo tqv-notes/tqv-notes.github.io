@@ -74,3 +74,21 @@ $$ q(x) \propto \exp\left( -\beta \lambda \|x\|_1  \right)$$
 The relation between variables \\( \\{x_i\\}\_{i=1}^{N} \\) to constraints \\( \\{q(y_a\|x)\\}\_{a=1}^{M} \\) could be visualized via fractor graph below:
 
 ![factor graph](/images/factor_graph.PNG){:height="70%" width="70%"}
+
+To calculate the posterior probability \\( q(x_i\|y) \\), we use the message passing method for the factor graph:
+
+$$
+\begin{align*}
+\mu_{i\rightarrow a}^{(t+1)}(x_i) & \propto \exp\left(-\beta\lambda |x_i|\right) \prod_{b \neq a}^{M} \mu^{(t)}_{i \leftarrow b}(x_i) \\
+\mu^{t}_{i \leftarrow a}(x_i) & \propto \int q(y_a|x) \prod_{j \neq i}^{N} \mu^{(t)}_{j \rightarrow a}(x_i) dx_{\backslash i}
+\end{align*}
+$$
+
+The posterior probability at time \\( t+1 \\) is given by:
+
+$$
+\begin{align*}
+q^{(t+1)}(x_i|y) & \propto \mu_{i}^{(t+1)}(x_i) \propto \mu_{i\rightarrow a}^{(t+1)}(x_i) \mu^{t}_{i \leftarrow a}(x_i) \\
+q^{(t+1)}(x_i|y) & = \frac{ \exp\left(-\beta\lambda |x_i|\right) \prod_{a=1}^{M} \mu^{(t)}_{i \leftarrow a}(x_i) }{ \int \exp\left(-\beta\lambda |x_i|\right) \prod_{a=1}^{M} \mu^{(t)}_{i \leftarrow a}(x_i) dx_i }
+\end{align*}
+$$
