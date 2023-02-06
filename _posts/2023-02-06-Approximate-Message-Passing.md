@@ -33,6 +33,8 @@ z^{(t)} &= y - H \hat{x}^{(t)} \\
 \end{align*}
 $$
 
+
+
 where, 
 
 $$ \eta\left(x,\lambda\right) = \text{sign}(x) \text{max}\left(\left|x\right|, \lambda\right) $$
@@ -48,4 +50,4 @@ z^{(t)} &= y - H \hat{x}^{(t)} + \frac{1}{\alpha} z^{(t-1)} \left\langle \eta^{\
 \end{align*}
 $$
 
-where, \\( \langle x \rangle = \frac{1}{N} \sum_{i=1}^{N} x_i \\) and \\( \eta^{\prime}_{t-1} \\) is the derivative of \\( \eta_{t-1} \\) .
+where, \\( \langle x \rangle = \frac{1}{N} \sum_{i=1}^{N} x_i \\) and \\( \eta^\prime_{t-1} \\) is the derivative of \\( \eta_{t-1} \\) .
