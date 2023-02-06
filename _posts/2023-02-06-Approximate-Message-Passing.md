@@ -56,7 +56,7 @@ To derive the AMP algorithm, we start first with the reformulation of the above-
 
 $$
 \begin{align*}
-\hat{x} &= \argmin_{x} \left( \frac{1}{2} \| y - H x\|_2^2 + \lambda \|x\|_1 \right) \\
+\hat{x} &= \underset{x}{\text{argmin}} \left( \frac{1}{2} \| y - H x\|_2^2 + \lambda \|x\|_1 \right) \\
         &= \lim_{\beta\rightarrow \infty} \int x \frac{1}{Z_\beta} \exp\left( -\beta \left( \frac{1}{2} \| y - H x\|_2^2 + \lambda \|x\|_1 \right) \right)
 \end{align*}
 $$
