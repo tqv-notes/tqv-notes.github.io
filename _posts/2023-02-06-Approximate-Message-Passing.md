@@ -71,4 +71,4 @@ $$ q(y|x)  \propto \exp\left( -\frac{\beta}{2} \| y - H x\|_2^2  \right)$$
 
 $$ q(x) \propto \exp\left( -\beta \lambda \|x\|_1  \right)$$
 
-![factor graph](https://user-images.githubusercontent.com/4943215/55412536-edbba180-5567-11e9-9c70-6d33bca3f8ed.jpg)
+![factor graph](/images/factor_graph.PNG)
