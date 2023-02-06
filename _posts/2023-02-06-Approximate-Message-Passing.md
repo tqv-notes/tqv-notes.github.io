@@ -75,4 +75,4 @@ The relation between variables \\( x_i \\) to constraints \\( q(y_a\|x) \\) coul
 
 ![factor graph](/images/factor_graph.PNG){:height="70%" width="70%"}
 
-Let us now assume that the model function \\( f \\) includes a constant \\( \{c_i\}^{i} \\) so that \\( f_{\theta}(x_i) = g_{\theta}(x_i) + c \\). Since \\( \frac{\partial f_{\theta}}{\partial c} = 1 \\) this implies that:
+Let us now assume that the model function \\( f \\) includes a constant \\( \\{c_i\\}^{i} \\) so that \\( f_{\theta}(x_i) = g_{\theta}(x_i) + c \\). Since \\( \frac{\partial f_{\theta}}{\partial c} = 1 \\) this implies that:
