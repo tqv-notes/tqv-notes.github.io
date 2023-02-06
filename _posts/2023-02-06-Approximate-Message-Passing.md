@@ -71,8 +71,6 @@ $$ q(y|x)  \propto \exp\left( -\frac{\beta}{2} \| y - H x\|_2^2  \right)$$
 
 $$ q(x) \propto \exp\left( -\beta \lambda \|x\|_1  \right)$$
 
-The relation between variables \\( x_i \\) to constraints \\( q(y_a\|x) \\) could be visualized via fractor graph below:
+The relation between variables \\( \\{x_i\\}\_{i=1}^{N} \\) to constraints \\( \\{q(y_a\|x)\\}\_{a=1}^{M} \\) could be visualized via fractor graph below:
 
 ![factor graph](/images/factor_graph.PNG){:height="70%" width="70%"}
-
-Let us now assume that the model function \\( f \\) includes a constant \\( \\{c_i\\}^{N}_{i=1} \\) so that \\( f_{\theta}(x_i) = g_{\theta}(x_i) + c \\). Since \\( \frac{\partial f_{\theta}}{\partial c} = 1 \\) this implies that:
