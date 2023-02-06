@@ -47,3 +47,5 @@ z^{(t)} &= y - H \hat{x}^{(t)} + \frac{1}{\alpha} z^{(t-1)} \left\langle \eta'_{
 \hat{x}^{(t+1)} &= \eta_t\left( \hat{x}^{(t)} + H^T z^{(t)} \right)
 \end{align*}
 $$
+
+where, \\( \langle x \rangle = \frac{1}{N} \sum_{i=1}^{N} x_i\\) and \\( \eta'_{t-1} \\) is the derivative of \\( \eta_{t-1} \\).
