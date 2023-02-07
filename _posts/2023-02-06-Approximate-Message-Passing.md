@@ -138,3 +138,20 @@ $$
 r^{(t)}_{i\rightarrow a} &= \Sigma_{i\rightarrow a}^{(t)} \sum_{b\neq a} \frac{h_{bi}(y_b-Z^{(t)}_{i\leftarrow b})}{1+V^{(t)}_{i\leftarrow b}}
 \end{align*}
 $$
+
+For later convenience, we introduce some new functions:
+
+$$
+\begin{align*}
+f_{\beta}(x;r,\Sigma) &= \frac{1}{Z_{\beta}} \exp\left( -\beta\left( \lambda |x| + \frac{1}{2\Sigma}(x-r)^2 \right) \right) \\
+F_\beta(x;r,\Sigma) &= \int x f_{\beta}(x;r,\Sigma) \\ 
+G_\beta(x;r,\Sigma) &= \int x^2 f_{\beta}(x;r,\Sigma) - |F_\beta(x;r,\Sigma)|^2\\
+\end{align*}
+$$
+
+with this notations, we could rewrite the message as: 
+
+$$ \mu_{i\rightarrow a}^{(t+1)}(x_i) =\mathcal{N}\left( x_i\middle\| \hat{x}^{(t+1)}\_{i\rightarrow a}, \hat{v}^{(t+1)}\_{i\rightarrow a} \right) $$
+
+where, \\( \hat{x}^{(t+1)}\_{i\rightarrow a} = F_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)}) \\) and \\( \hat{v}^{(t+1)}\_{i\rightarrow a} = \beta G_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)})\\)
+
