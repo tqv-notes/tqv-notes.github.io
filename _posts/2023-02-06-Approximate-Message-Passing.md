@@ -118,4 +118,23 @@ $$
 \end{align*}
 $$
 
-for later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta |h_{ai}|^2} \\).
+For later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta |h_{ai}|^2} \\).
+
+By applying the Gaussian multiplication property, we could calculate the message \\( x^{(t+1)}\_{i\leftarrow a}(x_i) \\) as:
+
+$$
+\begin{align*}
+\mu_{i\rightarrow a}^{(t+1)}(x_i) 
+& \propto \exp\left(-\beta\lambda |x_i|\right) \prod_{b \neq a}^{M} \mu^{(t)}_{i \leftarrow b}(x_i) \\
+& \propto \exp\left(-\beta\lambda |x_i|\right)~\mathcal{N}\left( x_i \middle| r^{(t)}_{i\rightarrow a}, \Sigma_{i\rightarrow a}^{(t)} \right)
+\end{align*}
+$$
+
+where, 
+
+$$
+\begin{align*}
+\Sigma_{i\rightarrow a}^{(t)} &= \left( \sum_{b\neq a} \frac{|h_{ai}|^2}{1+V_{i\rightarrow b}^{(t)}} \right)^{-1}\\
+r^{(t)}_{i\rightarrow a} &= \Sigma_{i\rightarrow a}^{(t)} \sum_{b\neq a} \frac{h_{bi}(y_b-Z^{(t)}_{i\leftarrow b})}{1+V^{(t)}_{i\leftarrow b}}
+\end{align*}
+$$
