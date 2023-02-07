@@ -92,3 +92,14 @@ q^{(t+1)}(x_i|y) & \propto \mu_{i}^{(t+1)}(x_i) \propto \mu_{i\rightarrow a}^{(t
 q^{(t+1)}(x_i|y) & = \frac{ \exp\left(-\beta\lambda |x_i|\right) \prod_{a=1}^{M} \mu^{(t)}_{i \leftarrow a}(x_i) }{ \int \exp\left(-\beta\lambda |x_i|\right) \prod_{a=1}^{M} \mu^{(t)}_{i \leftarrow a}(x_i) dx_i }
 \end{align*}
 $$
+
+Consider the variable \\( z_a = h_{ai} x_i + \sum_{j\neq i} h_{aj} x_j \\), since \\( \\{x_i\\}\_{i=1}^{N} \\) are i.i.d random variables, from (generalized) central limit theorem, when \\(N\\) is large, \\(z_a\\) is a Gaussian random variable with mean and variance at time \\( t \\) as:
+
+$$
+\begin{align*}
+\mathbb{E}[z_a] &= h_{ai} x_i + Z_{i\leftarrow a}^{(t)} \\
+\text{var}[z_a] &= \frac{1}{\beta} V_{i\leftarrow a}^{(t)}
+\end{align*}
+$$
+
+where, \\( Z^{(t)}\_{i\leftarrow a} \sum_{j\neq i} h_{aj} \hat{x}\_{j\rightarrow a}^{t} \\), \\( V^{(t)}\_{i\leftarrow a} \sum_{j\neq i} \|h_{aj}\|^2 \hat{v}\_{j\rightarrow a}^{t} \\) and \\( \hat{x}\_{j\rightarrow a}^{t} \\) and \\( \hat{v}\_{j\rightarrow a}^{t} \\) are the mean vand variance of random variables \\( x_j\\) at time \\(t\\).
