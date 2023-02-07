@@ -102,4 +102,18 @@ $$
 \end{align*}
 $$
 
-where, \\( Z^{(t)}\_{i\leftarrow a} \sum_{j\neq i} h_{aj} \hat{x}\_{j\rightarrow a}^{t} \\), \\( V^{(t)}\_{i\leftarrow a} \sum_{j\neq i} \|h_{aj}\|^2 \hat{v}\_{j\rightarrow a}^{t} \\) and \\( \hat{x}\_{j\rightarrow a}^{t} \\) and \\( \hat{v}\_{j\rightarrow a}^{t} \\) are the mean vand variance of random variables \\( x_j\\) at time \\(t\\).
+where, \\( Z^{(t)} = \_{i\leftarrow a} \sum_{j\neq i} h_{aj} \hat{x}\_{j\rightarrow a}^{t} \\), \\( V^{(t)} = \_{i\leftarrow a} \sum_{j\neq i} \|h_{aj}\|^2 \hat{v}\_{j\rightarrow a}^{t} \\) and \\( \hat{x}\_{j\rightarrow a}^{t} \\) and \\( \hat{v}\_{j\rightarrow a}^{t} \\) are the mean vand variance of random variables \\( x_j\\) at time \\(t\\).
+
+From this observation, we could simplify the expression for message \\( \mu_{i\leftarrow a}^{(t)} \\) as:
+
+$$
+\begin{align*}
+\mu^{t}_{i \leftarrow a}(x_i) 
+& \propto \int q(y_a|x) \prod_{j \neq i}^{N} \mu^{(t)}_{j \rightarrow a}(x_i) dx_{\backslash i} \\
+& \propto \int_{x_{\backslash i}} \int_{z_a}\exp{\left(-\frac{\beta}{2} |y_a-z_a|^2 \right)} \delta\left( z_a - \sum_{k=1}^{N} h_{ak}x_k \right) \prod_{j \neq i}^{N} \mu^{(t)}_{j \rightarrow a}(x_i) dz_a dx_{\backslash i} \\
+& \propto \int_{z_a}\exp{\left(-\frac{\beta}{2} |y_a-z_a|^2 \right)} \mathbb{E}\left[\delta\left( z_a - \sum_{j\neq i} h_{aj}x_j - h_{ai} x_i\right] \right) dz_a \\
+&\overset{N\rightarrow \infty}{=} \int_{z_a}\exp{ \left( -\frac{\beta}{2} |y_a-z_a|^2 \right)} \mathcal{N}\left( z_a \middle| h_{ai} x_i + Z^{(t)}, \frac{1}{\beta} Z_{i\leftarrow a}^{(t)} \right) dz_a \\
+& \propto \mathcal{N}\left( 0 \middle| y_a - h_{ai} x_i - Z^{(t)}_{i\leftarrow a}, \frac{1}{\beta}(1+V^{(t)}_{i\leftarrow a})\right) \\
+& \propto \mathcal{N}\left( x_i \middle| \frac{y_a - Z^{(t)}_{i\leftarrow a}}{h_{ai}}, \frac{(1+V^{(t)}_{i\leftarrow a})}{\beta |h_{ai}|^2}\right)
+\end{align*}
+$$
