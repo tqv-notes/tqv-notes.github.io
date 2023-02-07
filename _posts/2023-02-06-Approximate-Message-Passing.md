@@ -102,7 +102,7 @@ $$
 \end{align*}
 $$
 
-where, \\( Z^{(t)} = \_{i\leftarrow a} \sum_{j\neq i} h_{aj} \hat{x}\_{j\rightarrow a}^{t} \\), \\( V^{(t)} = \_{i\leftarrow a} \sum_{j\neq i} \|h_{aj}\|^2 \hat{v}\_{j\rightarrow a}^{t} \\) and \\( \hat{x}\_{j\rightarrow a}^{t} \\) and \\( \hat{v}\_{j\rightarrow a}^{t} \\) are the mean vand variance of random variables \\( x_j\\) at time \\(t\\).
+where, \\( Z^{(t)}\_{i\leftarrow a} = \sum_{j\neq i} h_{aj} \hat{x}\_{j\rightarrow a}^{t} \\), \\( V^{(t)}\_{i\leftarrow a} = \sum_{j\neq i} \|h_{aj}\|^2 \hat{v}\_{j\rightarrow a}^{t} \\) and \\( \hat{x}\_{j\rightarrow a}^{t} \\) and \\( \hat{v}\_{j\rightarrow a}^{t} \\) are the mean vand variance of random variables \\( x_j\\) at time \\(t\\).
 
 From this observation, we could simplify the expression for message \\( \mu_{i\leftarrow a}^{(t)} \\) as:
 
@@ -117,3 +117,5 @@ $$
 & \propto \mathcal{N}\left( x_i \middle| \frac{y_a - Z^{(t)}_{i\leftarrow a}}{h_{ai}}, \frac{(1+V^{(t)}_{i\leftarrow a})}{\beta |h_{ai}|^2}\right)
 \end{align*}
 $$
+
+for later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta |h_{ai}|^2} \\).
