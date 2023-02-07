@@ -151,7 +151,7 @@ $$
 
 with this notations, we could rewrite the message as: 
 
-$$ \mu_{i\rightarrow a}^{(t+1)}(x_i) =\mathcal{N}\left( x_i\middle\| \hat{x}^{(t+1)}\_{i\rightarrow a}, \hat{v}^{(t+1)}\_{i\rightarrow a} \right) $$
+$$ \mu_{i\rightarrow a}^{(t+1)}(x_i) =\mathcal{N}\left( x_i\middle| \hat{x}^{(t+1)}_{i\rightarrow a}, \hat{v}^{(t+1)}_{i\rightarrow a} \right) $$
 
 where, \\( \hat{x}^{(t+1)}\_{i\rightarrow a} = F_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)}) \\) and \\( \hat{v}^{(t+1)}\_{i\rightarrow a} = \beta G_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)})\\)
 
