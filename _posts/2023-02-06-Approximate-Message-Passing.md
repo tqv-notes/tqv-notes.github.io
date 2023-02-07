@@ -120,7 +120,7 @@ $$
 
 For later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta \|h_{ai}\|^2} \\).
 
-By applying the Gaussian multiplication property, we could calculate the message \\( x^{(t+1)}\_{i\leftarrow a}(x_i) \\) as:
+From the approximated result of \\( \mu^{(t)}\_{i\leftarrow a}\\), we could calculate the message \\( x^{(t+1)}\_{i\leftarrow a}(x_i) \\) as:
 
 $$
 \begin{align*}
@@ -134,7 +134,7 @@ where,
 
 $$
 \begin{align*}
-\Sigma_{i\rightarrow a}^{(t)} &= \left( \sum_{b\neq a} \frac{|h_{ai}|^2}{1+V_{i\rightarrow b}^{(t)}} \right)^{-1}\\
+\Sigma_{i\rightarrow a}^{(t)} &= \left( \sum_{b\neq a} \frac{|h_{bi}|^2}{1+V_{i\rightarrow b}^{(t)}} \right)^{-1}\\
 r^{(t)}_{i\rightarrow a} &= \Sigma_{i\rightarrow a}^{(t)} \sum_{b\neq a} \frac{h_{bi}(y_b-Z^{(t)}_{i\leftarrow b})}{1+V^{(t)}_{i\leftarrow b}}
 \end{align*}
 $$
@@ -155,3 +155,14 @@ $$ \mu_{i\rightarrow a}^{(t+1)}(x_i) =\mathcal{N}\left( x_i\middle| \hat{x}^{(t+
 
 where, \\( \hat{x}^{(t+1)}\_{i\rightarrow a} = F_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)}) \\) and \\( \hat{v}^{(t+1)}\_{i\rightarrow a} = \beta G_\beta(x_i;r^{(t)}\_{i\rightarrow a},\Sigma_{i\rightarrow a}^{(t)})\\)
 
+We now have all necessary information to calculate the posterior probability:
+
+$$
+\begin{align*}
+q^{(t+1)}(x_i|y)    &= \mathcal{N}\left( x_i\middle| \hat{x}^{(t+1)}_{i}, \hat{v}^{(t+1)}_{i} \right) \\
+\hat{x}^{(t+1)}_{i} &= F_\beta(x_i;r^{(t)}_{i},\Sigma_{i}^{(t)}) \\
+\hat{v}^{(t+1)}_{i} &= \beta G_\beta(x_i;r^{(t)}_{i},\Sigma_{i}^{(t)})\\
+\Sigma_{i}^{(t)}    &= \left( \sum_{a=1}^{M} \frac{|h_{ai}|^2}{1+V_{i\rightarrow a}^{(t)}} \right)^{-1}\\
+r^{(t)}_{i}         &= \Sigma_{i}^{(t)} \sum_{a=1}^{M} \frac{h_{ai} (y_a-Z^{(t)}_{i\leftarrow a})}{1+V^{(t)}_{i\leftarrow a}}
+\end{align*}
+$$
