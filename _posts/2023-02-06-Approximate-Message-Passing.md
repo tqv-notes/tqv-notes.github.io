@@ -118,7 +118,7 @@ $$
 \end{align*}
 $$
 
-For later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta |h_{ai}|^2} \\).
+For later convenience, we denote \\( \hat{x}\_{i\leftarrow a}^{(t)} = \frac{y_a - Z^{(t)}\_{i\leftarrow a}}{h_{ai}} \\) and \\( \hat{v}\_{i\leftarrow a}^{(t)} = \frac{(1+V^{(t)}\_{i\leftarrow a})}{\beta \|h_{ai}\|^2} \\).
 
 By applying the Gaussian multiplication property, we could calculate the message \\( x^{(t+1)}\_{i\leftarrow a}(x_i) \\) as:
 
