@@ -76,7 +76,7 @@ $$
 
 How can this help to solve the problem of interest? Well, for certain function \\(h(x)\\), we could find a close form for the proximal operator:
 - if \\(h(x) = 0\\), then \\( prox_t(x) = x \\)
-- if \\(h(x) = t||x||\_1\\), then \\(prox_t(x) = S_t(x)\\), where \\(S_t(x)\\) is the shrinkage function defined as:
+- if \\(h(x) = t\|\|x\|\|\_1\\), then \\(prox_t(x) = S_t(x)\\), where \\(S_t(x)\\) is the shrinkage function defined as:
 
 $$
 S_t(u) =
