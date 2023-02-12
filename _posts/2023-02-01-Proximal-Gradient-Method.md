@@ -25,10 +25,10 @@ $$
 f(x) = f(x_0) + \nabla f(x_0)^T (x-x_0) + (x-x_0)^T\nabla^2 f(x_0) (x-x_0) +O((x-x_0)^3)
 $$
 
-At minimum position \\(x\_\*\\)), we have \\( \nabla f(x\_\*) = 0\\). This leads to:
+At minimum position \\(x\_\star\\)), we have \\( \nabla f(x\_\star) = 0\\). This leads to:
 
 $$
-\nabla f(x_\*) + \nabla^2 f(x_\*) (x-x_\*) +O((x-x_\*)^2) = 0
+\nabla f(x_\star) + \nabla^2 f(x_\star) (x-x_\star) +O((x-x_\star)^2) = 0
 $$
 
 From this relation, we could derive the Newton algorithm as:
