@@ -86,3 +86,26 @@ S_t(u) =
     u+t       & \quad \text{if } u<-t\\
   \end{cases}
 $$
+
+We will give here few examples for application of the proximal operators:
+
+### LASSO
+
+Consider a standard least square regresion problem with \\(l\_1\\)-norm as:
+
+$$
+\underset{\beta}{\text{minimize}}~\{f(\beta) = g(\beta) + h(\beta)\}
+$$
+
+where, \\( g(\beta) = \frac{1}{2}\|\| y-X\beta \|\|^2\\) and \\( h(\beta) = \lambda \|\|\beta\|\|\_1\\) with \\( y\in\mathbb{R}^n \\), \\( X \in\mathbb{R}^{n\times p} \\) and \\( \beta \in\mathbb{R}^p \\).
+
+The gradient of \\( g(\beta) \\) is: \\( \nabla g(\beta) = X^T (X\beta - y)\\)
+
+The proximal operator of \\( h(\beta) \\) is: \\( prox_\lambda(\beta) = S_\lambda (\beta)\\)
+
+This leads to the follwing "iterative shringkage thresholding algorithm" (ISTA):
+
+- initialize at \\( \beta_0 \\)
+- repeat until convergence: \\( \beta_{k+1} = S_\lambda (\beta_k - t X^T (X\beta_k -y)) \\)
+
+### Matrix completion
