@@ -1,0 +1,10 @@
+---
+title:  "Proximal Gradient Method"
+mathjax: true
+layout: post
+categories: media
+---
+
+## Introduction
+
+The problem of our interest is the standard sparse linear regression:
