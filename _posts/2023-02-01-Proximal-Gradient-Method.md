@@ -28,7 +28,7 @@ $$
 At minimum position \\(x\_\*\\)), we have \\( \nabla f(x\_\*) = 0\\). This leads to:
 
 $$
-\nabla f(x_*) + \nabla^2 f(x_*) (x-x_*) +O((x-x_*)^2) = 0
+\nabla f(x_\*) + \nabla^2 f(x_\*) (x-x_\*) +O((x-x_\*)^2) = 0
 $$
 
 From this relation, we could derive the Newton algorithm as:
