@@ -71,7 +71,7 @@ $$
 From this expression, it is beneficial to introduce a new function named as "proximal operator" \\( prox(x) \\) as:
 
 $$
-prox_t(x) \overset{def}{=} \underset{u}{\text{argmin}}~ h(u) + \frac{1}{2t} ||u-x||^2
+prox_t(x) \overset{def}{=} \underset{u}{\text{argmin}}~ h(u) + \frac{1}{2} ||u-x||^2
 $$
 
 How can this help to solve the problem of interest? Well, for certain function \\(h(x)\\), we could find a close form for the proximal operator:
@@ -85,6 +85,31 @@ S_t(u) =
     0         & \quad \text{if } |u|\leq t \\
     u+t       & \quad \text{if } u<-t\\
   \end{cases}
+$$
+
+- if \\(h(X) = t\|\|X\|\|\_\star\\) where \\( \|\|X\|\|\_\star \\) is the nuclear norm of matrix \\( X \\) given by \\( \|\|X\|\|\_\star = \sum_{i} \sigma_i(x)\\) with \\( \sigma_i(X) \\) is the singular value of \\( X \\), the proximal operator for \\( h(X) \\) is:
+
+$$
+prox_t(X) = U S_t(\Sigma) V^T
+$$
+
+where, \\( U, \Sigma, V \\) are matrices obtained from SVD decomposition of matrix \\( X \\) i.e. \\( X = U \Sigma V^T\\) and \\(S_t\\) is the element-wise shringkage function defined as:
+
+$$
+S_t(\Sigma) = 
+ S_t\left( \begin{bmatrix}
+  \sigma_1 & 0 & \cdots & 0 \\
+  0 & \sigma_2 & \cdots & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  0 & 0 & \cdots & \sigma_N 
+ \end{bmatrix} \right)
+ 
+ = \begin{bmatrix}
+  S_t(\sigma_1) & 0 & \cdots & 0 \\
+  0 & S_t(\sigma_2) & \cdots & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  0 & 0 & \cdots & S_t(\sigma_N) 
+ \end{bmatrix}
 $$
 
 We will give here few examples for application of the proximal operators:
