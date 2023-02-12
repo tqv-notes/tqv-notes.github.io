@@ -48,7 +48,7 @@ The conventional formulation of gradient descent algorithm is as below:
 To create a link with the proximal gradient method, we rewrite the last step as an optimization of a quadratic function as:
 
 $$
-x_{k+1} = x_k - t_{k+1} \nabla f(x_k) \Longleftrightarrow x_{k+1} = \underset{x}{\text{argmin}}~f(x_k) + \nabla f(x_k)^T (x-x_k) + \frac{1}{t_{k+1}} ||x-x_k||^2
+x_{k+1} = x_k - t_{k+1} \nabla f(x_k) \Longleftrightarrow x_{k+1} = \underset{x}{\text{argmin}}~f(x_k) + \nabla f(x_k)^T (x-x_k) + \frac{1}{2 t_{k+1}} ||x-x_k||^2
 $$
 
 This new formulation has a nice geometric interpretation as in the below figure: 
