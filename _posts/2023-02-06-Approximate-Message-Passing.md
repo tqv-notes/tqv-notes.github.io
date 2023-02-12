@@ -15,6 +15,8 @@ where \\(y\in \mathbb{R}^M\\) is the observation, \\(x\in \mathbb{R}^N\\) is the
 
 ## Iterative Soft Threshold Algorithm (ISTA)
 
+This algorithm was discussed in detail in the previous post on the [proximal gradient method](https://tqv-notes.github.io/Proximal-Gradient-Method/).
+
 The ISTA algorithm can be summarized as:
 
 $$
