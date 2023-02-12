@@ -87,7 +87,7 @@ S_t(u) =
   \end{cases}
 $$
 
-![shrinkage](/images/shrinkage.PNG){:height="50%" width="50%"}
+![shrinkage](/images/shrinkage.PNG){:height="40%" width="40%"}
 
 - if \\(h(X) = t\|\|X\|\|\_\star\\) where \\( \|\|X\|\|\_\star \\) is the nuclear norm of matrix \\( X \\) given by \\( \|\|X\|\|\_\star = \sum_{i} \sigma_i(x)\\) with \\( \sigma_i(X) \\) is the singular value of \\( X \\), the proximal operator for \\( h(X) \\) is:
 
