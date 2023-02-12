@@ -135,4 +135,4 @@ This leads to the follwing "iterative shringkage thresholding algorithm" (ISTA):
 
 ### Matrix completion
 
-The matrix completion can be formulated as follows: Define \\( \Varphi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Varphi A\right)\_{(i,j)\in I} = A_{ij}, \left(\Varphi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
+The matrix completion can be formulated as follows: Define \\( \Phi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Phi A\right)\_{(i,j)\in I} = A_{ij},~\left(\Phi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
