@@ -87,6 +87,8 @@ S_t(u) =
   \end{cases}
 $$
 
+![shrinkage](/images/shrinkage.PNG){:height="50%" width="50%"}
+
 - if \\(h(X) = t\|\|X\|\|\_\star\\) where \\( \|\|X\|\|\_\star \\) is the nuclear norm of matrix \\( X \\) given by \\( \|\|X\|\|\_\star = \sum_{i} \sigma_i(x)\\) with \\( \sigma_i(X) \\) is the singular value of \\( X \\), the proximal operator for \\( h(X) \\) is:
 
 $$
@@ -135,9 +137,9 @@ This leads to the follwing "iterative shringkage thresholding algorithm" (ISTA):
 
 ### Matrix completion
 
-The matrix completion can be formulated as follows: 
+The matrix completion is usually stated as: Given a matrix \\(A \in \mathbb{R}^{m\times n} \\) with only \\(P\\) known elements. Under low-rank assumption of matrix \\( A\\), complete the missing elements.
 
-Define \\( \Phi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Phi A\right)\_{(i,j)\in I} = A_{ij},~\left(\Phi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
+Define \\( \Phi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Phi A\right)\_{(i,j)\in I} = A_{ij},~\left(\Phi A\right)\_{(i,j)\notin I} = 0 \\), \\(I\\) is the set of indices for known element of matrix \\( A \\) and \\( \| I \| = P\\).
 
 The cost function for matrix completion problem is:
 
