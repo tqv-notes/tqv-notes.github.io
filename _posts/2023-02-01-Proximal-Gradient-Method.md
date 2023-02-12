@@ -71,7 +71,7 @@ $$
 From this expression, it is beneficial to introduce a new function named as "proximal operator" \\( prox(x) \\) as:
 
 $$
-prox_t(x) \overset{def}{=} \underset{u}{\text{argmin}}~ h(u) + \frac{1}{2} ||u-x||^2
+prox_h(x) \overset{def}{=} \underset{u}{\text{argmin}}~ h(u) + \frac{1}{2} ||u-x||^2
 $$
 
 How can this help to solve the problem of interest? Well, for certain function \\(h(x)\\), we could find a close form for the proximal operator:
@@ -134,3 +134,5 @@ This leads to the follwing "iterative shringkage thresholding algorithm" (ISTA):
 - repeat until convergence: \\( \beta_{k+1} = S_\lambda (\beta_k - t X^T (X\beta_k -y)) \\)
 
 ### Matrix completion
+
+The matrix completion can be formulated as follows: Define \\( \Varphi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Varphi A\right)\_{(i,j)\in I} = A_{ij}, \left(\Varphi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
