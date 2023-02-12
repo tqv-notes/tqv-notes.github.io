@@ -148,3 +148,12 @@ $$
 & h(X) = \gamma ||X||_\star
 \end{align*}
 $$
+
+The gradient of \\( g(X) \\) is: \\( \Phi(X-A) \\)
+
+The proximal operator of \\( h(X) \\) is: \\( prox_\gamma(\beta) = S_\gamma (X)\\)
+
+This leads to the follwing matrix completion algorithm:
+
+- initialize at \\( X_0 \\)
+- repeat until convergence: \\( X_{k+1} = S_\gamma (X_k - t_{k+1} \Phi (X_k - A)) \\)
