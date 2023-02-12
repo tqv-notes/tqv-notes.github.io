@@ -59,5 +59,30 @@ At position \\(x_k\\), search for a quadratic function \\( \tilde{f}(x,x_k) \\) 
 
 ## Proximal gradient method
 
-In the previous methods, the function \\( g(x) \\) and \\( h(x) \\) are both smooth convex functions. In some applications (especially in compressed sensing where \\(l_1\\)-norm is used), the function \\( h(x) \\) is still convex but nondifferentiable. The proximal gradient method is introduced to deal with these kinds of problems.
+In the previous methods, the function \\( g(x) \\) and \\( h(x) \\) are both smooth convex functions. In some applications (especially in compressed sensing where \\(l_1\\)-norm is used), the function \\( h(x) \\) is still convex but nondifferentiable. The proximal gradient method is introduced to deal with these kinds of problems. The key idea is to perform quadratic approximation for \\( g(x) \\) and keep \\( g(x) \\) unchanged:
 
+$$
+\begin{align*}
+x_{k+1} &= \underset{x}{\text{argmin}}~ g(x_k) + \nabla g(x_k)^T (x-x_k) + \frac{1}{2 t} ||x-x_k||^2 + h(x) \\
+x_{k+1} &= \underset{x}{\text{argmin}}~ \frac{1}{2 t} \left\||x-(x_k - t\nabla g(x_k))\right\||^2 + h(x)
+\end{align*}
+$$
+
+From this expression, it is beneficial to introduce a new function named as "proximal operator" \\( prox(x) \\) as:
+
+$$
+prox_t(x) \overset{def}{=} \underset{u}{\text{argmin}}~ h(u) + \frac{1}{2t} ||u-x||^2
+$$
+
+How can this help to solve the problem of interest? Well, for certain function \\(h(x)\\), we could find a close form for the proximal operator:
+- if \\(h(x) = 0\\), then \\( prox_t(x) = x \\)
+- if \\(h(x) = t||x||\_1\\), then \\(prox_t(x) = S_t(x)\\), where \\(S_t(x)\\) is the shrinkage function defined as:
+
+$$
+S_t(u) =
+  \begin{cases}
+    u-t       & \quad \text{if } u>t\\
+    0         & \quad \text{if } |u|\leq t \\
+    u+t       & \quad \text{if } u<-t\\
+  \end{cases}
+$$
