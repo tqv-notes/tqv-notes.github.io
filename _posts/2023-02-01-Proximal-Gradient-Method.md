@@ -53,7 +53,7 @@ $$
 
 This new formulation has a nice geometric interpretation as in the below figure: 
 
-![quadratic approximation](/images/quadratic_approximation.PNG){:height="70%" width="70%"}
+![quadratic approximation](/images/quadratic_approximation.PNG){:height="50%" width="50%"}
 
 At position \\(x_k\\), search for a quadratic function \\( \tilde{f}(x,x_k) \\) so that \\( \tilde{f}(x,x_k) \geq f(x) \\) at the vicinity of \\( x_k \\), the optimization over \\( f(x) \\) is replaced by \\( \tilde{f}(x,x_k) \\). The value of \\( f(x)\\) at position \\(x_{k+1}\\) that minimizes \\( \tilde{f}(x,x_k) \\) should be smaller than \\(f(x_k)\\) since \\( \tilde{f}(x,x_k) = f(x_k)\\) at \\(x=x_k\\).
 
