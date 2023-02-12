@@ -8,7 +8,7 @@ categories: media
 It is quite common in many optimization to consider the following problem:
 
 $$
-\underset{x}{minimize} f(x) = g(x) + h(x)
+\underset{x}{\text{minimize}} f(x) = g(x) + h(x)
 $$
 
 here, \\( f(x) \\) can be seen as total cost function, \\( g(x) \\) is the standard least squares cost function and \\( h(x) \\) is the regularization term.
