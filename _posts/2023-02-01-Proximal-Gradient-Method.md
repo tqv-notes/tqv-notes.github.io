@@ -153,7 +153,7 @@ $$
 
 The gradient of \\( g(X) \\) is: \\( \Phi(X-A) \\)
 
-The proximal operator of \\( h(X) \\) is: \\( prox_\gamma(\beta) = S_\gamma (X)\\)
+The proximal operator of \\( h(X) \\) is: \\( prox_\gamma(X) = S_\gamma (X)\\)
 
 This leads to the follwing matrix completion algorithm:
 
