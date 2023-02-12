@@ -135,4 +135,16 @@ This leads to the follwing "iterative shringkage thresholding algorithm" (ISTA):
 
 ### Matrix completion
 
-The matrix completion can be formulated as follows: Define \\( \Phi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Phi A\right)\_{(i,j)\in I} = A_{ij},~\left(\Phi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
+The matrix completion can be formulated as follows: 
+
+Define \\( \Phi: \mathbb{R}^{m\times n} \rightarrow \mathbb{R}^{m\times n} \\) is a measurement operator with \\( \left(\Phi A\right)\_{(i,j)\in I} = A_{ij},~\left(\Phi A\right)\_{(i,j)\notin I} = 0 \\) and \\( \| I \| = P\\).
+
+The cost function for matrix completion problem is:
+
+$$
+\begin{align*}
+& \underset{X}{\{ f(X) = g(X) + h(X) \}} \\
+& g(X) = \frac{1}{2} \sum_{n=1}^{|I|} (X_{ij} - A_{ij})^2 = \frac{1}{2} || \Phi(X-A) ||^2 \\
+& h(X) = \gamma ||X||_\star
+\end{align*}
+$$
