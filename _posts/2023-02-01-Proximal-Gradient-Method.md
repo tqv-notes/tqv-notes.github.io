@@ -57,5 +57,7 @@ This new formulation has a nice geometric interpretation as in the below figure:
 
 At position \\(x_k\\), search for a quadratic function \\( \tilde{f}(x,x_k) \\) so that \\( \tilde{f}(x,x_k) \geq f(x) \\) at the vicinity of \\( x_k \\), the optimization over \\( f(x) \\) is replaced by \\( \tilde{f}(x,x_k) \\). The value of \\( f(x)\\) at position \\(x_{k+1}\\) that minimizes \\( \tilde{f}(x,x_k) \\) should be smaller than \\(f(x_k)\\) since \\( \tilde{f}(x,x_k) = f(x_k)\\) at \\(x=x_k\\).
 
-
 ## Proximal gradient method
+
+In the previous methods, the function \\( g(x) \\) and \\( h(x) \\) are both smooth convex functions. In some applications (especially in compressed sensing where \\(l_1\\)-norm is used), the function \\( h(x) \\) is still convex but nondifferentiable. The proximal gradient method is introduced to deal with these kinds of problems.
+
