@@ -64,7 +64,7 @@ In the previous methods, the function \\( g(x) \\) and \\( h(x) \\) are both smo
 $$
 \begin{align*}
 x_{k+1} &= \underset{x}{\text{argmin}}~ g(x_k) + \nabla g(x_k)^T (x-x_k) + \frac{1}{2 t} ||x-x_k||^2 + h(x) \\
-x_{k+1} &= \underset{x}{\text{argmin}}~ \frac{1}{2 t} \left\||x-(x_k - t\nabla g(x_k))\right\||^2 + h(x)
+x_{k+1} &= \underset{x}{\text{argmin}}~ \frac{1}{2 t} \left\|x-(x_k - t\nabla g(x_k))\right\|^2 + h(x)
 \end{align*}
 $$
 
