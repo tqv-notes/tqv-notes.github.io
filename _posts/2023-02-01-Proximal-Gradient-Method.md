@@ -145,7 +145,7 @@ The cost function for matrix completion problem is:
 
 $$
 \begin{align*}
-& \underset{X}{\{ f(X) = g(X) + h(X) \}} \\
+& \underset{X}{ \text{minimize}}~\{ f(X) = g(X) + h(X) \}\\
 & g(X) = \frac{1}{2} \sum_{n=1}^{|I|} (X_{ij} - A_{ij})^2 = \frac{1}{2} || \Phi(X-A) ||^2 \\
 & h(X) = \gamma ||X||_\star
 \end{align*}
