@@ -12,8 +12,9 @@ y = \left| A x^\ast \right|^2
 $$
 
 Suppose each row of matrix \\( A \\) is a vector \\( a_i^H \\) (here \\( H\\) symbol denotes Hermitian conjugation), we can rewrite above equation as:
+
 $$
-y_i = \left|\langle a_i, z \rangle \right|^2, ~~ \text{for}~ i = 1, 2, ..., d
+y_i = \left|\langle a_i, x^\ast \rangle \right|^2, ~~ \text{for}~ i = 1, 2, ..., d
 $$
 
 (note: the inner product \\( \langle x, y \rangle = x^H y\\) ).
