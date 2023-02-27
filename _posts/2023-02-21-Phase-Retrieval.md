@@ -42,3 +42,7 @@ the initial guess should be normalized to \\( \lambda = \sqrt{ n ( \sum_i y_i )/
 $$ x_{k+1} = x_k - \frac{\mu_{k+1}}{\|z_0\|^2} \left( \frac{1}{d} \sum_{i=1}^{d} \left(|\langle a_i, x \rangle|^2 - y_i\right)(a_i a_i^H) x \right)$$
 
 ## Deep learning-based methods
+
+$$
+\underset{x}{\text{minimize}}~\left\{ L(x) + R(x) \right\}
+$$
