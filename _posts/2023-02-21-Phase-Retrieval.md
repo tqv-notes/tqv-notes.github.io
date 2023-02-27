@@ -19,10 +19,16 @@ $$
 
 (note: the inner product \\( \langle x, y \rangle = x^H y\\) ).
 
+## Spectral methods
+
+The phase retrieval can be reformulated into an optimization as bellow:
+
 $$
-L(z) = \frac{1}{2d} \sum_{i=1}^{d} \left(y_i - \left|\langle a_i, z \rangle \right|^2\right)^2
+\underset{x}{\text{minimize}}~\{ L(x) = \frac{1}{2d} \sum_{i=1}^{d} \left(y_i - \left|\langle a_i, x \rangle \right|^2\right)^2 \}
 $$
 
 $$
 Y = \sum_{i=1}^{d} y_i a_i a_i^*
 $$
+
+## Deep learning-based methods
