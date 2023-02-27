@@ -27,10 +27,18 @@ $$
 \underset{x}{\text{minimize}}~\left\{ L(x) = \frac{1}{2d} \sum_{i=1}^{d} \left(y_i - \left|\langle a_i, x \rangle \right|^2\right)^2 \right\}
 $$
 
+The algorithm for this optimization problem is as below:
 
+- determine initial guess \\( x_0 \\) as eigenvector with the largest eigenvalue of following matrix:
 
 $$
 Y = \sum_{i=1}^{d} y_i a_i a_i^*
 $$
+
+the initial guess should be normalized to \\( \lambda = \sqrt{ n ( \sum_i y_i )/( \sum_i \| a_i \|^2 ) }\\).
+
+- perform iterative search:
+
+$$ x_{k+1} = x_k - \frac{\mu_{k+1}}{\|z_0\|^2} \left( \frac{1}{d} \sum_{i=1}^{d} \left(|\langle a_i, x \rangle|^2 - y_i\right)(a_i a_i^H) x \right)$$
 
 ## Deep learning-based methods
