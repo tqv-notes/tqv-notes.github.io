@@ -24,8 +24,10 @@ $$
 The phase retrieval can be reformulated into an optimization as bellow:
 
 $$
-\underset{x}{\text{minimize}}~\{ L(x) = \frac{1}{2d} \sum_{i=1}^{d} \left(y_i - \left|\langle a_i, x \rangle \right|^2\right)^2 \}
+\underset{x}{\text{minimize}}~\left\{ L(x) = \frac{1}{2d} \sum_{i=1}^{d} \left(y_i - \left|\langle a_i, x \rangle \right|^2\right)^2 \right\}
 $$
+
+
 
 $$
 Y = \sum_{i=1}^{d} y_i a_i a_i^*
