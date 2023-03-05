@@ -27,3 +27,13 @@ $$
 \lambda_{m_2} &= - \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u)
 \end{align*}
 $$
+
+To remove the need for mean estimation, we set \\( \lambda_{m_1} = 0 \\) and \\( \lambda_{m_2} = 0 \\), this leads to:
+
+$$
+  \begin{cases}
+    Z^\ast_1(u) & = \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\alpha_1}) + \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) Z_2(u_{\alpha_2})\\
+    \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) & = 1 \\
+    \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) & = 0
+  \end{cases}
+$$
