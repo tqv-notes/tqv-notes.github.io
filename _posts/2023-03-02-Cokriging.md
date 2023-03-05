@@ -37,3 +37,14 @@ $$
     \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) & = 0
   \end{cases}
 $$
+
+The criteria to find the best estimator is to minimize the following variance:
+
+$$
+\begin{align*}
+\sigma_E^2(u) & = \text{var}\left[ Z^\ast_1(u) - Z_1(u)\right] \\
+              & = \text{var}\left[ \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\alpha_1}) + \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) Z_2(u_{\alpha_2}) - Z_1(u)\right] \\
+              & = \sum_{\alpha_1,\alpha_1'} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_1'}^{(1)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_1(u_{\alpha_1'})\right] + \sum_{\alpha_2,\alpha_2'} \lambda_{\alpha_2}^{(2)} \lambda_{\alpha_2'}^{(2)} \text{cov}\left[ Z_2(u_{\alpha_2}), Z_2(u_{\alpha_2'})\right] + \sum_{\alpha_1,\alpha_2} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_2}^{(2)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_2(u_{\alpha_2})\right] \\
+              & ~ + \text{var}\left[ Z_1(u) \right] - \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \text{var}\left[ Z_1(u_{\alpha_1}), Z_1(u) \right] - \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) \text{var}\left[ Z_2(u_{\alpha_1}), Z_1(u) \right]
+\end{align*}
+$$
