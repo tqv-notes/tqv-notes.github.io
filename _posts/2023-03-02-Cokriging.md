@@ -48,3 +48,40 @@ $$
               & ~ + \text{var}\left[ Z_1(u) \right] - \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \text{var}\left[ Z_1(u_{\alpha_1}), Z_1(u) \right] - \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) \text{var}\left[ Z_2(u_{\alpha_1}), Z_1(u) \right]
 \end{align*}
 $$
+
+The Lagrangian for this problem is:
+
+$$
+\mathcal{L}(u) = \sigma_E^2(u) + 2\mu_1 \left( \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) - 1 \right) + 2\mu_2 \left( \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) \right)
+$$
+
+The best estimator should correspond to following system of equations:
+
+$$
+\begin{cases}
+\frac{1}{2} \frac{\partial \mathcal{L}}{\partial \alpha_i} & = 0 ~~~ \text{for}~ i = 1, 2 \\
+\frac{1}{2} \frac{\partial \mathcal{L}}{\partial \mu_i} & = 0 ~~~ \text{for}~ i = 1, 2
+\end{cases}
+$$
+
+Since \\( Z_1 \\) and \\( Z_2 \\) are stationary processes, we could define the covariance and cross-covariance as follows:
+
+$$
+\begin{cases}
+\text{cov}\left[ Z_1(u_{\alpha_1}), Z_1(u_{\beta_1}) \right] & = C_{11} (u_{\alpha_1} - u_{\beta_1}) \\
+\text{cov}\left[ Z_2(u_{\alpha_2}), Z_2(u_{\beta_2}) \right] & = C_{22} (u_{\alpha_2} - u_{\beta_2}) \\
+\text{cov}\left[ Z_1(u_{\alpha_1}), Z_2(u_{\beta_2}) \right] & = C_{12}(u_{\alpha_1} - u_{\beta_2}) \\
+\text{cov}\left[ Z_2(u_{\alpha_2}), Z_1(u_{\beta_1}) \right] & = C_{21}(u_{\alpha_2} - u_{\beta_1})
+\end{cases}
+$$
+
+The system of equations is rewrote in term of covariances and cross-covariances as follows:
+
+$$
+  \begin{cases}
+    \sum_{\beta_1 = 1}^{n_1} \lambda_{\beta_1}^{(1)}(u) C_{11}(u_{\alpha_1} - u_{\beta_1}) + \sum_{\beta_2 = 1}^{n_2} \lambda_{\beta_2}^{(2)}(u) C_{12}(u_{\alpha_1} - u_{\beta_2}) + \mu_1(u) & = C_{11}(u_{\alpha_1}) - u ~~~ \text{for}~ \alpha_1 = 1 ... n_1 \\
+    \sum_{\beta_1 = 1}^{n_1} \lambda_{\beta_1}^{(1)}(u) C_{21}(u_{\alpha_2} - u_{\beta_1}) + \sum_{\beta_2 = 1}^{n_2} \lambda_{\beta_2}^{(2)}(u) C_{22}(u_{\alpha_2} - u_{\beta_2}) + \mu_2(u) & = C_{21}(u_{\alpha_2}) - u ~~~ \text{for}~ \alpha_2 = 1 ... n_2 \\    
+    \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) & = 1 \\
+    \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) & = 0
+  \end{cases}
+$$
