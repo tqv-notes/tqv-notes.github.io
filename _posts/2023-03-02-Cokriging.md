@@ -85,3 +85,13 @@ $$
     \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) & = 0
   \end{cases}
 $$
+
+The variance of estimator at the optimal solution is:
+
+$$
+\begin{align*}
+\sigma^2(u) & = C_{11}(0) - \mu_1(u) - \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) C_{11}(u_{\alpha_1} - u) - \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) C_{21}(u_{\alpha_2} - u) \\
+& = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) (C_{11}(0)-C_{11}(u_{\alpha_1} - u)) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) (C_{21}(0)-C_{21}(u_{\alpha_2} - u)) \\
+& = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \gamma_{11}(u_{\alpha_1} - u) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) \gamma_{21}(u_{\alpha_2} - u)
+\end{align*}
+$$
