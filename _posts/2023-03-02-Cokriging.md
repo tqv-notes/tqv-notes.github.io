@@ -108,8 +108,8 @@ $$
   \mathbf{0}_1^T   & \mathbf{1}_2^T   & 0   & 0 
  \end{pmatrix}
  \begin{pmatrix}
-  \mathbf{\lambda}_1(u) \\
-  \mathbf{\lambda}_2(u) \\
+  \boldsymbol{\lambda}_1(u) \\
+  \boldsymbol{\lambda}_2(u) \\
   \mu_1(u)  \\
   \mu_2(u)
  \end{pmatrix}
@@ -129,14 +129,14 @@ $$
 \mathbf{K}_{22} & = \left[ C_{22}(u_{\alpha_2}-u_{\beta_2}) \right]_{\alpha_2 = 1 ... n_2, \beta_1 = 1 ... n_2} \\
 \mathbf{K}_{21} & = \left[ C_{21}(u_{\alpha_2}-u_{\beta_1}) \right]_{\alpha_2 = 1 ... n_2, \beta_1 = 1 ... n_1} \\
 \mathbf{K}_{12} & = \left[ C_{12}(u_{\alpha_1}-u_{\beta_2}) \right]_{\alpha_1 = 1 ... n_1, \beta_2 = 1 ... n_2} \\
-\mathbf{\lambda}_1(u) & = 
+\boldsymbol{\lambda}_1(u) & = 
 \begin{pmatrix}
   \lambda_1^{(1)}(u) \\
   \lambda_2^{(1)}(u) \\
   \vdots \\
   \lambda_{n_1}^{(1)}(u)
  \end{pmatrix} \\
- \mathbf{\lambda}_2(u) & = 
+ \boldsymbol{\lambda}_2(u) & = 
 \begin{pmatrix}
   \lambda_1^{(2)}(u) \\
   \lambda_2^{(2)}(u) \\
@@ -157,5 +157,39 @@ $$
   \vdots \\
   C_{21}(u_{n_2}-u)
  \end{pmatrix}
+\end{align*}
+$$
+
+The prediction of cokriging at new location \\( u \\) is given by:
+
+$$
+\begin{align*}
+Z_1^\ast(u) & = \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\alpha_1}) + \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) Z_2(u_{\alpha_2})\\
+            & =  
+\begin{pmatrix}
+  \mathbf{Z}_{1}(u) & \mathbf{Z}_{2}(u) & 0 & 0
+ \end{pmatrix}            
+ \begin{pmatrix}
+  \lambda_1^{(1)}(u) \\
+  \lambda_2^{(1)}(u) \\
+  \vdots \\
+  \lambda_{n_1}^{(1)}(u)
+ \end{pmatrix}\\
+            & =  
+\begin{pmatrix}
+  \mathbf{Z}_{1}(u) & \mathbf{Z}_{2}(u) & 0 & 0
+ \end{pmatrix}            
+\begin{pmatrix}
+  \mathbf{K}_{1,1} & \mathbf{K}_{1,2} & \mathbf{1}_1 & \mathbf{0}_1 \\
+  \mathbf{K}_{2,1} & \mathbf{K}_{2,2} & \mathbf{0}_2 & \mathbf{1}_1 \\
+  \mathbf{1}_1^T   & \mathbf{0}_2^T   & 0   & 0  \\
+  \mathbf{0}_1^T   & \mathbf{1}_2^T   & 0   & 0 
+ \end{pmatrix}^{-1}
+\begin{pmatrix}
+  \mathbf{k}_{11} \\
+  \mathbf{k}_{21} \\
+  1 \\
+  0
+ \end{pmatrix} 
 \end{align*}
 $$
