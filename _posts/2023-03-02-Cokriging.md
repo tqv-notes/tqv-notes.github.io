@@ -95,3 +95,67 @@ $$
 & = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \gamma_{11}(u_{\alpha_1} - u) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) \gamma_{21}(u_{\alpha_2} - u)
 \end{align*}
 $$
+
+here, we introduce the notion of (cross-) variogram \\( \gamma_{ij}(h) = C_{ij}(0) - C_{ij}(h)\\).
+
+In matrix notation, the optimal estimator can be found via solving the following equation:
+
+$$
+\begin{pmatrix}
+  \mathbf{K}_{1,1} & \mathbf{K}_{1,2} & \mathbf{1}_1 & \mathbf{0}_1 \\
+  \mathbf{K}_{2,1} & \mathbf{K}_{2,2} & \mathbf{0}_2 & \mathbf{1}_1 \\
+  \mathbf{1}_1^T   & \mathbf{0}_2^T   & 0   & 0  \\
+  \mathbf{0}_1^T   & \mathbf{1}_2^T   & 0   & 0 
+ \end{pmatrix}
+ \begin{pmatrix}
+  \mathbf{\lambda}_1(u) \\
+  \mathbf{\lambda}_2(u) \\
+  \mu_1(u)  \\
+  \mu_2(u)
+ \end{pmatrix}
+ =\begin{pmatrix}
+  \mathbf{k}_{11} \\
+  \mathbf{k}_{21} \\
+  1 \\
+  0
+ \end{pmatrix}
+$$
+
+where,
+
+$$
+\begin{align*}
+\mathbf{K}_{11} & = \left[ C_{11}(u_{\alpha_1}-u_{\beta_1}) \right]_{\alpha_1 = 1 ... n_1, \beta_1 = 1 ... n_1} \\
+\mathbf{K}_{22} & = \left[ C_{22}(u_{\alpha_2}-u_{\beta_2}) \right]_{\alpha_2 = 1 ... n_2, \beta_1 = 1 ... n_2} \\
+\mathbf{K}_{21} & = \left[ C_{21}(u_{\alpha_2}-u_{\beta_1}) \right]_{\alpha_2 = 1 ... n_2, \beta_1 = 1 ... n_1} \\
+\mathbf{K}_{12} & = \left[ C_{12}(u_{\alpha_1}-u_{\beta_2}) \right]_{\alpha_1 = 1 ... n_1, \beta_2 = 1 ... n_2} \\
+\mathbf{\lambda}_1(u) & = 
+\begin{pmatrix}
+  \lambda_1^{(1)}(u) \\
+  \lambda_2^{(1)}(u) \\
+  \vdots \\
+  \lambda_{n_1}^{(1)}(u)
+ \end{pmatrix} \\
+ \mathbf{\lambda}_2(u) & = 
+\begin{pmatrix}
+  \lambda_1^{(2)}(u) \\
+  \lambda_2^{(2)}(u) \\
+  \vdots \\
+  \lambda_{n_2}^{(2)}(u)
+ \end{pmatrix}\\
+\mathbf{k}_{11} & = 
+\begin{pmatrix}
+  C_{11}(u_1-u) \\
+  C_{11}(u_2-u) \\
+  \vdots \\
+  C_{11}(u_{n_1}-u)
+\end{pmatrix}\\
+\mathbf{k}_{21} & = 
+\begin{pmatrix}
+  C_{21}(u_1-u) \\
+  C_{21}(u_2-u) \\
+  \vdots \\
+  C_{21}(u_{n_2}-u)
+ \end{pmatrix}
+\end{align*}
+$$
