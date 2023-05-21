@@ -5,6 +5,8 @@ layout: post
 categories: media
 ---
 
+Random features for machine learning was first investigated within kernel machine learning framework (see [Rahimi & Recht, NIPS 2007] (https://proceedings.neurips.cc/paper/2007/hash/013a006f03dbc5392effeb8f18fda755-Abstract.html/)).
+
 $$
 f(x) = \sum_{i=1}^{N} \alpha_i k(x,x_i)
 $$
