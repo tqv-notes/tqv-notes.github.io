@@ -37,4 +37,4 @@ $$
 p_\theta(x_{0:T}) = p(x_T) \prod_{t=1}^T p_\theta(x_{t-1}|x_t) ~~\text{where},~ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1},\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))
 $$
 
-
+where, \\( p(x_T) \sim \mathcal{N}(0,\mathbb{I}) \\).
