@@ -18,7 +18,7 @@ q(x_{0:T}|x_{0}) &= \prod_{t=1}^T q(x_t|x_{t-1})
 \end{aligned}
 $$
 
-Let \\( \alpha_t = 1-\beta_t \\) and \\( \overline{\alpha_t} = \prod_{i=1}^t \alpha_i \\), then
+Let \\( \alpha_t = 1-\beta_t \\) and \\( \overline{\alpha}\_t = \prod_{i=1}^t \alpha_i \\), then
 
 $$
 \begin{aligned}
