@@ -31,7 +31,7 @@ $$
 
 ## Reverse diffusion process
 
-The reverse diffusion process \\( q(x_{t-1}|x_{t}) \\) is approximated with a learned model \\(p_\theta\\) as below:
+The reverse diffusion process \\( q(x_{t-1}||x_{t}) \\) is approximated with a learned model \\(p_\theta\\) as below:
 
 $$
 p_\theta(x_{0:T}) = p(x_T) \prod_{t=1}^T p_\theta(x_{t-1}|x_t) ~~\text{where},~ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1},\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))
