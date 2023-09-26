@@ -38,3 +38,9 @@ p_\theta(x_{0:T}) = p(x_T) \prod_{t=1}^T p_\theta(x_{t-1}|x_t) ~~\text{where},~ 
 $$
 
 where, \\( p(x_T) \sim \mathcal{N}(0,\mathbb{I}) \\).
+
+The model parameters can be estimated via log-likelihood \\( \mathbb{E}_{q(x_0)}\left[ p_{\theta}(x_0) \right] \\). It is usually more convenient to replace the log-likelihood optimization with the variational lower bound as:
+
+$$
+\mathbb{E}_{q(x_0)}\left[ p_{\theta}(x_0) \right] \geq \mathbb{E}_{q(x_{0:T})} \left[ \frac{q(x_{1:T}|x_0)}{p_{\theta}(x_{0:T})} \right]
+$$
