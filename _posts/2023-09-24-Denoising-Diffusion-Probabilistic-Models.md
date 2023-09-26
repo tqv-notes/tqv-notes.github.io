@@ -39,8 +39,11 @@ $$
 
 where, \\( p(x_T) \sim \mathcal{N}(0,\mathbb{I}) \\).
 
-The model parameters can be estimated via log-likelihood \\( \mathbb{E}_{q(x_0)}\left[ p_{\theta}(x_0) \right] \\). It is usually more convenient to replace the log-likelihood optimization with the variational lower bound as:
+The model parameters can be estimated via log-likelihood \\( \mathbb{E}_{q(x_0)}\left[ \log( p_{\theta}(x_0) ) \right] \\). It is usually more convenient to replace the log-likelihood optimization with the variational lower bound as:
 
 $$
-\mathbb{E}_{q(x_0)}\left[ p_{\theta}(x_0) \right] \geq \mathbb{E}_{q(x_{0:T})} \left[ \frac{q(x_{1:T}|x_0)}{p_{\theta}(x_{0:T})} \right]
+\begin{aligned}
+\mathbb{E}_{q(x_0)}\left[ \log( p_{\theta}(x_0) ) \right] & \geq \mathbb{E}_{q(x_{0:T})} \left[ \log\left( \frac{q(x_{1:T}|x_0)}{p_{\theta}(x_{0:T})} \right) \right] \\
+& \mathbb{E}_{q}\left[ KL(q(x_T|x_0) || p(x_T)) + \sum_{t=2}^T KL(q(x_{t-1}|x_t,x_0) || p(x_{t-1} || x_t)) -\log(p_{\theta}(x_0|x_1)) \right] \\
+\end{aligned}
 $$
