@@ -39,7 +39,7 @@ $$
 
 where, \\( p(x_T) \sim \mathcal{N}(0,\mathbb{I}) \\).
 
-The model parameters can be estimated via log-likelihood \\( \mathbb{E}_{q(x_0)}\left[ \log( p_{\theta}(x_0) ) \right] \\). It is usually more convenient to replace the log-likelihood optimization with the variational lower bound as:
+The model parameters can be estimated via log-likelihood \\( \mathbb{E}_{q(x_0)}\left[ \log( p\_{\theta}(x_0) ) \right] \\). It is usually more convenient to replace the log-likelihood optimization with the variational lower bound as:
 
 $$
 \begin{aligned}
