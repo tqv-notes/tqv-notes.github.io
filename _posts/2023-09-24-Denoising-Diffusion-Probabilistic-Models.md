@@ -64,7 +64,7 @@ $$
 \end{aligned}
 $$
 
-Since \\( p(x_{t-1} || x_t) \\) is also a Gaussian, then
+Since \\( p(x_{t-1} \|\| x_t) \\) is also a Gaussian, then
 
 $$
 L_t = \mathbb{E}_q \left[ \frac{1}{2 \beta_t^2} \| \mu_{\theta}(x_t,t) - \mu(x_t,t) \|^2 \right]
