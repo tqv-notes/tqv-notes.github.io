@@ -63,3 +63,21 @@ $$
 \gamma_t &= \frac{1-\overline{\alpha}_{t-1}}{1-\overline{\alpha}_t} \beta_t
 \end{aligned}
 $$
+
+Since \\( p(x_{t-1} || x_t) \\) is also a Gaussian, then
+
+$$
+L_t = \mathbb{E}_q \left[ \frac{1}{2 \beta_t^2} \| \mu_{\theta}(x_t,t) - \mu(x_t,t) \|^2 \right]
+$$
+
+To obtain a neat analytical expression, we need to make the change of variable as:
+
+$$
+\mu_{\theta}(x_t,t) = \frac{1}{\sqrt{\alpha}_t} \left( x_t - \frac{1-\alpha_t}{\sqrt{1-\overline{\alpha}_t}} \epsilon_\theta(x_t, t) \right)
+$$
+
+then,
+
+$$
+\| \mu_{\theta}(x_t,t) - \mu(x_t,t) \|^2 = \frac{(1-\alpha_t)^2}{1-\overline{\alpha}_t} \| \epsilon - \epsilon(\sqrt{\overline{\alpha}_t} x_{0} + \sqrt{1-\overline{\alpha}_t} \epsilon, t) \|^2
+$$
