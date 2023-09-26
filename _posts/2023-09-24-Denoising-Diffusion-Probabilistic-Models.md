@@ -48,3 +48,18 @@ $$
 & = L_T + \sum_{t=2}^T L_{t-1} + L_0
 \end{aligned}
 $$
+
+It is possible to show that: 
+
+$$
+q(x_{t-1}|x_t,x_0) = \mathcal{N}\left( x_{t-1}; \mu(x_t,x_0), \gamma_t \mathbb{I} \right)
+$$
+
+where,
+
+$$
+\begin{aligned}
+\mu(x_t,x_0) &= \frac{1}{\sqrt{\alpha}_t} \left( x_t - \frac{1-\alpha_t}{\sqrt{1-\overline{\alpha}_t}} \epsilon \right) = \mu(x_t,t)\\
+\gamma_t &= \frac{1-\overline{\alpha}_{t-1}}{1-\overline{\alpha}_t} \beta_t
+\end{aligned}
+$$
