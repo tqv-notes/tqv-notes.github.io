@@ -21,8 +21,16 @@ $$
 For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x) \in \mathbb{R}^D \\) with \\( D < d \\):
 
 $$
-k(x,x') = \sum_{j=1}^{D} z(x,\omega_j) z(x',\omega_j)
+k(x,x') = \sum_{j=1}^{D} z(x,\omega_j)^\top z(x',\omega_j)
 $$
+
+For Gaussian kernel, the feature map can be written as:
+
+$$
+z(x,\omega) = \exp(i \omega^\top x)
+$$
+
+where, \\( \omega \sim \mathcal{N}_D(0,\mathbb{I}) \\).
 
 With this kernel approximation, the approximation function is now:
 
