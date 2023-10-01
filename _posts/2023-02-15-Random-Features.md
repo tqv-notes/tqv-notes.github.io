@@ -15,7 +15,7 @@ $$
 The kernel functions can be a Gaussian function as:
 
 $$
-k(x,x') = \exp( -\frac{1}{2} \|x-x'\|^2_2 )
+k(x,x') = \exp\left( -\frac{1}{2} \|x-x'\|^2_2 \right)
 $$
 
 For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x) \in \mathbb{R}^D \\) with \\( D < d \\):
