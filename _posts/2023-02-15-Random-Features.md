@@ -18,11 +18,13 @@ $$
 k(x,x') = \exp( -\theta (x-x')^2 )
 $$
 
-For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x) \in \mathbb{R}^D \\) with \\(D \l d\\):
+For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x) \in \mathbb{R}^D \\) with \\( D < d \\):
 
 $$
 k(x,x') = \sum_{j=1}^{D} z(x,\omega_j) z(x',\omega_j)
 $$
+
+With this kernel approximation, the approximation function is now:
 
 $$
 f(x) = \sum_{j=1}^{D} \beta_j z(x,\omega_j)
