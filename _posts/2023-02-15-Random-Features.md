@@ -18,7 +18,7 @@ $$
 k(x,x') = \exp\left( -\frac{1}{2} \|x-x'\|^2_2 \right)
 $$
 
-For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x) \in \mathbb{R}^D \\) with \\( D < d \\):
+For large dataset, direct application of kernel is time-consuming due to the large matrix inverssion step. The idea of kernel approximation is to use a randomized feature map \\( x\in \mathbb{R}^d \rightarrow z(x,\omega) \in \mathbb{R}^D \\) with \\( D < d \\):
 
 $$
 k(x,x') = \sum_{j=1}^{D} z(x,\omega_j)^\top z(x',\omega_j)
