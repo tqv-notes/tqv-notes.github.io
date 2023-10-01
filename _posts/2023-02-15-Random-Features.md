@@ -52,4 +52,4 @@ $$
 k(x-y) = \int_{\mathbb{R}^d} p(\omega) \exp\left( i\omega^\top (x-y) \right) d\omega = \mathbb{E}_{p(\omega)}\left[ \exp(i\omega^\top x) \left(\exp(i\omega^\top y)\right)^\star \right]
 $$
 
-For Gaussian kernel \\( k(x) = \exp( - \|x\|^2/2) \\), the corresponding Fourier transformed function \\( p(\omega) \\) is also a Gaussian function. This leads to the choice of normal distribution for \\( \omega \\).
+For Gaussian kernel \\( k(x) = \exp( - \|\|x\|\|^2/2) \\), the corresponding Fourier transformed function \\( p(\omega) \\) is also a Gaussian function. This leads to the choice of normal distribution for \\( \omega \\).
