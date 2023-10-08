@@ -13,7 +13,7 @@ Recurrent Neural Networks (RNN) is a type of neural networks that deals with seq
 
 Below is the description of a simple RNN architecture
 
-![RNN](/images/rnn.png){:height="10%" width="10%"}
+![RNN](/images/rnn.png){:height="50%" width="50%"}
 
 $$
 \begin{aligned}
