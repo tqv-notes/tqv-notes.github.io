@@ -26,21 +26,21 @@ $$
 ## Transformer Architecture
 
 The transformer architecture use a particular attention mechanism to an input sequence \\(X=[x_T,\cdots, x_1]\\) to an output sequence \\(Z=[z_T,\cdots, z_1]\\) as below:
-1. choose query matrix \\( Q\\), key matrix \\( K\\) and value matrix \\(V\\) as:
+- choose query matrix \\( Q\\), key matrix \\( K\\) and value matrix \\(V\\) as:
 
 $$
 Q = A X, ~~ K = B X, ~~ V = C X
 $$
 
-where, \\( A, B \in \mathbb{R}^{l\times d} \\), \\( C \in \mathbb{R}^{o\times d} \\), \\( Q, K \in \mathbb{R}^{l\times T} \\) and \\( V \in \mathbb{R}^{o\times T} \\)
+where, \\(~A, B \in \mathbb{R}^{l\times d} \\), \\(~C \in \mathbb{R}^{o\times d} \\), \\(~Q, K \in \mathbb{R}^{l\times T} \\) and \\(~V \in \mathbb{R}^{o\times T} \\)
 
-2. define the attention function as a bilinear function:
+- define the attention function as a bilinear function:
 
 $$
 g(Q,K) = Q^\top K
 $$
 
-3. transformer as attention:
+- transformer as attention:
 
 $$
 Z = (C X) \text{softmax}\left((A X)^\top (B X)\right)
