@@ -22,11 +22,10 @@ here, \\( (J_f(\textbf{x}))_{ij} = \frac{\partial f_i(\textbf{x})}{\partial x_j}
 In [Real NVP](https://arxiv.org/abs/1605.08803) , the function \\(f\\) is obtained via stacking affine coupling layers. More precisely, from input \\(\textbf{x} \in mathbb{R}^D\\) and output \\(\textbf{y} \in mathbb{R}^d\\) with \\(d<D\\), the intermediate layers are defined as:
 
 $$
-\textbf{y}_{1:d} = \textbf{x}_{1:d}
-$$
-
-$$
-\textbf{y}_{d+1:D} = \textbf{x}_{d+1:D} \otimes \exp(s(\textbf{x}_{1:d})) + t(\textbf{x}_{1:d})
+\begin{aligned}
+\textbf{y}_{1:d} &= \textbf{x}_{1:d}\\
+\textbf{y}_{d+1:D} &= \textbf{x}_{d+1:D} \otimes \exp(s(\textbf{x}_{1:d})) + t(\textbf{x}_{1:d})
+\end{aligned}
 $$
 
 where \\(s\\) (scale) and \\(t\\) (translation) are neural networks mapping \\(\mathbb{R}^d\\) to \\(\mathbb{R}^{D-d}\\).
