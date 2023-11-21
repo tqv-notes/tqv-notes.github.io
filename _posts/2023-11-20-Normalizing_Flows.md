@@ -53,3 +53,9 @@ J(x) = \frac{\partial \textbf{y}}{\partial \textbf{x}} =
 \frac{\partial \textbf{y}_{d+1:D}}{\partial \textbf{x}_{1:d}} & \text{diag}(\exp(s(\textbf{x}_{1:d})))
 \end{bmatrix}
 $$
+
+The determinant of Jacobian matrix is:
+
+$$
+\left| \text{det}(J(\textbf{x})) \right| = \exp\left(\sum_{j=1}^{D-d} s(\textbf{x}_{1:d})_j\right)
+$$
