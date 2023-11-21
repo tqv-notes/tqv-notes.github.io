@@ -24,8 +24,9 @@ In [Real NVP](https://arxiv.org/abs/1605.08803) , the function \\(f\\) is obtain
 $$
 \begin{aligned}
 \textbf{y}_{1:d} &= \textbf{x}_{1:d}\\
-\textbf{y}_{d+1:D} &= \textbf{x}_{d+1:D} \otimes \exp(s(\textbf{x}_{1:d})) + t(\textbf{x}_{1:d})
+\textbf{y}_{d+1:D} &= \textbf{x}_{d+1:D} \odot \exp(s(\textbf{x}_{1:d})) + t(\textbf{x}_{1:d})
 \end{aligned}
 $$
 
 where \\(s\\) (scale) and \\(t\\) (translation) are neural networks mapping \\(\mathbb{R}^d\\) to \\(\mathbb{R}^{D-d}\\).
+
