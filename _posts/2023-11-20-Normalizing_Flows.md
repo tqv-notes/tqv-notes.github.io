@@ -19,7 +19,7 @@ $$
 
 here, \\( (J_f(\textbf{x}))_{ij} = \frac{\partial f_i(\textbf{x})}{\partial x_j}\\) is the Jacobian matrix of function \\( f: \mathbb{R}^n \rightarrow \mathbb{R}^m \\)
 
-In [Real NVP](https://arxiv.org/abs/1605.08803) , the function \\(f\\) is obtained via stacking affine coupling layers. More precisely, from input \\(\textbf{x} \in \mathbb{R}^D\\) and output \\(\textbf{y} \in \mathbb{R}^d\\) with \\(d<D\\), the intermediate layers are defined as:
+In [Real NVP](https://arxiv.org/abs/1605.08803), the function \\(f\\) is obtained via stacking affine coupling layers. More precisely, from input \\(\textbf{x} \in \mathbb{R}^D\\) and output \\(\textbf{y} \in \mathbb{R}^d\\) with \\(d<D\\), the intermediate layers are defined as:
 
 $$
 \begin{aligned}
