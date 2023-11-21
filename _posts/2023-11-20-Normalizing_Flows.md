@@ -44,4 +44,12 @@ $$
 \end{cases}
 $$
 
+The Jacobian of an affine coupling layer is:
 
+$$
+J(x) = \frac{\partial \textbf{y}}{\partial \textbf{x}} = 
+\begin{matrix}
+\mathbb{I}_d & \textbf{0}_{d\times (D-d)}\\
+\frac{\partial \textbf{y}_{d+1:D}}{\partial \textbf{x}_{1:d}} & \text{diag}(\exp(s(\textbf{x}_{1:d})))
+\end{matrix}
+$$
