@@ -59,3 +59,19 @@ The determinant of Jacobian matrix is:
 $$
 \left| \text{det}(J(\textbf{x})) \right| = \exp\left(\sum_{j=1}^{D-d} s(\textbf{x}_{1:d})_j\right)
 $$
+
+In the implementation, a binary mask \\(b=(1,...,1,0,...,0)\\) is used to describe the coupling affine layer:
+
+$$
+\begin{aligned}
+\textbf{y} &= \textbf{x} \odot \exp\left((1-\textbf{b})\odot s(\textbf{b}\odot \textbf{x})\right) + (1-\textbf{b}) \odot t(\textbf{b}\odot \textbf{x})\\
+\textbf{x} &= (\textbf{y}-(1-\textbf{b})\odot t(\textbf{b}\odot \textbf{y})) \odot \exp\left(-(1-\textbf{b})\odot s(\textbf{b}\odot \textbf{y})\right)
+\end{aligned}
+$$
+
+With this formulation, the determinant is now:
+
+$$
+\log\left|\text{det}(J(\textbf{x}))\right| = \sum_{j=1}^D \left((1-\textbf{b})\odot s(\textbf{b}\odot \textbf{x})\right)_j
+$$
+
