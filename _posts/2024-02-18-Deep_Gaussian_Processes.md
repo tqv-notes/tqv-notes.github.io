@@ -7,4 +7,8 @@ categories: media
 
 ## Sparse Gaussian Processes
 
-Assuming a dataset \\(\textbf{X},\textbf{y}\\) of \\(N\\) training samples, building a Gaussian process requires an inversion of \\(N\times N\\) matrix which takes \\( \mathcal{O}(N^3) \\) time.
+Assuming a dataset \\( (\textbf{X},\textbf{y}) \\) of \\(N\\) training samples, building a Gaussian process requires an inversion of \\(N\times N\\) matrix which takes \\( \mathcal{O}(N^3) \\) time.
+
+The idea of sparse GP with inducing points is to replace the original data with a smaller dataset \\( (Z, u = f(Z)) \\) where \\( f \\) is the true latent function.
+
+
