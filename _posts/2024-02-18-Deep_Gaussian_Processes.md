@@ -23,7 +23,7 @@ $$
 
 where, \\( Q_{ff} = K_{fu} K_{uu}^{-1}K_{uf}\\)
 
-By placing the prior for \\(u\\) as \\( \mathbb{P}(u|Z,\theta) = \mathcal{u|0,K_{u u}}\\) as it is the output of the true latent function \\(f\\), we can simplify the likelihood as:
+By placing the prior for \\(u\\) as \\( \mathbb{P}(u|Z,\theta) = \mathcal{N}(u|0,K_{u u})\\) as it is the output of the true latent function \\(f\\), we can simplify the likelihood as:
 
 $$
 \begin{aligned}
