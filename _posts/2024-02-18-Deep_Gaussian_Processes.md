@@ -28,7 +28,19 @@ By placing the prior for \\(u\\) as \\( \mathbb{P}(u|Z,\theta) = \mathcal{u|0,K_
 $$
 \begin{aligned}
 \mathbb{P}(y|X,Z) & = \int \mathbb{P}(y|X,Z,u,\theta) \mathbb{P}(u|Z,\theta) du\\
-                  & = \mathcal{N}(y|0,Q_{ff}+\text{diag}(K_{ff}-Q_{ff}))
+                  & = \mathcal{N}(y|0,Q_{ff} + \text{diag}(K_{ff}-Q_{ff}) + \sigma^2\mathbb{I})
+\end{aligned}
+$$
+
+The inducing inputs \\(Z\\) is obtained via maximing the likelihood function \\( \mathbb{P}(y|X,Z) \\).
+
+To obtain the prediction at new data points \\(X_*,y_*\\), we start first with the joint distribution \\(\mathbb{P}(y,y_*|X,X_*,Z)\\) and then calculate the conditioned probablity \\( \mathbb{P}(y_*|y,X,X_*,Z)\\). This leads to:
+
+$$
+\begin{aligned}
+\mathbb{P}(y_*|y,X,X_*,Z) & = \mathcal{N}(y_*|\mu_*,\Sigma_*)~~\text{where}\\
+                    \mu_* & = Q_{*f}\left(Q_{ff} + \text{diag}(K_{ff}-Q_{ff}) + \sigma^2\mathbb{I}\right)^{-1}y\\
+                 \Sigma_* & = K_{**} - Q_{*f}\left(K_{ff}-Q_{ff}) + \sigma^2\mathbb{I}\right)^{-1} Q_{f*}
 \end{aligned}
 $$
 
