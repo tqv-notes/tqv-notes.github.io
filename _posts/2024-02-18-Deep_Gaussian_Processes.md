@@ -23,7 +23,7 @@ $$
 
 where, \\( Q_{ff} = K_{fu} K_{uu}^{-1}K_{uf}\\)
 
-By placing the prior for \\(u\\) as \\( \mathbb{P}(u|Z,\theta) = \mathcal{N}(u|0,K_{u u})\\) as it is the output of the true latent function \\(f\\), we can simplify the likelihood as:
+By placing the prior for \\(u\\) as \\( \mathbb{P}(u|Z,\theta) = \mathcal{N}(u\|0,K_{u u})\\) as it is the output of the true latent function \\(f\\), we can simplify the likelihood as:
 
 $$
 \begin{aligned}
@@ -32,9 +32,9 @@ $$
 \end{aligned}
 $$
 
-The inducing inputs \\(Z\\) is obtained via maximing the likelihood function \\( \mathbb{P}(y|X,Z) \\).
+The inducing inputs \\(Z\\) is obtained via maximing the likelihood function \\( \mathbb{P}(y\|X,Z) \\).
 
-To obtain the prediction at new data points \\(X_*,y_*\\), we start first with the joint distribution \\(\mathbb{P}(y,y_*|X,X_*,Z)\\) and then calculate the conditioned probablity \\( \mathbb{P}(y_*|y,X,X_*,Z)\\). This leads to:
+To obtain the prediction at new data points \\(X_*,y_*\\), we start first with the joint distribution \\(\mathbb{P}(y,y_*\|X,X_*,Z)\\) and then calculate the conditioned probablity \\( \mathbb{P}(y_*\|y,X,X_*,Z)\\). This leads to:
 
 $$
 \begin{aligned}
