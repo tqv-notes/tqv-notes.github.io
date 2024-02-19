@@ -44,3 +44,18 @@ $$
 \end{aligned}
 $$
 
+## Deep Gaussian Processes
+
+$$
+y = f_L( f_{L-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon
+$$
+
+notations: \\( f_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) )\\) and \\( f_0 = X \\)
+
+$$
+\begin{aligned}
+\mathbb{P}(y,f_1, ..., f_L|X) & = \mathbb{P}(y|f_L) \prod_{l=1}^L \mathbb{P}(f_l | f_{l-1})\\
+            \mathbb{P}(y|f_L) & = \mathcal{N}(f_L,\sigma_n^2 \mathbb{I})\\
+      \mathbb{P}(f_l|f_{l-1}) & = \mathcal{N}(0,K_{f_l f_l} + \sigma_l^2 \mathbb{I})
+\end{aligned}
+$$
