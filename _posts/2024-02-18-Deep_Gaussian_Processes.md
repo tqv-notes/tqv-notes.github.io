@@ -71,6 +71,14 @@ The joint probability is difficult to estimate. To circumvent this problem, we w
 In the nested variational approach, a set of inducing points \\(Z_l, u_l = f_l(Z_l) \\) is introduced for layer \\(l\\).
 
 $$
+Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
+$$
+
+$$
+\log \mathbb{P}(f_1|X) \geq \log \mathcal{N}(f1|K_{f_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{f_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 f_1} \right)
+$$
+
+$$
 \begin{aligned}
 \log \mathbb{P}(f_2|u_2) \geq & \log \mathcal{N}(f_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_2)})\\
                               & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
