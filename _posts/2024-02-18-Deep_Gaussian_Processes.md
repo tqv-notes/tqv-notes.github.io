@@ -88,6 +88,14 @@ $$
 
 $$
 \begin{aligned}
+\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{f_l f_l}) \right]\\
+\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{f_l u_l} \right]\\
+\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l f_l} K_{f_l u_l} \right]
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
 \log \mathbb{P}(y|X) & \geq \log \mathcal{N}(y|\Psi_L K_{u_L u_L}^{-1} m_L, \sigma_n^2\mathbb{I}) - \sum_{l=1}^L \text{KL}(Q(u_l)||\mathbb{P(u_l)})\\
                      & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \sum_{l=2}^L \frac{1}{2\sigma_l^2}\left(\psi_l - \text{tr}(\Psi_l K_{u_l u_l}^{-1})\right)\\
                      & -\sum_{l=2}^L \frac{1}{2\sigma_l^2} \text{tr}\left((\Phi_l-\Psi_l^T \Psi_l) K_{u_l u_l}^{-1} (m_l m_l^T+S_l) K_{u_l u_l}^{-1}\right)
