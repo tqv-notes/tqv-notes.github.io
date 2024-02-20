@@ -46,11 +46,17 @@ $$
 
 ## Deep Gaussian Processes
 
+Deep Gaussian Processes assume that data is generated via a composition of multiple Gaussian Processes as:
+
 $$
 y = f_L( f_{L-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon
 $$
 
-notations: \\( f_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) )\\) and \\( f_0 = X \\)
+where, \\(f_l\\) is drawn from a Gaussian Process.
+
+We define new notations for later calculations: \\( f_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) )\\) and \\( f_0 = X \\)
+
+The joint probability between intermediate value \\(f_l\\) and the outputs \\(y\\) is:
 
 $$
 \begin{aligned}
