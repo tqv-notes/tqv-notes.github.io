@@ -65,3 +65,15 @@ $$
       \mathbb{P}(f_l|f_{l-1}) & = \mathcal{N}(0,K_{f_l f_l} + \sigma_l^2 \mathbb{I})
 \end{aligned}
 $$
+
+The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the "nested variational approach" (Hensman and Lawrence, 2014).
+
+In the nested variational approach, a set of inducing points \\(Z_l, u_l = f_l(Z_l) \\) is introduced for layer \\(l\\).
+
+$$
+\begin{aligned}
+\log \mathbb{P}(f_2|u_2) \geq & \log \mathcal{N}(f_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_2)})\\
+                              & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
+                              & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
+\end{aligned}
+$$
