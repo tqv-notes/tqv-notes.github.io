@@ -70,7 +70,7 @@ The joint probability is difficult to estimate. To circumvent this problem, we w
 
 In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( \\{Z_l, u_l = f_l(Z_l)\\}_{l} \\) is introduced for layer \\(l\\). 
 
-For convenience, we drop the \\(X, Z\\) in the conditioned probablity expression e.g. \\( \mathbb{P}(y|u, X, Z)\\) is reduced to \\( \mathbb{P}(y|u)\\).
+For convenience, we drop the \\(X, Z\\) in the conditioned probablity expression e.g. \\( \mathbb{P}(y\|u, X, Z)\\) is reduced to \\( \mathbb{P}(y\|u)\\).
 
 $$
 Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
@@ -90,7 +90,7 @@ Notes:
 
 \\( a \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
 
-\\( b \\): \\( \mathbb{P}(h_1|f_1) = \mathcal{N}(h_1|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1|u_1) = \mathcal{N}(f_1|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1|\mu_1, \Sigma_1)\\)
+\\( b \\): \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
 
 $$
 \begin{aligned}
