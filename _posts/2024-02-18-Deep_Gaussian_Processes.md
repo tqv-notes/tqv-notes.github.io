@@ -96,9 +96,16 @@ $$
 \mathbb{P}(y, h_1, ..., h_{L-1}|X, u_1, ..., u_L)  \geq \prod_{l=1}^{L} \tilde{\mathbb{P}}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
 $$
 
-where, \\( \log \tilde{\mathbb{P}}(h_l\|u_l) = \mathcal{N}(hl\|\mu_l, \sigma_l^2 \mathbb{I}) \\), \\( \mu_l = K_{h_l u_l}K_{u_l u_l}^{-1} m_l\\) and \\(\Sigma_l = K_{h_l h_l} - K_{h_l u_l}K_{u_l u_l}^{-1}K_{u_l h_l}\\).
+where, \\( \log \tilde{\mathbb{P}}(h_l\|u_l, h_{l-1}) = \mathcal{N}(h_l\|\mu_l, \sigma_l^2 \mathbb{I}) \\), \\( \mu_l = K_{h_l u_l}K_{u_l u_l}^{-1} m_l\\) and \\(\Sigma_l = K_{h_l h_l} - K_{h_l u_l}K_{u_l u_l}^{-1}K_{u_l h_l}\\).
 
-For the second layer, we give below the detailed derivation of the variational lower bound. First, we choose the variational distributions \\( Q(u_l) = \mathcal{N}(u_l\|m_l, S_l) \\) and \\( Q(h_l) = \int Q(u_l) \tilde{\mathbb{P}}(h_l\|u_l) du_l\\).
+For the second layer, we give below the detailed derivation of the variational lower bound. First, we choose the variational distributions \\( Q(u_l) = \mathcal{N}(u_l\|m_l, S_l) \\) and \\( Q(h_l) = \int Q(u_l) \tilde{\mathbb{P}}(h_l\|u_l, h_{l-1}) du_l\\).
+
+$$
+\begin{aligned}
+\log \mathbb{P}(h_2|u_2,u_1) & = \log \int \mathbb{P}(h_2,h_1|u_2,u_1) dh_1\\
+                             & \geq \log \int \tilde{\mathbb{P}}(h_2\|u_2,h_1) \tilde{\mathbb{P}}(h_1\|u_1) \exp\left(-\frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)\right) \exp\left(-\frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2)\right) dh_1
+\end{aligned}
+$$
 
 $$
 \begin{aligned}
