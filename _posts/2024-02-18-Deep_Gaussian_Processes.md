@@ -88,9 +88,9 @@ $$
 
 Notes: 
 
-\\( a \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
+\\( (a) \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
 
-\\( b \\): \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
+\\( (b) \\): \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
 
 $$
 \begin{aligned}
