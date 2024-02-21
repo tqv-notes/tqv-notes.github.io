@@ -56,7 +56,7 @@ where, \\(f_l\\) is drawn from a Gaussian Process.
 
 We define new notations for later calculations: \\( h_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon_l\\) and \\( h_0 = X \\)
 
-The joint probability between intermediate value \\(\{h_l\}_{l}\\) and the outputs \\(y\\) is:
+The joint probability between intermediate value \\({h_l}_{l}\\) and the outputs \\(y\\) is:
 
 $$
 \begin{aligned}
@@ -68,7 +68,7 @@ $$
 
 The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the "nested variational approach" (Hensman and Lawrence, 2014).
 
-In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( (Z_l, u_l = f_l(Z_l)) \\) is introduced for layer \\(l\\).
+In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( {Z_l, u_l = f_l(Z_l)}_{l} \\) is introduced for layer \\(l\\).
 
 $$
 Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
