@@ -126,19 +126,23 @@ $$
 \end{aligned}
 $$
 
-$$
-\begin{aligned}
-\psi_2 & = \mathbb{E}_{Q(h_1)} \left[ \text{tr}(K_{h_2 h_2}) \right]\\
-\Psi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{h_2 u_2} \right]\\
-\Phi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{u_2 h_2} K_{h_2 u_2} \right]
-\end{aligned}
-$$
+Using the analytical form of \\( Q(h_1) = \mathcal{N}(h_1\|m_1, S_1)\\) and direct calculation, we obtain the variational lower bound for \\( \log \mathbb{P}(h_2\|u_2)\\) as: 
 
 $$
 \begin{aligned}
 \log \mathbb{P}(h_2|u_2) \geq & \log \mathcal{N}(h_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
                               & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
                               & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
+\end{aligned}
+$$
+
+where,
+
+$$
+\begin{aligned}
+\psi_2 & = \mathbb{E}_{Q(h_1)} \left[ \text{tr}(K_{h_2 h_2}) \right]\\
+\Psi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{h_2 u_2} \right]\\
+\Phi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{u_2 h_2} K_{h_2 u_2} \right]
 \end{aligned}
 $$
 
