@@ -54,33 +54,33 @@ $$
 
 where, \\(f_l\\) is drawn from a Gaussian Process.
 
-We define new notations for later calculations: \\( f_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) )\\) and \\( f_0 = X \\)
+We define new notations for later calculations: \\( h_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon_l\\) and \\( h_0 = X \\)
 
-The joint probability between intermediate value \\(f_l\\) and the outputs \\(y\\) is:
+The joint probability between intermediate value \\(\{h_l\}_{l}\\) and the outputs \\(y\\) is:
 
 $$
 \begin{aligned}
-\mathbb{P}(y,f_1, ..., f_L|X) & = \mathbb{P}(y|f_L) \prod_{l=1}^L \mathbb{P}(f_l | f_{l-1})\\
+\mathbb{P}(y,h_1, ..., h_L|X) & = \mathbb{P}(y|h_L) \prod_{l=1}^L \mathbb{P}(h_l | h_{l-1})\\
             \mathbb{P}(y|f_L) & = \mathcal{N}(f_L,\sigma_n^2 \mathbb{I})\\
-      \mathbb{P}(f_l|f_{l-1}) & = \mathcal{N}(0,K_{f_l f_l} + \sigma_l^2 \mathbb{I})
+      \mathbb{P}(h_l|h_{l-1}) & = \mathcal{N}(0,K_{h_l h_l} + \sigma_l^2 \mathbb{I})
 \end{aligned}
 $$
 
 The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the "nested variational approach" (Hensman and Lawrence, 2014).
 
-In the nested variational approach, a set of inducing points \\(Z_l, u_l = f_l(Z_l) \\) is introduced for layer \\(l\\).
+In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( (Z_l, u_l = f_l(Z_l)) \\) is introduced for layer \\(l\\).
 
 $$
 Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
 $$
 
 $$
-\log \mathbb{P}(f_1|X) \geq \log \mathcal{N}(f1|K_{f_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{f_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 f_1} \right)
+\log \mathbb{P}(h_1|X) \geq \log \mathcal{N}(h1|K_{h_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{h_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 h_1} \right)
 $$
 
 $$
 \begin{aligned}
-\log \mathbb{P}(f_2|u_2) \geq & \log \mathcal{N}(f_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
+\log \mathbb{P}(h_2|u_2) \geq & \log \mathcal{N}(h_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
                               & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
                               & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
 \end{aligned}
@@ -88,9 +88,9 @@ $$
 
 $$
 \begin{aligned}
-\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{f_l f_l}) \right]\\
-\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{f_l u_l} \right]\\
-\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l f_l} K_{f_l u_l} \right]
+\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{h_l h_l}) \right]\\
+\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{h_l u_l} \right]\\
+\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l h_l} K_{h_l u_l} \right]
 \end{aligned}
 $$
 
