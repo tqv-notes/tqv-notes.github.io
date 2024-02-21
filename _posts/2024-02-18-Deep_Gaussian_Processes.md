@@ -92,7 +92,7 @@ Notes:
 
 \\( (b) \\): from definition, we have \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and sparse Gaussian Process formulation, we have \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
 
-The inequality for \\( \mathbb{P}(h_1|u_1) \\) can be generalized for other layers and this leads to:
+The inequality for \\( \mathbb{P}(h_1\|u_1) \\) can be generalized for other layers and this leads to:
 
 $$
 \mathbb{P}(y, h_1, ..., h_{L-1}|X, u_1, ..., u_L)  \geq \prod_{l=1}^{L} \mathbb{P}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
