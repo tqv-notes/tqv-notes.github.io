@@ -78,12 +78,19 @@ $$
 
 $$
 \begin{aligned}
-\log \mathbb{P}(h_1|u_1) & = \log \int \mathbb{P}(h_1|f_1) \mathbb{P}(h_1|u_1) df_1\\
-                         & \overset{Jensen}{\geq} \int \mathbb{P}(h_1|u_1) \log \mathbb{P}(h_1|f_1) df_1\\
+\log \mathbb{P}(h_1|u_1) & = \log \int \mathbb{P}(h_1|f_1) \mathbb{P}(f_1|u_1) df_1\\
+                         & \overset{a}{\geq} \int \mathbb{P}(f_1|u_1) \log \mathbb{P}(h_1|f_1) df_1\\
+                         & \overset{b}{=} \int \mathbb{P}(f_1|u_1) \left( -\frac{N}{2} \log 2\pi \sigma^2_1 -  \frac{1}{2\sigma_1^2} (h_1-f_1)^T(h_1-f_1) \right) df_1\\
                          & \geq \log \mathcal{N}(h1|K_{h_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{h_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 h_1} \right)\\
                          & \overset{\Delta}{=} \log \tilde{\mathbb{P}}(h_1|u_1)
 \end{aligned}
 $$
+
+Notes: 
+
+\\( a \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
+
+\\( b \\): \\( \mathbb{P}(h_1|f_1) = \mathcal{N}(h_1|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1|u_1) = \mathcal{N}(f_1|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1|\mu_1, \Sigma_1)\\)
 
 $$
 \begin{aligned}
