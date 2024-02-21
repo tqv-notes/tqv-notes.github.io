@@ -66,7 +66,7 @@ $$
 \end{aligned}
 $$
 
-The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the "nested variational approach" (Hensman and Lawrence, 2014).
+The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the 'nested variational approach' (see [Hensman and Lawrence, 2014](https://arxiv.org/abs/1412.1370)).
 
 In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( \\{Z_l, u_l = f_l(Z_l)\\}_{l} \\) is introduced for layer \\(l\\). 
 
@@ -128,9 +128,9 @@ $$
 
 $$
 \begin{aligned}
-\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{h_l h_l}) \right]\\
-\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{h_l u_l} \right]\\
-\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l h_l} K_{h_l u_l} \right]
+\psi_2 & = \mathbb{E}_{Q(h_1)} \left[ \text{tr}(K_{h_2 h_2}) \right]\\
+\Psi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{h_2 u_2} \right]\\
+\Phi_2 & = \mathbb{E}_{Q(h_1)} \left[ K_{u_2 h_2} K_{h_2 u_2} \right]
 \end{aligned}
 $$
 
@@ -142,10 +142,22 @@ $$
 \end{aligned}
 $$
 
+By applying the similar steps for other layers, we obtain the nested variational compression lower bound as:
+
 $$
 \begin{aligned}
 \log \mathbb{P}(y|X) & \geq \log \mathcal{N}(y|\Psi_L K_{u_L u_L}^{-1} m_L, \sigma_n^2\mathbb{I}) - \sum_{l=1}^L \text{KL}(Q(u_l)||\mathbb{P(u_l)})\\
                      & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \sum_{l=2}^L \frac{1}{2\sigma_l^2}\left(\psi_l - \text{tr}(\Psi_l K_{u_l u_l}^{-1})\right)\\
                      & -\sum_{l=2}^L \frac{1}{2\sigma_l^2} \text{tr}\left((\Phi_l-\Psi_l^T \Psi_l) K_{u_l u_l}^{-1} (m_l m_l^T+S_l) K_{u_l u_l}^{-1}\right)
+\end{aligned}
+$$
+
+here, similarly to the calculation of \\( \log \mathbb{P}(h_2\|u_2) \\), we introduce new parameters as
+
+$$
+\begin{aligned}
+\psi_l & = \mathbb{E}_{Q(h_{l-1})} \left[ \text{tr}(K_{h_l h_l}) \right]\\
+\Psi_l & = \mathbb{E}_{Q(h_{l-1})} \left[ K_{h_l u_l} \right]\\
+\Phi_l & = \mathbb{E}_{Q(h_{l-1})} \left[ K_{u_l h_l} K_{h_l u_l} \right]
 \end{aligned}
 $$
