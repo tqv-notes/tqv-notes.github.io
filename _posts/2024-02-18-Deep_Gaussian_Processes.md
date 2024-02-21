@@ -95,7 +95,7 @@ Notes:
 The inequality for \\( \mathbb{P}(h_1|u_1) \\) can be generalized for other layers and this leads to:
 
 $$
-\mathbb{P}(h_L,h_1, ..., h_{L-1}|u_1, ..., u_L)  \geq \prod_{l=1}^{L} \mathbb{P}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
+\mathbb{P}(y, h_1, ..., h_{L-1}|X, u_1, ..., u_L)  \geq \prod_{l=1}^{L} \mathbb{P}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
 $$
 
 $$
