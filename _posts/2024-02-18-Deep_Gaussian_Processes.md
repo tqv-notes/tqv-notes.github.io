@@ -128,17 +128,17 @@ $$
 
 $$
 \begin{aligned}
-\log \mathbb{P}(h_2|u_2) \geq & \log \mathcal{N}(h_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
-                              & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
-                              & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
+\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{h_l h_l}) \right]\\
+\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{h_l u_l} \right]\\
+\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l h_l} K_{h_l u_l} \right]
 \end{aligned}
 $$
 
 $$
 \begin{aligned}
-\psi_l & = \mathbb{E}_{q_{l-1}} \left[ \text{tr}(K_{h_l h_l}) \right]\\
-\Psi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{h_l u_l} \right]\\
-\Phi_l & = \mathbb{E}_{q_{l-1}} \left[ K_{u_l h_l} K_{h_l u_l} \right]
+\log \mathbb{P}(h_2|u_2) \geq & \log \mathcal{N}(h_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
+                              & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
+                              & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
 \end{aligned}
 $$
 
