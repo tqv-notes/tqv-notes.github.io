@@ -103,14 +103,20 @@ For the second layer, we give below the detailed derivation of the variational l
 $$
 \begin{aligned}
 \log \mathbb{P}(h_2|u_2,u_1) & = \log \int \mathbb{P}(h_2,h_1|u_2,u_1) dh_1\\
-                             & \geq \log \int \tilde{\mathbb{P}}(h_2\|u_2,h_1) \tilde{\mathbb{P}}(h_1\|u_1) \exp\left(-\frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)\right) \exp\left(-\frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2)\right) dh_1\\
-                             & \overset{(a)}{\geq} \mathbb{E}_{\tilde{\mathbb{P}}(h_1\|u_1)}\left[\log \tilde{\mathbb{P}}(h_2\|u_2,h_1) \right] - \mathbb{E}_{\tilde{\mathbb{P}}(h_1\|u_1)}\left[ \frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2) \right] - \frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)
+                             & \geq \log \int \tilde{\mathbb{P}}(h_2|u_2,h_1) \tilde{\mathbb{P}}(h_1|u_1) \exp\left(-\frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)\right) \exp\left(-\frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2)\right) dh_1\\
+                             & \overset{(a)}{\geq} \mathbb{E}_{\tilde{\mathbb{P}}(h_1|u_1)}\left[\log \tilde{\mathbb{P}}(h_2|u_2,h_1) \right] - \mathbb{E}_{\tilde{\mathbb{P}}(h_1|u_1)}\left[ \frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2) \right] - \frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)
 \end{aligned}
 $$
 
 Notes:
 
 \\( (a) \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
+
+By marginalizing the variable \\( u_1 \\) using the variational distribution \\( Q(u_1) \\), we have:
+
+$$
+\log \mathbb{P}(h_2|u_2) \geq \mathbb{E}_{Q(h_1)}\left[\log \tilde{\mathbb{P}}(h_2|u_2,h_1) \right] - KL\left[Q(u_1)\|\mathbb{P}(u_1)\right] - \mathbb{E}_{Q(h_1)}\left[ \frac{1}{2\sigma_2^2} \text{tr}(\Sigma_2) \right] - \frac{1}{2\sigma_1^2} \text{tr}(\Sigma_1)
+$$
 
 $$
 \begin{aligned}
