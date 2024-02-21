@@ -68,7 +68,9 @@ $$
 
 The joint probability is difficult to estimate. To circumvent this problem, we will use the Gaussian approximation techniques. We will focus on the "nested variational approach" (Hensman and Lawrence, 2014).
 
-In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( \\{Z_l, u_l = f_l(Z_l)\\}_{l} \\) is introduced for layer \\(l\\).
+In the nested variational approach, to avoid the computational cost of large dataset, following the sparse Gaussian Process approach, a set of inducing points \\( \\{Z_l, u_l = f_l(Z_l)\\}_{l} \\) is introduced for layer \\(l\\). 
+
+For convenience, we drop the \\(X, Z\\) in the conditioned probablity expression e.g. \\( \mathbb{P}(y|u, X, Z)\\) is reduced to \\( \mathbb{P}(y|u)\\).
 
 $$
 Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
@@ -76,7 +78,10 @@ $$
 
 $$
 \begin{aligned}
-\log \mathbb{P}(h_1|X) \geq \log \mathcal{N}(h1|K_{h_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{h_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 h_1} \right)
+\log \mathbb{P}(h_1|u_1) & = \log \int \mathbb{P}(h_1|f_1) \mathbb{P}(h_1|u_1) df_1\\
+                         & \overset{Jensen}{\geq} \int \mathbb{P}(h_1|u_1) \log \mathbb{P}(h_1|f_1) df_1\\
+                         & \geq \log \mathcal{N}(h1|K_{h_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{h_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 h_1} \right)\\
+                         & \overset{\Delta}{=} \log \tilde{\mathbb{P}}(h_1|u_1)
 \end{aligned}
 $$
 
