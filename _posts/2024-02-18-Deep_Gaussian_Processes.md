@@ -72,9 +72,7 @@ In the nested variational approach, to avoid the computational cost of large dat
 
 For convenience, we drop the \\(X, Z\\) in the conditioned probablity expression e.g. \\( \mathbb{P}(y\|u, X, Z)\\) is reduced to \\( \mathbb{P}(y\|u)\\).
 
-$$
-Q(u_l) = \mathcal{N}(u_l|m_l, S_l)
-$$
+For the first layer, the variational lower bound is given by:
 
 $$
 \begin{aligned}
@@ -97,6 +95,10 @@ The inequality for \\( \mathbb{P}(h_1\|u_1) \\) can be generalized for other lay
 $$
 \mathbb{P}(y, h_1, ..., h_{L-1}|X, u_1, ..., u_L)  \geq \prod_{l=1}^{L} \tilde{\mathbb{P}}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
 $$
+
+where, \\( \log \tilde{\mathbb{P}}(h_l|u_l) = \mathcal{N}(hl|\mu_l, \sigma_l^2 \mathbb{I}) \\), \\( \mu_l = K_{h_l u_l}K_{u_l u_l}^{-1} m_l\\) and \\(\Sigma_l = K_{h_l h_l} - K_{h_l u_l}K_{u_l u_l}^{-1}K_{u_l h_l}\\).
+
+For the second layer, we give below the detailed derivation of the variational lower bound. First, we define \\( Q(u_l) = \mathcal{N}(u_l\|m_l, S_l) \\) and \\( Q(h_l) = \int Q(u_l) \tilde{\mathbb{P}}(h_l\|u_l) du_l\\).
 
 $$
 \begin{aligned}
