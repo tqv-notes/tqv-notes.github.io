@@ -54,13 +54,13 @@ $$
 
 where, \\(f_l\\) is drawn from a Gaussian Process.
 
-We define new notations for later calculations: \\( h_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon_l\\) and \\( h_0 = X \\)
+We define new notations for later calculations: \\( h_l =  f_l( f_{l-1}( \cdots ( f_1(X) )\cdots ) ) + \epsilon_l\\), \\( h_L = y\\) and \\( h_0 = X \\)
 
 The joint probability between intermediate value \\(\\{h_l\\}_{l}\\) and the outputs \\(y\\) is:
 
 $$
 \begin{aligned}
-\mathbb{P}(y,h_1, ..., h_L|X) & = \mathbb{P}(y|h_L) \prod_{l=1}^L \mathbb{P}(h_l | h_{l-1})\\
+\mathbb{P}(y,h_1, ..., h_{L-1}|X) & = \mathbb{P}(y|h_L) \prod_{l=1}^{L-1} \mathbb{P}(h_l | h_{l-1})\\
             \mathbb{P}(y|f_L) & = \mathcal{N}(f_L,\sigma_n^2 \mathbb{I})\\
       \mathbb{P}(h_l|h_{l-1}) & = \mathcal{N}(0,K_{h_l h_l} + \sigma_l^2 \mathbb{I})
 \end{aligned}
@@ -79,8 +79,8 @@ $$
 $$
 \begin{aligned}
 \log \mathbb{P}(h_1|u_1) & = \log \int \mathbb{P}(h_1|f_1) \mathbb{P}(f_1|u_1) df_1\\
-                         & \overset{a}{\geq} \int \mathbb{P}(f_1|u_1) \log \mathbb{P}(h_1|f_1) df_1\\
-                         & \overset{b}{=} \int \mathbb{P}(f_1|u_1) \left( -\frac{N}{2} \log 2\pi \sigma^2_1 -  \frac{1}{2\sigma_1^2} (h_1-f_1)^T(h_1-f_1) \right) df_1\\
+                         & \overset{(a)}{\geq} \int \mathbb{P}(f_1|u_1) \log \mathbb{P}(h_1|f_1) df_1\\
+                         & \overset{(b)}{=} \int \mathbb{P}(f_1|u_1) \left( -\frac{N}{2} \log 2\pi \sigma^2_1 -  \frac{1}{2\sigma_1^2} (h_1-f_1)^T(h_1-f_1) \right) df_1\\
                          & \geq \log \mathcal{N}(h1|K_{h_1 u_1}K_{u_1 u_1}^{-1} m_1, \sigma_1^2 \mathbb{I}) - \text{tr}\left(K_{h_1 u_1} K_{u_1 u_1}^{-1} S_1 K_{u_1 u_1}^{-1} K_{u_1 h_1} \right)\\
                          & \overset{\Delta}{=} \log \tilde{\mathbb{P}}(h_1|u_1)
 \end{aligned}
@@ -90,7 +90,13 @@ Notes:
 
 \\( (a) \\): here, we use Jensen's inequality \\( \log \mathbb{E}(f(X)) \geq \mathbb{E}(\log f(X)) \\)
 
-\\( (b) \\): \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
+\\( (b) \\): from definition, we have \\( \mathbb{P}(h_1\|f_1) = \mathcal{N}(h_1\|f_1, \sigma_1^2 \mathbb{I}) \\) and sparse Gaussian Process formulation, we have \\( \mathbb{P}(f_1\|u_1) = \mathcal{N}(f_1\|K_{h_1 u_1}K_{u_1 u_1}^{-1} u_1, K_{h_1 h_1} - K_{h_1 u_1}K_{u_1 u_1}^{-1}K_{u_1 h_1} ) \overset{\Delta}{=} \mathcal{N}(h_1\|\mu_1, \Sigma_1)\\)
+
+The inequality for \\( \mathbb{P}(h_1|u_1) \\) can be generalized for other layers and this leads to:
+
+$$
+\mathbb{P}(h_L,h_1, ..., h_{L-1}|u_1, ..., u_L)  \geq \prod_{l=1}^{L} \mathbb{P}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
+$$
 
 $$
 \begin{aligned}
