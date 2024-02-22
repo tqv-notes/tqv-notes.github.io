@@ -168,4 +168,4 @@ $$
 \end{aligned}
 $$
 
-Note also that \\( m_l m_l^T + S_l \\) is the explicit result of \\( \mathbb{E}_{Q(h_l)}\[u_l u_l^T\] \\).
+Note also that \\( m_l m_l^T + S_l \\) is the explicit result of \\( \mathbb{E}_{Q(h_l)}\[u_l u_l^T\] \\) with \\( Q(h_l) = \mathcal{N}(h_l\|m_l, S_l) \\).
