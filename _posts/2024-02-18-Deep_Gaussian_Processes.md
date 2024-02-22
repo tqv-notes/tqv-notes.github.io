@@ -167,3 +167,5 @@ $$
 \Phi_l & = \mathbb{E}_{Q(h_{l-1})} \left[ K_{u_l h_l} K_{h_l u_l} \right]
 \end{aligned}
 $$
+
+Note also that \\( m_l m_l^T + S_l \\) is the explicit result of \\( \mathbb{E}_{Q(h_l)}\[u_l u_l^T\] \\).
