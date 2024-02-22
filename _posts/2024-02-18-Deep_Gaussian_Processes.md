@@ -96,7 +96,7 @@ $$
 \mathbb{P}(y, h_1, ..., h_{L-1}|X, u_1, ..., u_L)  \geq \prod_{l=1}^{L} \tilde{\mathbb{P}}(h_l | u_l, h_{l-1}) \exp\left(-\sum_{l=1}^{L} \frac{1}{\sigma_l^2} \text{tr}(\Sigma_l)\right)
 $$
 
-where, \\( \log \tilde{\mathbb{P}}(h_l\|u_l, h_{l-1}) = \mathcal{N}(h_l\|\mu_l, \sigma_l^2 \mathbb{I}) \\), \\( \mu_l = K_{h_l u_l}K_{u_l u_l}^{-1} m_l\\) and \\(\Sigma_l = K_{h_l h_l} - K_{h_l u_l}K_{u_l u_l}^{-1}K_{u_l h_l}\\).
+where, \\( \log \tilde{\mathbb{P}}(h_l\|u_l, h_{l-1}) = \mathcal{N}(h_l\|\mu_l, \sigma_l^2 \mathbb{I}) \\), \\( \mu_l = K_{h_l u_l}K_{u_l u_l}^{-1} u_l\\) and \\(\Sigma_l = K_{h_l h_l} - K_{h_l u_l}K_{u_l u_l}^{-1}K_{u_l h_l}\\).
 
 For the second layer, we give below the detailed derivation of the variational lower bound. First, we choose the variational distributions \\( Q(u_l) = \mathcal{N}(u_l\|m_l, S_l) \\) and \\( Q(h_l) = \int Q(u_l) \tilde{\mathbb{P}}(h_l\|u_l, h_{l-1}) du_l\\).
 
@@ -132,7 +132,7 @@ $$
 \begin{aligned}
 \log \mathbb{P}(h_2|u_2) \geq & \log \mathcal{N}(h_2|\Psi_2 K_{u_2 u_2}^{-1} m_2, \sigma_2^2\mathbb{I}) - \text{KL}(Q(u_1)||\mathbb{P(u_1)})\\
                               & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \frac{1}{2\sigma_2^2}\left(\psi_2 - \text{tr}(\Psi_2 K_{u_2 u_2}^{-1})\right)\\
-                              & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} (m_2 m_2^T+S_2) K_{u_2 u_2}^{-1}\right)
+                              & -\frac{1}{2\sigma_2^2} \text{tr}\left((\Phi_2-\Psi_2^T \Psi_2) K_{u_2 u_2}^{-1} u_2 u_2^T K_{u_2 u_2}^{-1}\right)
 \end{aligned}
 $$
 
@@ -150,7 +150,9 @@ By applying the similar steps for other layers, we obtain the nested variational
 
 $$
 \begin{aligned}
-\log \mathbb{P}(y|X) & \geq \log \mathcal{N}(y|\Psi_L K_{u_L u_L}^{-1} m_L, \sigma_n^2\mathbb{I}) - \sum_{l=1}^L \text{KL}(Q(u_l)||\mathbb{P(u_l)})\\
+\log \mathbb{P}(y|X) & = \log \int \mathbb{P}(y|u_L,X) \mathbb{P}(u_L) du_L\\
+                     & \geq \int \mathbb{P}(u_L) \log \mathbb{P}(y|u_L, X) du_L\\
+                     & \geq \log \mathcal{N}(y|\Psi_L K_{u_L u_L}^{-1} m_L, \sigma_n^2\mathbb{I}) - \sum_{l=1}^L \text{KL}(Q(u_l)||\mathbb{P(u_l)})\\
                      & -\frac{1}{2\sigma_1^2} \text{tr}\left(K_{11}-Q_{11}\right) - \sum_{l=2}^L \frac{1}{2\sigma_l^2}\left(\psi_l - \text{tr}(\Psi_l K_{u_l u_l}^{-1})\right)\\
                      & -\sum_{l=2}^L \frac{1}{2\sigma_l^2} \text{tr}\left((\Phi_l-\Psi_l^T \Psi_l) K_{u_l u_l}^{-1} (m_l m_l^T+S_l) K_{u_l u_l}^{-1}\right)
 \end{aligned}
