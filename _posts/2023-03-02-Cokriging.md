@@ -227,7 +227,7 @@ $$
 From this definition, we can deduce the relation between the (cross-) covariance of \\(Z_i(u)\\) and the covariances of independent stationary functions \\(c_l(h)\\) as:
 
 $$
-C_{ij}(h) = \sum_{l=0}^{L} \left( \sum_{k=1}^{N_l} a_{ik}^l a_{jk}^l\right) c_l(h) = \sum_{l=0}^L b_ij^l c_i(h)
+C_{ij}(h) = \sum_{l=0}^{L} \left( \sum_{k=1}^{N_l} a_{ik}^l a_{jk}^l\right) c_l(h) = \sum_{l=0}^L b_{ij}^l c_i(h)
 $$
 
 With \\(c_l(h)\\) are permissible covariance models, the sufficient condition for \\(C_{ij}(h)\\) to be a permisssible model of coregionalization is that all the coregionalization matrices \\( B_l = [b_{ij}^l] \\) are positive simi-definite.
