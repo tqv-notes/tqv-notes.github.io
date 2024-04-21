@@ -9,7 +9,7 @@ For conventional kriging (also known as gaussian process regression), only one s
 
 In this note, we introduce the cokriging framework to be able to jointly model two different output channels. This technique is known as 'multi-output gaussian process regression' in machine learning community. Both 'kriging' and 'cokriging' terminology are from geostatistical community.
 
-# Mathematical formulation of cokriging
+## Mathematical formulation of cokriging
 
 Consider a situation where we have two kinds of data:
 - Primary data: \\( \\{ z_1(u_{\alpha_1}) \\}\_{\alpha_1 = 1 ... n_1} \\)
@@ -196,7 +196,7 @@ Z_1^\ast(u) & = \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\al
 \end{align*}
 $$
 
-# Theoretical variogram models:
+## Theoretical variogram models
 
 The theoretical variogram \\( 2\gamma (h) \\) of an 'intrinsic' stationary process \\( Z(u) \\) is defined as:
 
@@ -216,7 +216,7 @@ $$
 2\gamma_{ij} = \mathbb{E}[(Z_i(u+h)-Z_i(u))(Z_j(u+h)-Z_j(u))]
 $$
 
-# Linear Model of Coregionalization:
+## Linear Model of Coregionalization
 
 Within the linear model of coregionalization framework, each stationary function \\( Z_i(u) \\) is a linear combination of independent stationary function \\( Y_k^l(u) \\) with zero mean and covariance \\(c_l(h)\\) as below:
 
