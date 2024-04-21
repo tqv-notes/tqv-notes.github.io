@@ -193,3 +193,17 @@ Z_1^\ast(u) & = \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\al
  \end{pmatrix} 
 \end{align*}
 $$
+
+Theoretical variogram models:
+
+The theoretical variogram \\( 2\gamma (h) \\) of an 'intrinsic' stationary process \\( Z(u) \\) is defined as:
+
+$$
+2\gamma (h) = \text{var}[Z(u+h)-Z(u)]
+$$
+
+Since the covarinace is given by \\( C(h) = \mathbb{E}[Z(u)Z(u+h)] - \mu^2\\) with \\(\mu = \mathbb{E}[Z(u)]\\), then we have:
+
+$$
+2\gamma (h) = C(0) - C(h)
+$$
