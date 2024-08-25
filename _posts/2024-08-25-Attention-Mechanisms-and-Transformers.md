@@ -1,5 +1,5 @@
 ---
-title:  "Attention Mechanism and Transformers"
+title:  "Attention Mechanisms and Transformers"
 mathjax: true
 layout: post
 categories: media
