@@ -38,7 +38,7 @@ $$
 where,
 
 $$
-[A^{(m)}_{h}]_{n n'} = \frac{ \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_n \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_{n''} \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }
+\left[A^{(m)}_{h}\right]_{n n'} = \frac{ \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_n \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_{n''} \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }
 $$
 
 ## Transformers
