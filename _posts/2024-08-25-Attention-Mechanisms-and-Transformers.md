@@ -19,8 +19,8 @@ $$
 
 where, the attention matrix is normalized over its column i.e. \\( \sum_{n'=1}^N A_{n'n}^{(m)} = 1\\).
 
-# Self-Attention Mechanism
+### Self-Attention Mechanism
 
-# Multi-Head Self-Attention Mechanism
+### Multi-Head Self-Attention Mechanism
 
 ## Transformers
