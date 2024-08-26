@@ -24,7 +24,7 @@ where, the attention matrix is normalized over its column i.e. \\( \sum_{n=1}^N 
 In the self-attention mechanism, the attention matrix is defined via its inputs as:
 
 $$
-A^{(m)}_{n n'} = \frac{ \exp\left( x^{(m-1)}_n^T U_k^{(m)}^T U^{(m)}_q x^{(m-1)}_{n'}/\sqrt{D} \right) }{ \sum_{a=1}^N \exp\left( x^{(m-1)}_{a}^T U_k^{(m)}^T U^{(m)}_q x^{(m-1)}_{n'}/\sqrt{D} \right) }
+A^{(m)}_{n n'} = \frac{ \exp\left( x^{(m-1)}_n^T U_k^{(m)}^T U^{(m)}_q x^{(m-1)}_{n'}/\sqrt{D} \right) }{ 1 }
 $$
 
 ### Multi-Head Self-Attention Mechanism
