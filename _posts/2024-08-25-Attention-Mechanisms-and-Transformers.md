@@ -29,4 +29,16 @@ $$
 
 ### Multi-Head Self-Attention Mechanism
 
+Like CNN with multiple filters, to increase the capacity of self-attention mechanism, the transformer block has \\(H\\) self-attentions in parallel:
+
+$$
+Y^{(m)} = \sum_{h=1}^H V_h^{(m)} X^{(m-1)} A^{(m)}_h
+$$
+
+where,
+
+$$
+[A^{(m)}_{h}]_{n n'} = \frac{ \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_n \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_{n''} \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }
+$$
+
 ## Transformers
