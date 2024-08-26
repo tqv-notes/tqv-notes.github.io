@@ -55,4 +55,4 @@ To help the training of the transformer block, two extra components are needed: 
 
 Put everything together, we have the diagram of transformer block as follows:
 
-![transformer_block](/images/transformer_block.png){:height="50%" width="50%"}
+![transformer_block](/images/transformer_block.png){:height="100%" width="100%"}
