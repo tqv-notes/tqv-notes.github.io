@@ -24,7 +24,7 @@ where, the attention matrix is normalized over its column i.e. \\( \sum_{n=1}^N 
 In the self-attention mechanism, the attention matrix is defined via its inputs as:
 
 $$
-A^{(m)}_{n n'} = \frac{ \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_n \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_{n''} \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }
+A^{(m)}_{n n'} = \frac{ \exp \left( \frac{1}{\sqrt{D}} \left( x^{(m-1)}_n \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \exp \left( \frac{1}{\sqrt{D}} \left( x^{(m-1)}_{n''} \right)^T \left( U_k^{(m)} \right)^T U^{(m)}_q x^{(m-1)}_{n'} \right) }
 $$
 
 ### Multi-Head Self-Attention Mechanism
@@ -38,7 +38,7 @@ $$
 where,
 
 $$
-\left[A^{(m)}_{h}\right]_{n n'} = \frac{ \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_n \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \frac{1}{\sqrt{D}} \exp \left( \left( x^{(m-1)}_{n''} \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }
+\left[A^{(m)}_{h}\right]_{n n'} = \frac{ \exp \left( \frac{1}{\sqrt{D}} \left( x^{(m-1)}_n \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }{ \sum_{n''=1}^N \exp \left( \frac{1}{\sqrt{D}} \left( x^{(m-1)}_{n''} \right)^T \left( U_{k h}^{(m)} \right)^T U^{(m)}_{q h} x^{(m-1)}_{n'} \right) }
 $$
 
 ## Transformers
