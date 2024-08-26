@@ -32,7 +32,7 @@ $$
 Like CNN with multiple filters, to increase the capacity of self-attention mechanism, the transformer block has \\(H\\) self-attentions in parallel:
 
 $$
-Y^{(m)} = \sum_{h=1}^H V_h^{(m)} X^{(m-1)} A^{(m)}_h
+Y^{(m)} = \text{MHSA}(X^{(m-1)}) = \sum_{h=1}^H V_h^{(m)} X^{(m-1)} A^{(m)}_h
 $$
 
 where,
@@ -42,3 +42,17 @@ $$
 $$
 
 ## Transformers
+
+The output of multi-head self-attention block will pass through a multi-layer perceptron:
+
+$$
+X^{(m)} = \text{MLP}(Y^{m}) = \text{MLP}( \text{MHSA}(X^{m-1}) )
+$$
+
+This completes the core component of the transformer block.
+
+To help the training of the transformer block, two extra components are needed: the residual connections and the layer normalization.
+
+Put everything together, we have the diagram of transformer block as follows:
+
+![transformer_block](/images/transformer_block.png){:height="50%" width="50%"}
