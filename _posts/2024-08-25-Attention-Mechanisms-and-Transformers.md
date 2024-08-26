@@ -17,9 +17,15 @@ $$
 Y^{(m)} = X^{(m-1)} A^{(m)}
 $$
 
-where, the attention matrix is normalized over its column i.e. \\( \sum_{n'=1}^N A_{n'n}^{(m)} = 1\\).
+where, the attention matrix is normalized over its column i.e. \\( \sum_{n=1}^N A_{n n'}^{(m)} = 1\\).
 
 ### Self-Attention Mechanism
+
+In the self-attention mechanism, the attention matrix is defined via its inputs as:
+
+$$
+A^{(m)}_{n n'} = \frac{ \exp\left( x^{(m-1)}_n^T U_k^{(m)}^T U^{(m)}_q x^{(m-1)}_{n'}/\sqrt{D} \right) }{ \sum_{n''=1}^N \exp\left( x^{(m-1)}_{n''}^T U_k^{(m)}^T U^{(m)}_q x^{(m-1)}_{n'}/\sqrt{D} \right) }
+$$
 
 ### Multi-Head Self-Attention Mechanism
 
