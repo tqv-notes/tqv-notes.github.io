@@ -11,9 +11,9 @@ Attention mechanism (as discussed in [Attention Mechanisms and Transformers](htt
 
 We first describe the single graph attention layer and then multi-head attention layer.
 
-In the single graph attention layer, the input is a set of node features \\( \textbf{h} = {h_1, h_2, \dots, h_N}\\) with \\( h_i \in \mathbb{R}^F \\), and \\( N, F\\) are number of nodes and number of features respectively.
+In the single graph attention layer, the input is a set of node features \\( \textbf{h} = \\{h_1, h_2, \dots, h_N\\}\\) with \\( h_i \in \mathbb{R}^F \\), and \\( N, F\\) are number of nodes and number of features respectively.
 
-The purpose of (self-) attention layer is to learn the relationship between nodes (how important the node \\(j\\) to the node \\(i\\)). To do this, we first linearly transform \\(\textbf{h}\\) to \\( \textbf{h}^\prime = {h_1^\prime, h_2^\prime, \dots, h_N^\prime}\\) with \\(h_i^\prime \in \mathbb{R}^{F^\prime}\\).
+The purpose of (self-) attention layer is to learn the relationship between nodes (how important the node \\(j\\) to the node \\(i\\)). To do this, we first linearly transform \\(\textbf{h}\\) to \\( \textbf{h}^\prime = \\{h_1^\prime, h_2^\prime, \dots, h_N^\prime\\}\\) with \\(h_i^\prime \in \mathbb{R}^{F^\prime}\\).
 
 $$
 
