@@ -17,12 +17,12 @@ The purpose of (self-) attention layer is to learn the relationship between node
 
 $$
 
-\alpha_{ij} = \frac{ \exp\left(\text{LeakyReLU}\left(a^T \begin{bmatrix}
-           W h_i \\
-           W h_j
+\alpha_{ij} = \frac{ \exp\left(\text{LeakyReLU}\left(\textbf{a}^T \begin{bmatrix}
+           \textbf{W} h_i \\
+           \textbf{W} h_j
          \end{bmatrix} \right)\right) }{ \sum_{k\in \mathcal{N}_i} \exp\left(\text{LeakyReLU}\left(a^T \begin{bmatrix}
-           W h_i \\
-           W h_j
+           \textbf{W} h_i \\
+           \textbf{W} h_j
          \end{bmatrix} \right)\right) }
 
 $$
