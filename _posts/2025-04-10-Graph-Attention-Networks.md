@@ -13,7 +13,7 @@ We first describe the single graph attention layer and then multi-head attention
 
 In the single graph attention layer, the input is a set of node features \\( \textbf{h} = \\{h_1, h_2, \dots, h_N\\}\\) with \\( h_i \in \mathbb{R}^F \\), and \\( N, F\\) are number of nodes and number of features respectively.
 
-The purpose of (self-) attention layer is to learn the relationship between nodes (how important the node \\(j\\) to the node \\(i\\)). To do this, we first linearly transform \\(\textbf{h}\\) to \\( \textbf{h}^\prime = \\{h_1^\prime, h_2^\prime, \dots, h_N^\prime\\}\\) via a weight matrix \\(\textbf{W}\\) with \\(h_i^\prime \in \mathbb{R}^{F^\prime}\\) and then preform dot-product with the attention weight vector \\(\textbf{a}\\)) before applying an activation function (here, the \\( \text{LeakyReLU} \\) function is used). The output of these steps is then normalized via a softmax function. Put everything together, we have the formula to calculate the attention coeffficients as:
+The purpose of (self-) attention layer is to learn the relationship between nodes (how important the node \\(j\\) to the node \\(i\\)). To do this, we first linearly transform \\(\textbf{h}\\) to \\( \textbf{h}^\prime = \\{h_1^\prime, h_2^\prime, \dots, h_N^\prime\\}\\) (here \\(h_i^\prime \in \mathbb{R}^{F^\prime}\\)) via a weight matrix \\(\textbf{W}\\) and then preform dot-product with the attention weight vector \\(\textbf{a}\\)) before applying an activation function (here, the \\( \text{LeakyReLU} \\) function is used). The output of these steps is then normalized via a softmax function. Put everything together, we have the formula to calculate the attention coeffficients as:
 
 $$
 
