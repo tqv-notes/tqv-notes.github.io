@@ -7,7 +7,11 @@ categories: media
 
 In this post, we will explain the attention-based architecture for graphs (named as "graph attention networks"). This note is based on [Veličković et al., 2024](https://arxiv.org/abs/1710.10903).
 
-Attention mechanism (as discussed in [Attention Mechanisms and Transformers](https://tqv-notes.github.io/Attention-Mechanisms-and-Transformers//) was orginally invented for natural language processing tasks where we can see input/output as a sequence of data. Based on this pioneering work, the graph attention networks (GAT) was proposed to efficiently deal with graph-structured data.
+Attention mechanism (as discussed in [Attention Mechanisms and Transformers](https://tqv-notes.github.io/Attention-Mechanisms-and-Transformers//)). was orginally invented for natural language processing tasks where we can see input/output as a sequence of data. Based on this pioneering work, the graph attention networks (GAT) was proposed to efficiently deal with graph-structured data.
+
+We first describe the single graph attention layer and then multi-head attention layer.
+
+In the single graph attention layer, the input is a set of node features \\( \textbf{h} = \{h_1, h_2, \dots, h_N\}\\) with \\( h_i \in \mathbb{R}^F \\), \\( N, F\\) are number of nodes and number of features respectively.
 
 $$
 
