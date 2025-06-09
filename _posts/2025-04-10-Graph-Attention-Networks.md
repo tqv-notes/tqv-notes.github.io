@@ -26,3 +26,19 @@ $$
          \end{bmatrix} \right)\right) }
 
 $$
+
+The normalized attention coefficients \\( \\{\alpha_{ij}\\}\\) are then used to calculate the final output as:
+
+$$
+h_i^\prime = \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha_{ij} \textbf{W} h_j \right)
+$$
+
+$$
+h_i^\prime = 
+\begin{bmatrix}
+\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(1)}_{ij} \textbf{W}^{(1)} h_j \right) \\
+\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(2)}_{ij} \textbf{W}^{(2)} h_j \right) \\
+\vdots\\
+\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(K)}_{ij} \textbf{W}^{(K)} h_j \right)
+\end{bmatrix}
+$$
