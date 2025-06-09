@@ -9,6 +9,6 @@ In this post, we will explain the attention-based architecture for graphs (named
 
 $$
 
-\alpha_{ij} = \frac{ \exp\left(LeakyReLU\left(a^T \[W h_i || W h_j\] \right)\right) }{ \sum_{k\in \mathcal{N}_i} \exp\left(LeakyReLU\left(a^T \[W h_i || W h_k\] \right)\right) }
+\alpha_{ij} = \frac{ \exp\left(LeakyReLU\left(a^T [W h_i || W h_j] \right)\right) }{ \sum_{k\in \mathcal{N}_i} \exp\left(LeakyReLU\left(a^T [W h_i || W h_k] \right)\right) }
 
 $$
