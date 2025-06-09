@@ -33,6 +33,8 @@ $$
 h_i^\prime = \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha_{ij} \textbf{W} h_j \right)
 $$
 
+To help the learning process of the attention layer, it is beneficial to extend this mechanism to multi-head attention where K independent attention mechanisms are used and the final output can be the concatenation of all outputs of K independent attentions:
+
 $$
 h_i^\prime = 
 \begin{bmatrix}
@@ -42,6 +44,8 @@ h_i^\prime =
 \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(K)}_{ij} \textbf{W}^{(K)} h_j \right)
 \end{bmatrix}
 $$
+
+or an average of all K independent attentions as:
 
 $$
 h_i^\prime = \sigma\left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}_i} \alpha^{(k)}_{ij} \textbf{W}^{(k)} h_j \right)
