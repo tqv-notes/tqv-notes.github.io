@@ -36,9 +36,13 @@ $$
 $$
 h_i^\prime = 
 \begin{bmatrix}
-\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(1)}_{ij} \textbf{W}^{(1)} h_j \right) \\
-\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(2)}_{ij} \textbf{W}^{(2)} h_j \right) \\
+\sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(1)}_{ij} \textbf{W}^{(1)} h_j \right) \\
+\sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(2)}_{ij} \textbf{W}^{(2)} h_j \right) \\
 \vdots\\
-\textbf{W} \sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(K)}_{ij} \textbf{W}^{(K)} h_j \right)
+\sigma\left( \sum_{j \in \mathcal{N}_i} \alpha^{(K)}_{ij} \textbf{W}^{(K)} h_j \right)
 \end{bmatrix}
+$$
+
+$$
+h_i^\prime = \sigma\left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}_i} \alpha^{(k)}_{ij} \textbf{W}^{(k)} h_j \right)
 $$
