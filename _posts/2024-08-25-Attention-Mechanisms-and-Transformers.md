@@ -105,6 +105,7 @@ class AttentionModel(torch.nn.Module):
         summary = torch.einsum('bij, bje -> bie', att, values)[:,0,:]
         pred = self.head_mlp(summary)
         return pred, att, values
+
 def train():
     model = AttentionModel()
     opt = torch.optim.Adam(model.parameters(), lr = 3e-4)
