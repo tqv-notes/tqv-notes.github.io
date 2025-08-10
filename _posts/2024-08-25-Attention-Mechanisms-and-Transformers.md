@@ -62,7 +62,6 @@ Put everything together, we have the diagram of transformer block as follows:
 In this example, we use attention mechanism to count digits without explicitly using any counting function: we will provide an array of 10 digits with values randomly selected from 0 to 9 and a label true if number of digit 4 is strickly larger than number of digit 2 and false otherwise. The model needs to learn from data how to recognize this pattern (number of digit 4 vs number of digit 2) and how to correctly label it.
 
 ```python
-
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
