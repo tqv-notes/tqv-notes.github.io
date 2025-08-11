@@ -50,3 +50,5 @@ or an average of all K independent attentions as:
 $$
 h_i^\prime = \sigma\left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}_i} \alpha^{(k)}_{ij} \textbf{W}^{(k)} h_j \right)
 $$
+
+A simple implementation in Jax framework can be found on the github repository: https://github.com/tqv-notes/graph_attention_networks
