@@ -23,7 +23,7 @@ $$
 a(q,k_i) = \frac{ \exp(f(q,k_i)) }{ \sum_{j=1}^n \exp(f(q,k_j)) }
 $$
 
-with \\(f(q,k_i)\\) is the function that estimate the "similarity" or "closeness" betwen query and key. In deep learning, the choice of function \\(f\\) is usually a scaled dot product function i.e. \\(f(q,k_i) = q^T k_i / \sqrt{d}\\) with \\(d) is the dimension of key and query.
+with \\(f(q,k_i)\\) is the function that estimate the "similarity" or "closeness" betwen query and key. In deep learning, the choice of function \\(f\\) is usually a scaled dot product function i.e. \\(f(q,k_i) = q^T k_i / \sqrt{d}\\) with \\(d\\) is the dimension of key and query.
 
 In a more abstract picture, if we denote all values as a matrix input \\(X\\), the attention weights as a matrix \\(A\\) and attention output as a matrix \\(Y\\), then the attention mechanism can be seen simply as a linear transformation of input as:
 
