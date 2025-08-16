@@ -76,6 +76,12 @@ Put everything together, we have the diagram of transformer block as follows:
 In this example, we use attention mechanism to count digits without explicitly using any counting function: we will provide an array of 10 digits with values randomly selected from 0 to 9 and a label true if number of digit 4 is strickly larger than number of digit 2 and false otherwise. The model needs to learn from data how to recognize this pattern (number of digit 4 vs number of digit 2) and how to correctly label it.
 
 ```python
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 15 22:38:54 2025
+
+@author: qtran
+"""
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
@@ -97,27 +103,27 @@ class AttentionModel(torch.nn.Module):
         self.key_func = torch.nn.Linear(16, 32)
         
         self.value_func = torch.nn.Sequential(
-                        torch.nn.Linear(32,64),
+                        torch.nn.Linear(16,32),
                         torch.nn.ReLU(),
-                        torch.nn.Linear(64,1)
+                        torch.nn.Linear(32,1)
                     )
         
         self.head_mlp = torch.nn.Sequential(
-            torch.nn.Linear(1,64),
+            torch.nn.Linear(1,32),
             torch.nn.ReLU(),
-            torch.nn.Linear(64,1),
+            torch.nn.Linear(32,1),
             torch.nn.Sigmoid()
         )
 
     def forward(self,X):
-        embedX = self.embed_func(X)
-        keys = self.key_func(embedX)
-        qk = torch.einsum('ie, bje -> bij', self.query, keys)
+        embedX = self.embed_func(X) # [123, 10, 16]
+        keys = self.key_func(embedX) # [123, 10, 32]
+        qk = torch.einsum('ie, bje -> bij', self.query, keys) # [1,32] x [123, 10, 32] -> [123, 1, 10]     
         qk = qk / (32**0.5)
-        att = torch.nn.functional.softmax(qk, dim=-1)
-        values = value_func(embedX)
-        summary = torch.einsum('bij, bje -> bie', att, values)[:,0,:]
-        pred = self.head_mlp(summary)
+        att = torch.nn.functional.softmax(qk, dim=-1) # [123, 1, 10]
+        values = self.value_func(embedX) # [123, 10, 1]
+        summary = torch.einsum('bij, bje -> bie', att, values)[:,0,:] # [123, 1]
+        pred = self.head_mlp(summary) # [123, 1]
         return pred, att, values
 
 def train():
