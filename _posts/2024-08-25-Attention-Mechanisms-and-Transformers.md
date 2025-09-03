@@ -73,7 +73,7 @@ Put everything together, we have the diagram of transformer block as follows:
 
 ## Simple example of attention mechanism
 
-In this example, we use attention mechanism to count digits without explicitly using any counting function: we will provide an array of 10 digits with values randomly selected from 0 to 9 and a label true if number of digit 4 is strickly larger than number of digit 2 and false otherwise. The model needs to learn from data how to recognize this pattern (number of digit 4 vs number of digit 2) and how to correctly label it.
+In this example, we use attention mechanism to count digits without explicitly using any counting function: we will provide an array of 10 digits with values randomly selected from 0 to 9 and a label true if number of digit 4 is strickly larger than number of digit 2 and false otherwise. From the data, the model will recognize the importance of digits 2 and 4 and how to distinguish these two digits from others.  
 
 ```python
 import torch
@@ -125,7 +125,6 @@ def train():
     opt = torch.optim.Adam(model.parameters(), lr = 3e-4)
     losses = []
     for idx in range(5000):
-        X, y = generate_data(123)
         p, a, v = model(X)
         loss = torch.nn.functional.binary_cross_entropy(p, y)
         losses.append(float(loss))
@@ -153,7 +152,7 @@ if __name__ == "__main__":
     plt.gcf().set_size_inches(10,1)
     plt.show()
     
-    message = v[:,:,0]
+    # message = v[:,:,0]
     message = np.where(a[0] > 0.1, v[:,:,0], np.nan*v[:,:,0])
     plt.imshow(message)
     
