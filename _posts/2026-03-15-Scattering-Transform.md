@@ -159,7 +159,7 @@ $$d_{J+1}(x, x') \leq d_J(x, x')$$
 and in the limit it is translation invariant:
 $$\lim_{J \to \infty} \| S_J[P_J] x - S_J[P_J] x_v \| = 0, \quad \forall x, v$$
 
-where $x_v(u) = x(u - v)$.
+where \\(x_v(u) = x(u - v)\\).
 
 ### 5.4 Lipschitz Stability to Deformations
 
