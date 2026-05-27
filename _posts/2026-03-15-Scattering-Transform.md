@@ -139,7 +139,7 @@ Input x
 **Proposition.** The windowed scattering transform is non-expansive:
 $$\| S_J[P_J] x - S_J[P_J] x' \| \leq \| x - x' \|, \quad \forall x, x' \in L^2(\mathbb{R}^d)$$
 
-This follows because (1) the Littlewood-Paley wavelet frame satisfies $\|W_J x\| \leq \|x\|$, and (2) the modulus satisfies $\| |a| - |b| \| \leq \|a - b\|$. Their composition is also non-expansive.
+This follows because (1) the Littlewood-Paley wavelet frame satisfies $\|W_J x\| \leq \|x\|$, and (2) the modulus satisfies $\| \|a\| - \|b\| \| \leq \|a - b\|$. Their composition is also non-expansive.
 
 ### 5.2 Energy Conservation and Exponential Decay
 
@@ -175,7 +175,7 @@ The bound decomposes into:
 - **Deformation term** $\|\nabla\tau\|_\infty$: controlled by scale separation in the wavelet decomposition
 - **Curvature term** $\|H\tau\|_\infty$: second-order correction
 
-The proof hinges on controlling the commutator $[W_J, L_\tau] = W_J L_\tau - L_\tau W_J$ between the wavelet transform and the deformation operator, which is bounded by $\|\nabla\tau\|$ due to the scale-localization property of wavelets.
+The proof hinges on controlling the commutator \\( \[W_J, L_\tau\] = W_J L_\tau - L_\tau W_J\\) between the wavelet transform and the deformation operator, which is bounded by $\|\nabla\tau\|$ due to the scale-localization property of wavelets.
 
 ---
 
