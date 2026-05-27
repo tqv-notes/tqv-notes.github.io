@@ -56,7 +56,11 @@ The LLM formatter for answer cleanup was also replaced with deterministic regex.
 
 Two final fixes addressed the remaining infrastructure issues. DuckDuckGo's unreliability from HF Spaces was mitigated by adding Tavily as the primary search engine (free tier, 1000 searches/month), with DDG as fallback. Tavily also returns a direct `answer` field that often contains exactly what GAIA needs.
 
-The file download issue was traced to its root cause: the scoring API's `/files/{task_id}` endpoint returns `"No file path associated with task_id"` for all tasks. The files exist on the HuggingFace dataset repository, not the scoring API. Changing the download URL to `https://huggingface.co/datasets/gaia-benchmark/GAIA/resolve/main/2023/validation/{file_name}` should unlock the 5 file-dependent questions that have been failing since the beginning.
+The file download issue was traced to its root cause: the scoring API's `/files/{task_id}` endpoint returns `"No file path associated with task_id"` for all tasks. The files exist on the HuggingFace dataset repository, not the scoring API. I decided to change the download URL to: 
+<div align="center">
+https://huggingface.co/datasets/gaia-benchmark/GAIA/resolve/main/2023/validation/{file_name}.
+</div>
+This should unlock the 5 file-dependent questions that have been failing since the beginning.
 
 ## Lessons Learned
 
