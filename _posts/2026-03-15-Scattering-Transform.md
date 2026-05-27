@@ -60,18 +60,18 @@ A key structural consequence is **scale separation**: since deformations act dif
 
 ## 3. Why Fourier Fails
 
-The Fourier modulus $\Phi(x) = |\hat{x}(\omega)|$ is translation invariant and stable to additive noise, but it is **catastrophically unstable to deformations at high frequencies**.
+The Fourier modulus \\( \Phi(x) = |\hat{x}(\omega)| \\) is translation invariant and stable to additive noise, but it is **catastrophically unstable to deformations at high frequencies**.
 
 ### The Dilation Example
 
-Let $\tau(u) = su$ be a small uniform dilation ($|s| \ll 1$), and let $x(u) = e^{i\xi u} \theta(u)$ be a modulated window centered at frequency $\xi$. The dilated signal $x_\tau(u) = x((1+s)u)$ has its central frequency shifted to $(1+s)\xi$.
+Let \\(\tau(u) = su\\) be a small uniform dilation (\\(|s| \ll 1\\)), and let \\(x(u) = e^{i\xi u} \theta(u)\\) be a modulated window centered at frequency \\(\xi\\). The dilated signal \\(x_\tau(u) = x((1+s)u)\\) has its central frequency shifted to \\((1+s)\xi\\).
 
-The frequency spread of $x$ is $\sigma_\theta^2 = \int |\omega - \xi|^2 |\hat{\theta}(\omega)|^2 d\omega$, and after dilation it becomes $(1+s)^2 \sigma_\theta^2$.
+The frequency spread of \\(x\\) is \\(\sigma_\theta^2 = \int |\omega - \xi|^2 |\hat{\theta}(\omega)|^2 d\omega\\), and after dilation it becomes \\((1+s)^2 \sigma_\theta^2\\).
 
-When the frequency shift $s\xi$ is large compared to the bandwidth $\sigma_\theta$, the supports of $|\hat{x}|$ and $|\hat{x}_\tau|$ are nearly disjoint, so:
+When the frequency shift \\(s\xi\\) is large compared to the bandwidth \\(\sigma_\theta\\), the supports of \\(|\hat{x}|\\) and \\(|\hat{x}_\tau|\\) are nearly disjoint, so:
 $$\| |\hat{x}_\tau| - |\hat{x}| \| \approx \| x \|$$
 
-This is an $O(1)$ error from an arbitrarily small deformation when $\xi$ is large. The Fourier modulus is **not Lipschitz continuous** with respect to deformations.
+This is an \\(O(1)\\) error from an arbitrarily small deformation when \\(\xi\\) is large. The Fourier modulus is **not Lipschitz continuous** with respect to deformations.
 
 The fix is to band-limit the signal before measuring it - that is, to use a **wavelet transform** that isolates each frequency band before applying a modulus nonlinearity.
 
@@ -182,6 +182,8 @@ The proof hinges on controlling the commutator $[W_J, L_\tau] = W_J L_\tau - L_\
 ## Demo 1 - The Cascade: Energy Decay Across Layers
 
 This demo builds a synthetic multi-scale signal and visualizes how energy is distributed across scattering orders. The theoretical prediction - exponential decay with path depth - is confirmed empirically.
+
+Important note for installation: `pip install kymatio numpy scipy matplotlib`
 
 ```python
 """
@@ -771,5 +773,3 @@ The scattering transform occupies a unique position: it is simultaneously a theo
 6. Bacry, E., & Muzy, J.-F. (2003). *Log-infinitely divisible multiscale random walk processes*. Communications in Mathematical Physics, 236(3), 449–475.
 
 ---
-
-*Install requirements: `pip install kymatio numpy scipy matplotlib`*
