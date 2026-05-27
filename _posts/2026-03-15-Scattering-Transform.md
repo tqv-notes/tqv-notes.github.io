@@ -84,7 +84,7 @@ The fix is to band-limit the signal before measuring it - that is, to use a **wa
 A Littlewood-Paley wavelet transform is built from a mother wavelet $\psi \in L^2(\mathbb{R}^d)$ by dilating and rotating:
 $$\psi_\lambda(u) = a^{-dj} \psi(a^{-j} r^{-1} u), \quad \lambda = a^j r$$
 
-where $j \in \mathbb{Z}$ controls scale ($a^j$ is the scale factor, typically $a = 2$) and $r \in G$ is a rotation. The Littlewood-Paley condition ensures the filter bank is a tight frame:
+where \\(j \in \mathbb{Z}\\) controls scale (\\(a^j\\) is the scale factor, typically \\(a = 2\\)) and \\(r \in G\\) is a rotation. The Littlewood-Paley condition ensures the filter bank is a tight frame:
 
 $$1 - \varepsilon \leq |\hat{\phi}(2^J \omega)|^2 + \frac{1}{2} \sum_{j \leq J} \sum_{r \in G} |\hat{\psi}(2^j r \omega)|^2 \leq 1$$
 
@@ -92,24 +92,24 @@ This means the decomposition is *energy-preserving* and *invertible*.
 
 ### 4.2 The Modulus Nonlinearity
 
-Wavelet coefficients $x \star \psi_\lambda(u)$ are not translation invariant. Their average is zero (wavelets have zero mean). The key step is to apply the complex modulus:
+Wavelet coefficients \\(x \star \psi_\lambda(u)\\) are not translation invariant. Their average is zero (wavelets have zero mean). The key step is to apply the complex modulus:
 $$|x \star \psi_\lambda(u)|$$
 
-This produces a non-negative, non-zero envelope that is roughly translation invariant at the scale of $\psi_\lambda$. The modulus is the *only* nonlinearity that:
+This produces a non-negative, non-zero envelope that is roughly translation invariant at the scale of \\(\psi_\lambda\\). The modulus is the *only* nonlinearity that:
 - Is non-expansive: $\| \|a\| - \|b\| \| \leq \| a - b \|$
 - Preserves signal energy across layers
 
 ### 4.3 The Cascade
 
-Averaging $\|x \star \psi_\lambda\|$ over a window of size $2^J$ gives a translation-invariant first-order feature:
+Averaging \\(\|x \star \psi_\lambda\|\\) over a window of size \\(2^J\\) gives a translation-invariant first-order feature:
 $$S_J[\lambda_1] x(u) = \|x \star \psi_{\lambda_1}\| \star \phi_{2^J}(u)$$
 
-But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to $\|x \star \psi_{\lambda_1}\|$, taking the modulus again, and averaging.
+But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to \\(\|x \star \psi_{\lambda_1}\|\\), taking the modulus again, and averaging.
 
 This produces second-order coefficients:
 $$S_J[\lambda_1, \lambda_2] x(u) = \big| |x \star \psi_{\lambda_1}| \star \psi_{\lambda_2} \big| \star \phi_{2^J}(u)$$
 
-Iterating this process defines the full scattering transform. For a **path** $p = (\lambda_1, \lambda_2, \ldots, \lambda_m)$, we define the propagator:
+Iterating this process defines the full scattering transform. For a **path** \\(p = (\lambda_1, \lambda_2, \ldots, \lambda_m)\\), we define the propagator:
 $$U[p]x = \big| \cdots \big| |x \star \psi_{\lambda_1}| \star \psi_{\lambda_2} \big| \cdots \big| \star \psi_{\lambda_m} \big|$$
 
 and the scattering coefficient:
