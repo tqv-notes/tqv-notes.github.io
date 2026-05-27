@@ -13,6 +13,10 @@ The benchmark is part of the Hugging Face Agents Course (Unit 4), where particip
 
 ## Architecture Evolution
 
+Here, I will describe the evolution of different attempts to build an AI agent for GAIA benchmark. 
+
+Important note: I implemented a custom tool-use agent directly on the Anthropic API, without using agent frameworks like smolagents, LangGraph, or LlamaIndex. The core is a ReAct-style loop - the LLM reasons, calls tools, observes results, and repeats - wrapped with deterministic preprocessing and postprocessing stages. This framework-free approach traded convenience for full control over file handling, error recovery, and answer formatting.
+
 ### Attempt 1: Naive LLM Loop (0%)
 
 The starting point was a template with a `BasicAgent` that returned a hardcoded answer. Replacing it with a simple Claude API call and tool definitions got the structure right, but the first real run scored 0% - the model string was outdated (`claude-sonnet-4-20250514` had been deprecated), and every API call returned a 404.
