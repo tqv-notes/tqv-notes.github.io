@@ -412,7 +412,7 @@ plt.savefig("demo2_stability.png", dpi=150, bbox_inches='tight')
 plt.show()
 ```
 
-The bottom-right panel is the key result: the Fourier error grows rapidly and nonlinearly with deformation amplitude, while the scattering error grows slowly and approximately *linearly* - consistent with the Lipschitz bound $\|S_J x_\tau - S_J x\| \lesssim \|\nabla\tau\|_\infty$.
+The bottom-right panel is the key result: the Fourier error grows rapidly and nonlinearly with deformation amplitude, while the scattering error grows slowly and approximately *linearly* - consistent with the Lipschitz bound \\(\|S_J x_\tau - S_J x\| \lesssim \|\nabla\tau\|_\infty\\).
 
 ---
 
@@ -420,7 +420,7 @@ The bottom-right panel is the key result: the Fourier error grows rapidly and no
 
 This demo reproduces the central experiment from Section 4.2 of Mallat (2012): two stochastic processes with **identical power spectra** (i.e., identical second-order statistics) but different higher-order statistics. The Fourier modulus cannot distinguish them; second-order scattering can.
 
-The theoretical explanation: the expected scattering coefficient $\mathbb{E}[S_J[p]X]$ for a path $p$ of length $m$ captures moments of $X$ up to order $2^m$. First-order scattering ($m=1$) depends only on second-order moments (the power spectrum); second-order scattering ($m=2$) depends on up to fourth-order moments, enabling discrimination.
+The theoretical explanation: the expected scattering coefficient \\(\mathbb{E}[S_J[p]X]\\) for a path \\(p\\) of length \\(m\\) captures moments of \\(X\\) up to order \\(2^m\\). First-order scattering (\\(m=1\\)) depends only on second-order moments (the power spectrum); second-order scattering (\\(m=2\\)) depends on up to fourth-order moments, enabling discrimination.
 
 ```python
 """
@@ -575,7 +575,7 @@ One of the most powerful applications of scattering is robust estimation of *mul
 For a self-similar process with Hurst exponent $H$, the renormalized first-order scattering satisfies:
 $$\tilde{S}_X(j) := \frac{\mathbb{E}[|X \otimes \psi_j|]}{\mathbb{E}[|X \otimes \psi_0|]} = 2^{jH}$$
 
-and the deviation from linearity of $\log \tilde{S}_X(j)$ vs. $j$ measures intermittency (the curvature of the scaling exponent $\zeta(q)$).
+and the deviation from linearity of \\(\log \tilde{S}_X(j)\\) vs. \\(j\\) measures intermittency (the curvature of the scaling exponent \\(\zeta(q)\\)).
 
 ```python
 """
@@ -723,7 +723,7 @@ The three processes are designed to have progressively more intermittency:
 - **OU**: non-power-law curve (finite correlation length → rolls off at large scales)
 - **MRW**: non-linear log-scattering curve with clear curvature - the "signature" of multifractality
 
-The curvature $\zeta(2) - 2\zeta(1) < 0$ is directly detectable from the decay of second-order scattering coefficients $\tilde{S}(j_1, j_2)$ as a function of $j_2 - j_1$, providing a statistically robust intermittency estimator.
+The curvature \\(\zeta(2) - 2\zeta(1) < 0\\) is directly detectable from the decay of second-order scattering coefficients \\(\tilde{S}(j_1, j_2)\\) as a function of \\(j_2 - j_1\\), providing a statistically robust intermittency estimator.
 
 ---
 
@@ -731,19 +731,19 @@ The curvature $\zeta(2) - 2\zeta(1) < 0$ is directly detectable from the decay o
 
 ### Roto-Translation Scattering
 
-For images, the scattering transform extends to the roto-translation group $G_\text{rot} \cong \mathbb{R}^2 \rtimes SO(2)$, building joint invariants to both translations and rotations. The key distinction from a *separable* approach (first translation-invariant, then rotation-invariant) is that the joint representation can discriminate textures that a separable one cannot - for example, distinguishing a texture from its mirror image.
+For images, the scattering transform extends to the roto-translation group \\(G_\text{rot} \cong \mathbb{R}^2 \rtimes SO(2)\\), building joint invariants to both translations and rotations. The key distinction from a *separable* approach (first translation-invariant, then rotation-invariant) is that the joint representation can discriminate textures that a separable one cannot - for example, distinguishing a texture from its mirror image.
 
 ### Time-Frequency Scattering for Audio
 
-Audio recognition requires stability to both time-warps and frequency transpositions. The signal is first lifted to the time-frequency plane via a scalogram $z(t, \lambda) = |x \otimes \psi_\lambda(t)|$, and then a *joint* wavelet decomposition is applied to $z$ over the roto-translation group of time-frequency shifts. This is the basis of state-of-the-art audio classification systems.
+Audio recognition requires stability to both time-warps and frequency transpositions. The signal is first lifted to the time-frequency plane via a scalogram \\(z(t, \lambda) = \|x \otimes \psi_\lambda(t)\|\\), and then a *joint* wavelet decomposition is applied to \\(z\\) over the roto-translation group of time-frequency shifts. This is the basis of state-of-the-art audio classification systems.
 
 ### Quantum Chemistry (Solid Harmonic Scattering)
 
-For 3D molecular signals, rotational and translational invariance are physically mandated - quantum-mechanical energies cannot depend on the molecule's orientation. Scattering representations over $SO(3)$ using solid harmonic wavelets achieve competitive accuracy on QM7/QM9 datasets for energy regression, with formal stability guarantees.
+For 3D molecular signals, rotational and translational invariance are physically mandated - quantum-mechanical energies cannot depend on the molecule's orientation. Scattering representations over \\(SO(3)\\) using solid harmonic wavelets achieve competitive accuracy on QM7/QM9 datasets for energy regression, with formal stability guarantees.
 
 ### Graph and Manifold Scattering
 
-For data on graphs (social networks, molecular graphs), there is no global group structure. The scattering formalism extends by replacing Euclidean wavelets with **diffusion wavelets** built from the graph Laplacian $L = D - A$. The $k$-th diffusion wavelet captures signal variations at the $k$-th diffusion time scale. Geometric stability is now expressed in terms of metric perturbations of the graph structure.
+For data on graphs (social networks, molecular graphs), there is no global group structure. The scattering formalism extends by replacing Euclidean wavelets with **diffusion wavelets** built from the graph Laplacian \\(L = D - A\\). The \\(k\\)-th diffusion wavelet captures signal variations at the $k$-th diffusion time scale. Geometric stability is now expressed in terms of metric perturbations of the graph structure.
 
 ---
 
