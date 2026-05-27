@@ -96,15 +96,15 @@ Wavelet coefficients $x \star \psi_\lambda(u)$ are not translation invariant. Th
 $$|x \star \psi_\lambda(u)|$$
 
 This produces a non-negative, non-zero envelope that is roughly translation invariant at the scale of $\psi_\lambda$. The modulus is the *only* nonlinearity that:
-- Is non-expansive: $\| |a| - |b| \| \leq \| a - b \|$
+- Is non-expansive: $\| \|a\| - \|b\| \| \leq \| a - b \|$
 - Preserves signal energy across layers
 
 ### 4.3 The Cascade
 
-Averaging $|x \star \psi_\lambda|$ over a window of size $2^J$ gives a translation-invariant first-order feature:
-$$S_J[\lambda_1] x(u) = |x \star \psi_{\lambda_1}| \star \phi_{2^J}(u)$$
+Averaging $\|x \star \psi_\lambda\|$ over a window of size $2^J$ gives a translation-invariant first-order feature:
+$$S_J[\lambda_1] x(u) = \|x \star \psi_{\lambda_1}\| \star \phi_{2^J}(u)$$
 
-But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to $|x \star \psi_{\lambda_1}|$, taking the modulus again, and averaging.
+But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to $\|x \star \psi_{\lambda_1}\|$, taking the modulus again, and averaging.
 
 This produces second-order coefficients:
 $$S_J[\lambda_1, \lambda_2] x(u) = \big| |x \star \psi_{\lambda_1}| \star \psi_{\lambda_2} \big| \star \phi_{2^J}(u)$$
@@ -118,7 +118,7 @@ $$S_J[p]x(u) = U[p]x \star \phi_{2^J}(u)$$
 The resulting architecture is a convolutional network whose filters are fixed wavelets, not learned parameters.
 
 ```
-Input x
+Input x 
    │
    ├── S_J[∅]x = x ★ φ_J                  (order 0: low-pass average)
    │
