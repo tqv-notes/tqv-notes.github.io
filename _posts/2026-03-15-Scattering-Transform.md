@@ -38,21 +38,21 @@ The scattering transform is a hand-crafted signal representation that provably e
 
 ### 2.1 The Setting
 
-Let $x \in L^2(\mathbb{R}^d)$ be a signal (e.g., an image or audio waveform). We want to build a representation $\Phi(x) \in \mathbb{R}^K$ to feed into a linear classifier $\hat{f}(x) = \langle \Phi(x), \theta \rangle$.
+Let \\(x \in L^2(\mathbb{R}^d)\\) be a signal (e.g., an image or audio waveform). We want to build a representation \\(\Phi(x) \in \mathbb{R}^K\\) to feed into a linear classifier \\(\hat{f}(x) = \langle \Phi(x), \theta \rangle\\).
 
-For this to generalize well, $\Phi$ must satisfy two things:
+For this to generalize well, \\(\Phi\\) must satisfy two things:
 
 **Stability to additive noise:**
 $$\| \Phi(x) - \Phi(x') \| \lesssim \| x - x' \|$$
 
-**Stability to deformations:** Given a smooth displacement field $\tau : \mathbb{R}^d \to \mathbb{R}^d$, let $x_\tau(u) = x(u - \tau(u))$ be the deformed signal. We want:
+**Stability to deformations:** Given a smooth displacement field \\(\tau : \mathbb{R}^d \to \mathbb{R}^d\\), let \\(x_\tau(u) = x(u - \tau(u))\\) be the deformed signal. We want:
 $$\| \Phi(x_\tau) - \Phi(x) \| \lesssim \| x \| \cdot \| \tau \|$$
 
-where $\|\tau\|$ is some appropriate norm on the displacement field.
+where \\(\|\tau\|\\) is some appropriate norm on the displacement field.
 
 ### 2.2 Why Deformation Stability Is the Right Prior
 
-Global translation invariance ($f(T_v x) = f(x)$ for all translations $T_v$) is a weak constraint - the translation group is only $d$-dimensional. The space of local deformations is infinite-dimensional and captures far more natural variability: changes in viewpoint, non-rigid motion, pronunciation variation in speech.
+Global translation invariance (\\(f(T_v x) = f(x)\\) for all translations \\(T_v\\)) is a weak constraint - the translation group is only \\(d\\)-dimensional. The space of local deformations is infinite-dimensional and captures far more natural variability: changes in viewpoint, non-rigid motion, pronunciation variation in speech.
 
 A key structural consequence is **scale separation**: since deformations act differently at different frequencies, a deformation-stable representation must separate scales. This is precisely what wavelet decompositions do - and precisely what the layers of a CNN do implicitly.
 
@@ -60,16 +60,16 @@ A key structural consequence is **scale separation**: since deformations act dif
 
 ## 3. Why Fourier Fails
 
-The Fourier modulus \\( \Phi(x) = |\hat{x}(\omega)| \\) is translation invariant and stable to additive noise, but it is **catastrophically unstable to deformations at high frequencies**.
+The Fourier modulus \\( \Phi(x) = \|\hat{x}(\omega)\| \\) is translation invariant and stable to additive noise, but it is **catastrophically unstable to deformations at high frequencies**.
 
 ### The Dilation Example
 
-Let \\(\tau(u) = su\\) be a small uniform dilation (\\(|s| \ll 1\\)), and let \\(x(u) = e^{i\xi u} \theta(u)\\) be a modulated window centered at frequency \\(\xi\\). The dilated signal \\(x_\tau(u) = x((1+s)u)\\) has its central frequency shifted to \\((1+s)\xi\\).
+Let \\(\tau(u) = su\\) be a small uniform dilation (\\(\|s\| \ll 1\\)), and let \\(x(u) = e^{i\xi u} \theta(u)\\) be a modulated window centered at frequency \\(\xi\\). The dilated signal \\(x_\tau(u) = x((1+s)u)\\) has its central frequency shifted to \\((1+s)\xi\\).
 
-The frequency spread of \\(x\\) is \\(\sigma_\theta^2 = \int |\omega - \xi|^2 |\hat{\theta}(\omega)|^2 d\omega\\), and after dilation it becomes \\((1+s)^2 \sigma_\theta^2\\).
+The frequency spread of \\(x\\) is \\(\sigma_\theta^2 = \int \|\omega - \xi\|^2 |\hat{\theta}(\omega)\|^2 d\omega\\), and after dilation it becomes \\((1+s)^2 \sigma_\theta^2\\).
 
-When the frequency shift \\(s\xi\\) is large compared to the bandwidth \\(\sigma_\theta\\), the supports of \\(|\hat{x}|\\) and \\(|\hat{x}_\tau|\\) are nearly disjoint, so:
-$$\| |\hat{x}_\tau| - |\hat{x}| \| \approx \| x \|$$
+When the frequency shift \\(s\xi\\) is large compared to the bandwidth \\(\sigma_\theta\\), the supports of \\(\|\hat{x}\|\\) and \\(\|\hat{x}_\tau\|\\) are nearly disjoint, so:
+$$\| \|\hat{x}_\tau\| - \|\hat{x}\| \| \approx \| x \|$$
 
 This is an \\(O(1)\\) error from an arbitrarily small deformation when \\(\xi\\) is large. The Fourier modulus is **not Lipschitz continuous** with respect to deformations.
 
