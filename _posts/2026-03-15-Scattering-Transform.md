@@ -81,7 +81,7 @@ The fix is to band-limit the signal before measuring it - that is, to use a **wa
 
 ### 4.1 The Wavelet Filter Bank
 
-A Littlewood-Paley wavelet transform is built from a mother wavelet $\psi \in L^2(\mathbb{R}^d)$ by dilating and rotating:
+A Littlewood-Paley wavelet transform is built from a mother wavelet \\(\psi \in L^2(\mathbb{R}^d)\\) by dilating and rotating:
 $$\psi_\lambda(u) = a^{-dj} \psi(a^{-j} r^{-1} u), \quad \lambda = a^j r$$
 
 where \\(j \in \mathbb{Z}\\) controls scale (\\(a^j\\) is the scale factor, typically \\(a = 2\\)) and \\(r \in G\\) is a rotation. The Littlewood-Paley condition ensures the filter bank is a tight frame:
@@ -92,28 +92,28 @@ This means the decomposition is *energy-preserving* and *invertible*.
 
 ### 4.2 The Modulus Nonlinearity
 
-Wavelet coefficients \\(x \star \psi_\lambda(u)\\) are not translation invariant. Their average is zero (wavelets have zero mean). The key step is to apply the complex modulus:
-$$|x \star \psi_\lambda(u)|$$
+Wavelet coefficients \\(x \otimes \psi_\lambda(u)\\) are not translation invariant. Their average is zero (wavelets have zero mean). The key step is to apply the complex modulus:
+$$|x \otimes \psi_\lambda(u)|$$
 
 This produces a non-negative, non-zero envelope that is roughly translation invariant at the scale of \\(\psi_\lambda\\). The modulus is the *only* nonlinearity that:
-- Is non-expansive: $\| \|a\| - \|b\| \| \leq \| a - b \|$
+- Is non-expansive: \\(\| \|a\| - \|b\| \| \leq \| a - b \|\\)
 - Preserves signal energy across layers
 
 ### 4.3 The Cascade
 
-Averaging \\(\|x \star \psi_\lambda\|\\) over a window of size \\(2^J\\) gives a translation-invariant first-order feature:
-$$S_J[\lambda_1] x(u) = \|x \star \psi_{\lambda_1}\| \star \phi_{2^J}(u)$$
+Averaging \\(\|x \otimes \psi_\lambda\|\\) over a window of size \\(2^J\\) gives a translation-invariant first-order feature:
+$$S_J[\lambda_1] x(u) = \|x \otimes \psi_{\lambda_1}\| \otimes \phi_{2^J}(u)$$
 
-But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to \\(\|x \star \psi_{\lambda_1}\|\\), taking the modulus again, and averaging.
+But averaging discards information - specifically, the spatial modulation of the wavelet envelope. This lost information is recovered by applying *another* wavelet transform to \\(\|x \otimes \psi_{\lambda_1}\|\\), taking the modulus again, and averaging.
 
 This produces second-order coefficients:
-$$S_J[\lambda_1, \lambda_2] x(u) = \big| |x \star \psi_{\lambda_1}| \star \psi_{\lambda_2} \big| \star \phi_{2^J}(u)$$
+$$S_J[\lambda_1, \lambda_2] x(u) = \big| |x \otimes \psi_{\lambda_1}| \otimes \psi_{\lambda_2} \big| \otimes \phi_{2^J}(u)$$
 
 Iterating this process defines the full scattering transform. For a **path** \\(p = (\lambda_1, \lambda_2, \ldots, \lambda_m)\\), we define the propagator:
-$$U[p]x = \big| \cdots \big| |x \star \psi_{\lambda_1}| \star \psi_{\lambda_2} \big| \cdots \big| \star \psi_{\lambda_m} \big|$$
+$$U[p]x = \big| \cdots \big| |x \otimes \psi_{\lambda_1}| \otimes \psi_{\lambda_2} \big| \cdots \big| \otimes \psi_{\lambda_m} \big|$$
 
 and the scattering coefficient:
-$$S_J[p]x(u) = U[p]x \star \phi_{2^J}(u)$$
+$$S_J[p]x(u) = U[p]x \otimes \phi_{2^J}(u)$$
 
 The resulting architecture is a convolutional network whose filters are fixed wavelets, not learned parameters.
 
@@ -147,7 +147,7 @@ Under mild conditions on the wavelet (roughly: the wavelet is analytic and has a
 $$\|x\|^2 = \sum_{p \in P_\infty} \|S_J[p]x\|^2$$
 
 More importantly, the energy decays *exponentially* with path depth:
-$$R_{J,x}(m) := \sum_{|p|=m} \|U[p]x\|^2 \leq \|x\|^2 - \|x \star \chi_{ra^m}\|^2$$
+$$R_{J,x}(m) := \sum_{|p|=m} \|U[p]x\|^2 \leq \|x\|^2 - \|x \otimes \chi_{ra^m}\|^2$$
 
 where \\(\chi_s\\) is a Gaussian window of width \\(s\\). Energy at frequency \\(2^k\\) disappears after \\(O(k)\\) layers, so typical signals require no more than 2–3 layers. Empirically, on image datasets, over 99% of the energy is captured by paths of length \\(m \leq 2\\).
 
@@ -245,7 +245,7 @@ axes[0].set_ylabel("Amplitude")
 
 # 2. Order-0 scattering (low-pass average of entire signal)
 axes[1].plot(Sx[order == 0].T, color='#d7191c', lw=1.5)
-axes[1].set_title(r"Order 0:  $S_J[\emptyset]\,x = x \star \phi_{2^J}$  - global low-pass envelope")
+axes[1].set_title(r"Order 0:  $S_J[\emptyset]\,x = x \otimes \phi_{2^J}$  - global low-pass envelope")
 axes[1].set_xlabel("Spatial position (downsampled)")
 
 # 3. Order-1 coefficients as a heatmap over (time, scale)
@@ -573,7 +573,7 @@ The result is stark: order-1 scattering energies are nearly identical between th
 One of the most powerful applications of scattering is robust estimation of *multifractal* properties of stochastic processes. Classical wavelet moment estimators are unstable for heavy-tailed processes because high polynomial moments have large variance. Scattering moments are computed with a non-expansive operator and are therefore statistically stable.
 
 For a self-similar process with Hurst exponent $H$, the renormalized first-order scattering satisfies:
-$$\tilde{S}_X(j) := \frac{\mathbb{E}[|X \star \psi_j|]}{\mathbb{E}[|X \star \psi_0|]} = 2^{jH}$$
+$$\tilde{S}_X(j) := \frac{\mathbb{E}[|X \otimes \psi_j|]}{\mathbb{E}[|X \otimes \psi_0|]} = 2^{jH}$$
 
 and the deviation from linearity of $\log \tilde{S}_X(j)$ vs. $j$ measures intermittency (the curvature of the scaling exponent $\zeta(q)$).
 
@@ -735,7 +735,7 @@ For images, the scattering transform extends to the roto-translation group $G_\t
 
 ### Time-Frequency Scattering for Audio
 
-Audio recognition requires stability to both time-warps and frequency transpositions. The signal is first lifted to the time-frequency plane via a scalogram $z(t, \lambda) = |x \star \psi_\lambda(t)|$, and then a *joint* wavelet decomposition is applied to $z$ over the roto-translation group of time-frequency shifts. This is the basis of state-of-the-art audio classification systems.
+Audio recognition requires stability to both time-warps and frequency transpositions. The signal is first lifted to the time-frequency plane via a scalogram $z(t, \lambda) = |x \otimes \psi_\lambda(t)|$, and then a *joint* wavelet decomposition is applied to $z$ over the roto-translation group of time-frequency shifts. This is the basis of state-of-the-art audio classification systems.
 
 ### Quantum Chemistry (Solid Harmonic Scattering)
 
