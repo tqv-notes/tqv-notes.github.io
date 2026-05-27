@@ -86,7 +86,7 @@ A direct comparison showed Claude Sonnet at 50% vs. GPT-4.1 at 20% with the same
 
 **6. Study other implementations, but verify their assumptions.**
 
-Every open-source GAIA agent we studied used the scoring API's `/files/{task_id}` endpoint for downloads - because it worked when they built their agents. It no longer does. Infrastructure assumptions that were valid months ago may not hold today.
+Every open-source GAIA agent I cross-checked used the scoring API's `/files/{task_id}` endpoint for downloads - because it worked when they built their agents. It no longer does. Infrastructure assumptions that were valid months ago may not hold today.
 
 ## What Would Get to 80%+
 
