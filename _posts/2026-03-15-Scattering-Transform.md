@@ -755,7 +755,7 @@ For data on graphs (social networks, molecular graphs), there is no global group
 | Stable to additive noise | Y | Y |
 | Lipschitz to deformations | N | Y |
 | Energy conserving | N (information loss) | Y |
-| Captures higher-order moments | N | Y (order $m$ --> \\(2^m\\)-th moments) |
+| Captures higher-order moments | N | Y (order \\(m\\) --> \\(2^m\\)-th moments) |
 | Generalizes to non-Euclidean | N | Y (Lie groups, graphs, manifolds) |
 | Filters learned from data | N/A | N (mathematically fixed) |
 
