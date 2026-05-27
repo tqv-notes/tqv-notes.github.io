@@ -120,11 +120,11 @@ The resulting architecture is a convolutional network whose filters are fixed wa
 ```
 Input x 
    │
-   ├── S_J[∅]x = x ★ φ_J                  (order 0: low-pass average)
+   ├── S_J[∅]x = x ⊗ φ_J                  (order 0: low-pass average)
    │
-   ├── U[λ₁]x = |x ★ ψ_λ₁|
+   ├── U[λ₁]x = |x ⊗ ψ_λ₁|
    │     ├── S_J[λ₁]x                      (order 1 outputs)
-   │     └── U[λ₁,λ₂]x = |U[λ₁]x ★ ψ_λ₂|
+   │     └── U[λ₁,λ₂]x = |U[λ₁]x ⊗ ψ_λ₂|
    │           ├── S_J[λ₁,λ₂]x             (order 2 outputs)
    │           └── ...                     (order 3, ...)
    └── ...
