@@ -66,7 +66,7 @@ The Fourier modulus \\( \Phi(x) = \|\hat{x}(\omega)\| \\) is translation invaria
 
 Let \\(\tau(u) = su\\) be a small uniform dilation (\\(\|s\| \ll 1\\)), and let \\(x(u) = e^{i\xi u} \theta(u)\\) be a modulated window centered at frequency \\(\xi\\). The dilated signal \\(x_\tau(u) = x((1+s)u)\\) has its central frequency shifted to \\((1+s)\xi\\).
 
-The frequency spread of \\(x\\) is \\(\sigma_\theta^2 = \int \|\omega - \xi\|^2 |\hat{\theta}(\omega)\|^2 d\omega\\), and after dilation it becomes \\((1+s)^2 \sigma_\theta^2\\).
+The frequency spread of \\(x\\) is \\(\sigma_\theta^2 = \int \|\omega - \xi\|^2 \|\hat{\theta}(\omega)\|^2 d\omega\\), and after dilation it becomes \\((1+s)^2 \sigma_\theta^2\\).
 
 When the frequency shift \\(s\xi\\) is large compared to the bandwidth \\(\sigma_\theta\\), the supports of \\(\|\hat{x}\|\\) and \\(\|\hat{x}_\tau\|\\) are nearly disjoint, so:
 $$\| \|\hat{x}_\tau\| - \|\hat{x}\| \| \approx \| x \|$$
