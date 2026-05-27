@@ -139,7 +139,7 @@ Input x
 **Proposition.** The windowed scattering transform is non-expansive:
 $$\| S_J[P_J] x - S_J[P_J] x' \| \leq \| x - x' \|, \quad \forall x, x' \in L^2(\mathbb{R}^d)$$
 
-This follows because (1) the Littlewood-Paley wavelet frame satisfies $\|W_J x\| \leq \|x\|$, and (2) the modulus satisfies $\| \|a\| - \|b\| \| \leq \|a - b\|$. Their composition is also non-expansive.
+This follows because (1) the Littlewood-Paley wavelet frame satisfies \\(\|W_J x\| \leq \|x\|\\), and (2) the modulus satisfies \\(\| \|a\| - \|b\| \| \leq \|a - b\|\\). Their composition is also non-expansive.
 
 ### 5.2 Energy Conservation and Exponential Decay
 
@@ -149,11 +149,11 @@ $$\|x\|^2 = \sum_{p \in P_\infty} \|S_J[p]x\|^2$$
 More importantly, the energy decays *exponentially* with path depth:
 $$R_{J,x}(m) := \sum_{|p|=m} \|U[p]x\|^2 \leq \|x\|^2 - \|x \star \chi_{ra^m}\|^2$$
 
-where $\chi_s$ is a Gaussian window of width $s$. Energy at frequency $2^k$ disappears after $O(k)$ layers, so typical signals require no more than 2–3 layers. Empirically, on image datasets, over 99% of the energy is captured by paths of length $m \leq 2$.
+where \\(\chi_s\\) is a Gaussian window of width \\(s\\). Energy at frequency \\(2^k\\) disappears after \\(O(k)\\) layers, so typical signals require no more than 2–3 layers. Empirically, on image datasets, over 99% of the energy is captured by paths of length \\(m \leq 2\\).
 
 ### 5.3 Asymptotic Translation Invariance
 
-The scattering metric $d_J(x, x') := \|S_J[P_J]x - S_J[P_J]x'\|$ is non-increasing in $J$:
+The scattering metric $d_J(x, x') := \|S_J[P_J]x - S_J[P_J]x'\|$ is non-increasing in \\(J\\):
 $$d_{J+1}(x, x') \leq d_J(x, x')$$
 
 and in the limit it is translation invariant:
@@ -163,7 +163,7 @@ where $x_v(u) = x(u - v)$.
 
 ### 5.4 Lipschitz Stability to Deformations
 
-This is the central theorem. For a $C^2$ displacement field $\tau$ with $\|\nabla\tau\|_\infty \leq 1/2$:
+This is the central theorem. For a \\( C^2 \\) displacement field \\(\tau\\) with \\( \|\nabla\tau\|_\infty \leq 1/2 \\):
 
 $$\| S_J[P_J] x_\tau - S_J[P_J] x \| \leq C \|U[P_J]x\|_1 \cdot K(\tau)$$
 
@@ -171,9 +171,9 @@ where:
 $$K(\tau) = 2^{-J}\|\tau\|_\infty + \|\nabla\tau\|_\infty \max\!\left(1,\, \log \frac{\sup_{u,u'}|\tau(u)-\tau(u')|}{\|\nabla\tau\|_\infty}\right) + \|H\tau\|_\infty$$
 
 The bound decomposes into:
-- **Translation term** $2^{-J}\|\tau\|_\infty$: suppressed by increasing $J$, capturing local translation invariance
-- **Deformation term** $\|\nabla\tau\|_\infty$: controlled by scale separation in the wavelet decomposition
-- **Curvature term** $\|H\tau\|_\infty$: second-order correction
+- **Translation term** \\( 2^{-J}\|\tau\|_\infty \\): suppressed by increasing $J$, capturing local translation invariance
+- **Deformation term** \\( \|\nabla\tau\|_\infty \\): controlled by scale separation in the wavelet decomposition
+- **Curvature term** \\( \|H\tau\|_\infty \\): second-order correction
 
 The proof hinges on controlling the commutator \\( \[W_J, L_\tau\] = W_J L_\tau - L_\tau W_J\\) between the wavelet transform and the deformation operator, which is bounded by $\|\nabla\tau\|$ due to the scale-localization property of wavelets.
 
