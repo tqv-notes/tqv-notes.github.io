@@ -19,7 +19,7 @@ Important note: I implemented a custom tool-use agent directly on the Anthropic 
 
 ### Attempt 1: Naive LLM Loop (0%)
 
-The starting point was a template with a `BasicAgent` that returned a hardcoded answer. Replacing it with a simple Claude API call and tool definitions got the structure right, but the first real run scored 0% - the model string was outdated (`claude-sonnet-4-20250514` had been deprecated), and every API call returned a 404.
+The starting point was a template with a `BasicAgent` that returned a default answer. Replacing it with a simple Claude API call and tool definitions got the structure right, but the first real run scored 0% - the model string was outdated (`claude-sonnet-4-20250514` had been deprecated), and every API call returned a 404.
 
 Lesson: model identifiers change. Hardcoding them without a fallback is fragile.
 
@@ -35,7 +35,7 @@ Three changes pushed the score to 50%. First, adding a Wikipedia tool that fetch
 
 ### Attempt 4: Deterministic Preprocessing (65%)
 
-This was the architectural turning point, inspired by studying several high-scoring open-source implementations (70-77% accuracy). The key insight from those repos and from detailed failure analysis: stop asking the LLM to decide when and how to process files. Do it deterministically before the LLM ever sees the question.
+For this step, the key insight from detailed failure analysis: Stop asking the LLM to decide when and how to process files. Do it deterministically before the LLM ever sees the question.
 
 The pipeline became:
 
