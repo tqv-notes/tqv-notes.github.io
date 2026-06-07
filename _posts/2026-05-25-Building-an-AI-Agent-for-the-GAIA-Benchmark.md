@@ -88,10 +88,6 @@ DuckDuckGo works locally but is heavily throttled from shared cloud IPs. The Wik
 
 A direct comparison showed Claude Sonnet at 50% vs. GPT-4.1 at 20% with the same tool set and prompts. Claude was notably better at deciding when to use tools, recovering from failed searches by trying alternative queries, and following file processing instructions. GPT-4.1's `tool_choice="auto"` was less reliable for multi-step reasoning.
 
-**6. Study other implementations, but verify their assumptions.**
-
-Every open-source GAIA agent I cross-checked used the scoring API's `/files/{task_id}` endpoint for downloads - because it worked when they built their agents. It no longer does. Infrastructure assumptions that were valid months ago may not hold today.
-
 ## What Would Get to 80%+
 
 Based on the failure analysis, reaching higher accuracy would require addressing the remaining hard questions: YouTube videos where transcripts aren't available (frame extraction + OCR), web pages that require JavaScript rendering (Playwright), and multi-hop research questions where the agent needs to chain 3-4 specific web lookups without getting lost. Adding a verification pass - re-checking the answer against the original question before submitting - would also catch formatting errors that slip through regex cleanup.
