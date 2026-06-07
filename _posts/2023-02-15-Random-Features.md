@@ -65,7 +65,7 @@ Both are valid; the real-valued cosine map is what you use in practice.
 **Complex exponential**
 $$z(x) = \frac{1}{\sqrt{D}}\big[\, e^{i\,\omega_j^\top x} \,\big]_{j=1}^{D}$$
 
-**Real cosine** (with phase $b_j \sim \text{Uniform}(0, 2\pi)$)
+**Real cosine** (with phase \\(b_j \sim \text{Uniform}(0, 2\pi)\\))
 $$z(x) = \sqrt{\frac{2}{D}}\,\big[\, \cos(\omega_j^\top x + b_j) \,\big]_{j=1}^{D}$$
 
 The \\(\frac{1}{\sqrt{D}}\\) (resp. \\(\sqrt{2/D}\\)) factor turns the *sum* into the
