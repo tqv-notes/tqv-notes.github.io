@@ -38,10 +38,10 @@ chosen so that the inner product approximates the kernel:
 
 $$k(x, x') \;\approx\; z(x)^\top z(x').$$
 
-Here $D$ is the number of random features. Unlike the implicit kernel map
+Here \\(D\\) is the number of random features. Unlike the implicit kernel map
 (which is infinite-dimensional), \\(D\\) is finite and we control it - typically
 \\(D \gg d\\), with accuracy improving as \\(D\\) grows. Once we have \\(z(\cdot)\\), we
-fit a plain **linear** model in the $D$-dimensional feature space, which costs
+fit a plain **linear** model in the \\(D\\)-dimensional feature space, which costs
 \\(O(N D^2)\\) instead of \\(O(N^3)\\). When \\(D \ll N\\), this is a big win.
 
 ## 3. Bochner's theorem (why it works)
@@ -54,7 +54,7 @@ $$k(x - y) = \int_{\mathbb{R}^d} p(\omega)\, e^{\, i\,\omega^\top (x - y)}\, d\o
 
 So if we draw \\(\omega_1, \dots, \omega_D \sim p\\) i.i.d., the **Monte Carlo
 estimate** of the expectation gives our approximation. For the Gaussian kernel
-with bandwidth $\sigma$, the density \\(p(\omega)\\) is itself Gaussian:
+with bandwidth \\(\sigma\\), the density \\(p(\omega)\\) is itself Gaussian:
 
 $$\omega \sim \mathcal{N}\!\left(0,\; \sigma^{-2} I_d\right).$$
 
@@ -69,7 +69,7 @@ $$z(x) = \frac{1}{\sqrt{D}}\big[\, e^{i\,\omega_j^\top x} \,\big]_{j=1}^{D}$$
 $$z(x) = \sqrt{\frac{2}{D}}\,\big[\, \cos(\omega_j^\top x + b_j) \,\big]_{j=1}^{D}$$
 
 The \\(\frac{1}{\sqrt{D}}\\) (resp. \\(\sqrt{2/D}\\)) factor turns the *sum* into the
-*average* that Monte Carlo requires — this normalization is essential.
+*average* that Monte Carlo requires - this normalization is essential.
 
 ## 4. Example 1: Approximate the kernel
 
