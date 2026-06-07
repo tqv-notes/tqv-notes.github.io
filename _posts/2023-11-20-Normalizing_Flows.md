@@ -229,6 +229,5 @@ if __name__ == "__main__":
 ```
 
 It should provide an image as follows:
-This new formulation has a nice geometric interpretation as in the below figure: 
 
-![two_moons_distribution](/images/two_moons.png){:height="50%" width="50%"}
+![two_moons_distribution](/images/two_moons.png){:height="50%" width="100%"}
