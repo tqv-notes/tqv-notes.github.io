@@ -52,7 +52,7 @@ so $k(0) = 1$ is the Fourier transform of a probability density $p(\omega)$:
 $$k(x - y) = \int_{\mathbb{R}^d} p(\omega)\, e^{\, i\,\omega^\top (x - y)}\, d\omega
 = \mathbb{E}_{\omega \sim p}\!\left[ e^{i\omega^\top x}\,\overline{e^{i\omega^\top y}} \right].$$
 
-So if we draw $\omega_1, \dots, \omega_D \sim p$ i.i.d., the **Monte Carlo
+So if we draw \\(\omega_1, \dots, \omega_D \sim p\\) i.i.d., the **Monte Carlo
 estimate** of the expectation gives our approximation. For the Gaussian kernel
 with bandwidth $\sigma$, the density $p(\omega)$ is itself Gaussian:
 
