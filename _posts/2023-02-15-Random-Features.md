@@ -54,7 +54,7 @@ $$k(x - y) = \int_{\mathbb{R}^d} p(\omega)\, e^{\, i\,\omega^\top (x - y)}\, d\o
 
 So if we draw \\(\omega_1, \dots, \omega_D \sim p\\) i.i.d., the **Monte Carlo
 estimate** of the expectation gives our approximation. For the Gaussian kernel
-with bandwidth $\sigma$, the density $p(\omega)$ is itself Gaussian:
+with bandwidth $\sigma$, the density \\(p(\omega)\\) is itself Gaussian:
 
 $$\omega \sim \mathcal{N}\!\left(0,\; \sigma^{-2} I_d\right).$$
 
@@ -68,7 +68,7 @@ $$z(x) = \frac{1}{\sqrt{D}}\big[\, e^{i\,\omega_j^\top x} \,\big]_{j=1}^{D}$$
 **Real cosine** (with phase $b_j \sim \text{Uniform}(0, 2\pi)$)
 $$z(x) = \sqrt{\frac{2}{D}}\,\big[\, \cos(\omega_j^\top x + b_j) \,\big]_{j=1}^{D}$$
 
-The $\frac{1}{\sqrt{D}}$ (resp. $\sqrt{2/D}$) factor turns the *sum* into the
+The \\(\frac{1}{\sqrt{D}}\\) (resp. \\(\sqrt{2/D}\\)) factor turns the *sum* into the
 *average* that Monte Carlo requires — this normalization is essential.
 
 ## 4. Example 1: Approximate the kernel
@@ -118,7 +118,7 @@ print("Max abs error:", np.abs(K_approx - K_exact).max())
 
 ## 5. Example 2: Convergence of random-feature kernel
 
-The approximation error of a Monte Carlo estimate shrinks like $O(1/\sqrt{D})$.
+The approximation error of a Monte Carlo estimate shrinks like \\(O(1/\sqrt{D})\\).
 Let's confirm that scaling empirically.
 
 ```python
@@ -149,7 +149,7 @@ plt.legend(); plt.title("Random-feature kernel approximation error")
 plt.show()
 ```
 
-The measured error tracks the $1/\sqrt{D}$ reference line — exactly what the
+The measured error tracks the \\(1/\sqrt{D}\\) reference line - exactly what the
 theory predicts.
 
 ## 6. Example 3: Scalable kernel ridge regression
@@ -191,18 +191,18 @@ plt.show()
 ```
 
 The random-feature curve closely matches exact KRR, but the linear solve scales
-with $D$ rather than $N$. When $N$ runs into the hundreds of thousands, the
-exact $O(N^3)$ solve becomes impractical while random features stay cheap.
+with \\(D\\) rather than \\(N\\). When \\(N\\) runs into the hundreds of thousands, the
+exact \\(O(N^3)\\) solve becomes impractical while random features stay cheap.
 
 ## 7. Takeaways
 
 - Random features replace an expensive implicit kernel with a cheap explicit
-  feature map $z(x)$ such that $k(x,x') \approx z(x)^\top z(x')$.
+  feature map \\(z(x)\\) such that \\(k(x,x') \approx z(x)^\top z(x')\\).
 - The justification is **Bochner's theorem** plus a **Monte Carlo** average;
-  error decays as $O(1/\sqrt{D})$.
+  error decays as \\(O(1/\sqrt{D})\\).
 - For the Gaussian kernel, sample frequencies from
-  $\mathcal{N}(0, \sigma^{-2}I)$ and use the cosine map with a random phase.
-- The practical win: $O(N^3)$ kernel methods become $O(N D^2)$ linear models.
+  \\(\mathcal{N}(0, \sigma^{-2}I)\\) and use the cosine map with a random phase.
+- The practical win: \\(O(N^3)\\) kernel methods become \\(O(N D^2)\\) linear models.
 
 ### References
 - A. Rahimi and B. Recht, *Random Features for Large-Scale Kernel Machines*,
