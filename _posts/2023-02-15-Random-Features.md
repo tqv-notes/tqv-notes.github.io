@@ -23,9 +23,9 @@ A common choice is the Gaussian (RBF) kernel:
 
 $$k(x, x') = \exp\!\left(-\frac{\|x - x'\|_2^2}{2\sigma^2}\right)$$
 
-The catch: fitting requires working with the $N \times N$ Gram matrix.
-Solving the linear system costs $O(N^3)$ time and $O(N^2)$ memory.
-For large $N$ this is infeasible.
+The catch: fitting requires working with the \\(N \times N\\) Gram matrix.
+Solving the linear system costs \\(O(N^3)\\) time and \\(O(N^2)\\) memory.
+For large \\(N\\) this is infeasible.
 
 ## 2. The random-features idea
 
@@ -39,15 +39,15 @@ chosen so that the inner product approximates the kernel:
 $$k(x, x') \;\approx\; z(x)^\top z(x').$$
 
 Here $D$ is the number of random features. Unlike the implicit kernel map
-(which is infinite-dimensional), $D$ is finite and we control it — typically
-$D \gg d$, with accuracy improving as $D$ grows. Once we have $z(\cdot)$, we
+(which is infinite-dimensional), \\(D\\) is finite and we control it - typically
+\\(D \gg d\\), with accuracy improving as \\(D\\) grows. Once we have \\(z(\cdot)\\), we
 fit a plain **linear** model in the $D$-dimensional feature space, which costs
-$O(N D^2)$ instead of $O(N^3)$. When $D \ll N$, this is a big win.
+\\(O(N D^2)\\) instead of \\(O(N^3)\\). When \\(D \ll N\\), this is a big win.
 
 ## 3. Bochner's theorem (why it works)
 
-A continuous, shift-invariant kernel $k(x, x') = k(x - x')$ that is normalized
-so $k(0) = 1$ is the Fourier transform of a probability density $p(\omega)$:
+A continuous, shift-invariant kernel \\(k(x, x') = k(x - x')\\) that is normalized
+so \\(k(0) = 1\\) is the Fourier transform of a probability density \\(p(\omega)\\):
 
 $$k(x - y) = \int_{\mathbb{R}^d} p(\omega)\, e^{\, i\,\omega^\top (x - y)}\, d\omega
 = \mathbb{E}_{\omega \sim p}\!\left[ e^{i\omega^\top x}\,\overline{e^{i\omega^\top y}} \right].$$
