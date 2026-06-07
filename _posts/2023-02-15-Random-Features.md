@@ -5,8 +5,6 @@ layout: post
 categories: media
 ---
 
-# Random Features for Kernel Approximation
-
 Random features for machine learning were introduced in the kernel-machine
 setting by [Rahimi & Recht, NIPS 2007](https://proceedings.neurips.cc/paper/2007/hash/013a006f03dbc5392effeb8f18fda755-Abstract.html).
 This note explains the idea, the theory (Bochner's theorem), and shows three
@@ -44,7 +42,7 @@ Here \\(D\\) is the number of random features. Unlike the implicit kernel map
 fit a plain **linear** model in the \\(D\\)-dimensional feature space, which costs
 \\(O(N D^2)\\) instead of \\(O(N^3)\\). When \\(D \ll N\\), this is a big win.
 
-## 3. Bochner's theorem (why it works)
+## 3. Bochner's theorem
 
 A continuous, shift-invariant kernel \\(k(x, x') = k(x - x')\\) that is normalized
 so \\(k(0) = 1\\) is the Fourier transform of a probability density \\(p(\omega)\\):
@@ -194,7 +192,7 @@ The random-feature curve closely matches exact KRR, but the linear solve scales
 with \\(D\\) rather than \\(N\\). When \\(N\\) runs into the hundreds of thousands, the
 exact \\(O(N^3)\\) solve becomes impractical while random features stay cheap.
 
-## 7. Takeaways
+## 7. Summary
 
 - Random features replace an expensive implicit kernel with a cheap explicit
   feature map \\(z(x)\\) such that \\(k(x,x') \approx z(x)^\top z(x')\\).
