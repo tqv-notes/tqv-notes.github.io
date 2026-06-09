@@ -433,143 +433,127 @@ The theoretical explanation: the expected scattering coefficient \\(\mathbb{E}[S
 
 ```python
 """
-Example 3: Texture Discrimination
-================================
-Two processes with identical power spectra but different higher-order statistics.
-First-order scattering fails to distinguish them; second-order succeeds.
+example 3: texture discrimination where only order-2 scattering separates them.
+============================================================================
+two processes with exactly identical power spectra (by construction, via phase
+randomization) but different cross-scale coupling. 
+the power spectrum is broadband (multi-peak). 
+first-order scattering cannot distinguish them, second-order scattering can.
 
-Reproduces the experiment in Mallat (2012), Section 4.2.
-
-Install: pip install kymatio numpy scipy matplotlib
+install: pip install kymatio numpy scipy matplotlib
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 from kymatio.numpy import Scattering1D
+from scipy.stats import kurtosis
 
-rng = np.random.default_rng(42)
-T   = 2**14     # long signal for reliable moment estimation
-J   = 7
+rng = np.random.default_rng(13)
+T   = 2**14
+J   = 8
 Q   = 8
 
-# Shared spectral envelope
-# Both processes are constructed by filtering in the Fourier domain.
-# The envelope is the same → same PSD.
-def spectral_envelope(T):
-    freqs    = np.fft.rfftfreq(T)
-    envelope = np.exp(-((freqs - 0.05)**2) / (2 * 0.008**2))   # Gaussian peak at f=0.05
-    return envelope
+CARRIERS = np.linspace(0.05,0.25,20)   # broadband spectrum
+F_ENV    = 0.010                       # slow shared envelope
+DEPTH    = 0.95
 
-# Process A: Gaussian stationary texture
-def gaussian_texture(T, rng):
-    white    = rng.standard_normal(T)
-    W        = np.fft.rfft(white)
-    env      = spectral_envelope(T)
-    signal   = np.fft.irfft(W * env, n=T)
-    return signal / signal.std()
+# process B: several carriers sharing one slow positive envelope
+# the shared modulation couples all carrier bands to the coarse envelope scale,
+# producing strong, distributed second-order scattering coefficients.
+def slow_positive_envelope(T, rng, f_env, depth):
+    Wn    = np.fft.rfft(rng.standard_normal(T))
+    freqs = np.fft.rfftfreq(T)
+    env   = np.fft.irfft(Wn * np.exp(-(freqs / f_env)**2), n=T)
+    return 1.0 + depth * (env / (np.abs(env).max() + 1e-9))   # strictly positive
 
-# Process B: Sparse (non-Gaussian) texture
-# Sparse random impulses convolved with the same spectral envelope.
-# The power spectrum is the same (convolution theorem), but the signal
-# has heavy tails and clustering → different 4th-order moments.
-def sparse_texture(T, rng, density=0.008):
-    spikes   = (rng.uniform(0, 1, T) < density).astype(float)
-    spikes  *= rng.standard_normal(T)    # random-sign impulses
-    W        = np.fft.rfft(spikes)
-    env      = spectral_envelope(T)
-    signal   = np.fft.irfft(W * env, n=T)
-    return signal / signal.std()
+def multi_carrier_texture(T, rng, carriers, f_env, depth):
+    tt  = np.arange(T)
+    env = slow_positive_envelope(T, rng, f_env, depth)        # one shared envelope
+    x   = np.zeros(T)
+    for fc in carriers:
+        x += np.cos(2 * np.pi * fc * tt + rng.uniform(0, 2 * np.pi))
+    x *= env                                                   # shared modulation
+    return x / x.std()
 
-proc_A = gaussian_texture(T, rng)
-proc_B = sparse_texture(T, rng)
+# process A: Gaussian surrogate of B (phase randomization)
+# keeps |FFT(B)| exactly, randomizes phases => identical PSD, coupling destroyed.
+def phase_randomize(x, rng):
+    X   = np.fft.rfft(x)
+    mag = np.abs(X)
+    ph  = rng.uniform(0, 2 * np.pi, len(X)); ph[0] = 0.0      # keep DC real
+    if len(x) % 2 == 0:
+        ph[-1] = 0.0                                          # keep Nyquist real
+    return np.fft.irfft(mag * np.exp(1j * ph), n=len(x))
 
-# Power spectral density comparison
+proc_B = multi_carrier_texture(T, rng, CARRIERS, F_ENV, DEPTH)
+proc_A = phase_randomize(proc_B, rng); proc_A /= proc_A.std()
+
+# check PSD difference and kurtosis
 PSD_A = np.abs(np.fft.rfft(proc_A))**2
 PSD_B = np.abs(np.fft.rfft(proc_B))**2
-psd_corr = np.corrcoef(PSD_A, PSD_B)[0, 1]
-print(f"PSD correlation (A vs B): {psd_corr:.5f}  <-- near 1.0 (indistinguishable by spectrum)")
+psd_rel_err = np.linalg.norm(PSD_A - PSD_B) / np.linalg.norm(PSD_B)
+kurt_A, kurt_B = kurtosis(proc_A), kurtosis(proc_B)
+print(f"PSD relative error (A vs B):  {psd_rel_err:.2e}   (=> identical by construction)")
+print(f"kurtosis A / B:               {kurt_A:.2f} / {kurt_B:.2f}")
 
-# Kurtosis: direct evidence of non-Gaussianity
-from scipy.stats import kurtosis
-kurt_A = kurtosis(proc_A)
-kurt_B = kurtosis(proc_B)
-print(f"Kurtosis A (Gaussian):   {kurt_A:.2f}  <-- near 0")
-print(f"Kurtosis B (sparse):     {kurt_B:.2f}  <-- large positive (heavy tails)")
-
-# Scattering representations
-scat  = Scattering1D(J=J, shape=T, Q=Q)
-Sx_A  = scat(proc_A)
-Sx_B  = scat(proc_B)
-meta  = scat.meta()
+# scattering
+scat = Scattering1D(J=J, shape=T, Q=Q)
+Sx_A, Sx_B = scat(proc_A), scat(proc_B)
+meta = scat.meta()
 order = meta['order']
-
-# Mean scattering energy per path (approximates the expected scattering)
 E_A = np.mean(np.abs(Sx_A), axis=1)
 E_B = np.mean(np.abs(Sx_B), axis=1)
 
-# Relative difference per path
-rel_diff = np.abs(E_A - E_B) / (0.5 * (E_A + E_B) + 1e-10)
+# energy-weighted distance over the top energy-carrying paths
+def weighted_distance(EA, EB, mask, top_frac=0.6):
+    idx = np.where(mask)[0]
+    ref = 0.5 * (EA[idx] + EB[idx])
+    thresh = np.quantile(ref, 1 - top_frac)
+    keep   = idx[ref >= thresh]
+    num = np.linalg.norm(EA[keep] - EB[keep])
+    den = np.linalg.norm(0.5 * (EA[keep] + EB[keep])) + 1e-12
+    return num / den
 
-for m in [1, 2]:
-    mask     = order == m
-    avg_diff = rel_diff[mask].mean()
-    print(f"Mean relative scattering difference (order {m}): {avg_diff:.4f}"
-          f"  <-- {'LOW: indistinguishable' if avg_diff < 0.1 else 'HIGH: discriminated!'}")
+d1 = weighted_distance(E_A, E_B, order == 1)
+d2 = weighted_distance(E_A, E_B, order == 2)
+print(f"\n")
+print(f"order-1 weighted distance: {d1:.3f}   (small -> indistinguishable)")
+print(f"order-2 weighted distance: {d2:.3f}   (large -> discriminated)")
+print(f"ratio order2/order1:       {d2/d1:.1f}x")
 
-# Plot
+# plot
 fig, axes = plt.subplots(3, 2, figsize=(14, 11))
+cA, cB = '#2c7bb6', '#d7191c'
 
-# Row 0: sample realizations
-axes[0, 0].plot(proc_A[:800], lw=0.7, color='#2c7bb6')
-axes[0, 0].set_title(f"Process A - Gaussian  (kurtosis = {kurt_A:.1f})")
-axes[0, 1].plot(proc_B[:800], lw=0.7, color='#d7191c')
-axes[0, 1].set_title(f"Process B - Sparse  (kurtosis = {kurt_B:.1f})")
+axes[0, 0].plot(proc_A[:1500], lw=0.6, color=cA)
+axes[0, 0].set_title(f"process A - gaussian surrogate (no coupling)  (kurtosis = {kurt_A:.1f})")
+axes[0, 1].plot(proc_B[:1500], lw=0.6, color=cB)
+axes[0, 1].set_title(f"process B - shared modulation (coupling)  (kurtosis = {kurt_B:.1f})")
 
-# Row 1: PSDs (should look nearly identical)
-freqs = np.fft.rfftfreq(T)
-mask_f = freqs < 0.15
-axes[1, 0].plot(freqs[mask_f], PSD_A[mask_f], color='#2c7bb6', lw=0.8, label='A')
-axes[1, 0].plot(freqs[mask_f], PSD_B[mask_f], color='#d7191c', lw=0.8, alpha=0.7, label='B')
-axes[1, 0].set_title(f"Power spectra  (correlation = {psd_corr:.4f} - nearly identical)")
-axes[1, 0].legend()
-axes[1, 0].set_xlabel("Frequency")
+freqs = np.fft.rfftfreq(T); mf = freqs < 0.28
+axes[1, 0].plot(freqs[mf], PSD_A[mf], color=cA, lw=0.7, label='A')
+axes[1, 0].plot(freqs[mf], PSD_B[mf], color=cB, lw=0.7, alpha=0.6, label='B')
+axes[1, 0].set_title(f"power spectra  (rel. error = {psd_rel_err:.1e} -> identical, broadband)")
+axes[1, 0].legend(); axes[1, 0].set_xlabel("frequency")
+axes[1, 1].plot(freqs[mf], np.abs(PSD_A - PSD_B)[mf], color='gray', lw=0.7)
+axes[1, 1].set_title("PSD difference  (machine zero)"); axes[1, 1].set_xlabel("frequency")
 
-axes[1, 1].plot(freqs[mask_f], np.abs(PSD_A - PSD_B)[mask_f], color='gray', lw=0.8)
-axes[1, 1].set_title("PSD difference  (small - Fourier cannot discriminate)")
-axes[1, 1].set_xlabel("Frequency")
+def plot_paths(ax, EA, EB, mask, title, top=40):
+    idx = np.where(mask)[0]
+    ref = 0.5 * (EA[idx] + EB[idx])
+    sel = idx[np.argsort(ref)[::-1][:top]]
+    sel = sel[np.argsort(sel)]
+    xx  = np.arange(len(sel)); w = 0.4
+    ax.bar(xx - w/2, EA[sel], width=w, color=cA, label='A', alpha=0.85)
+    ax.bar(xx + w/2, EB[sel], width=w, color=cB, label='B', alpha=0.85)
+    ax.set_title(title); ax.legend(); ax.set_xlabel("path (top energy)")
 
-# Row 2: First-order scattering (should look similar)
-idx1   = np.where(order == 1)[0]
-width  = 0.35
-x_idx1 = np.arange(len(idx1))
-axes[2, 0].bar(x_idx1 - width/2, E_A[idx1], width=width, color='#2c7bb6',
-               label='A', alpha=0.85)
-axes[2, 0].bar(x_idx1 + width/2, E_B[idx1], width=width, color='#d7191c',
-               label='B', alpha=0.85)
-d1 = rel_diff[order == 1].mean()
-axes[2, 0].set_title(f"Order-1 scattering energies  (mean rel. diff = {d1:.3f} - similar)")
-axes[2, 0].set_xlabel("Scale index")
-axes[2, 0].legend()
+plot_paths(axes[2, 0], E_A, E_B, order == 1, f"order-1 energies  (dist = {d1:.2f} -> similar)")
+plot_paths(axes[2, 1], E_A, E_B, order == 2, f"order-2 energies  (dist = {d2:.2f} -> different)")
 
-# Row 2 right: Second-order scattering (should look different)
-idx2    = np.where(order == 2)[0]
-x_idx2  = np.arange(len(idx2))
-# Show every 4th path for clarity
-step    = max(1, len(idx2) // 80)
-idx2s   = idx2[::step]
-x_idx2s = np.arange(len(idx2s))
-axes[2, 1].bar(x_idx2s - width/2, E_A[idx2s], width=width, color='#2c7bb6',
-               label='A', alpha=0.85)
-axes[2, 1].bar(x_idx2s + width/2, E_B[idx2s], width=width, color='#d7191c',
-               label='B', alpha=0.85)
-d2 = rel_diff[order == 2].mean()
-axes[2, 1].set_title(f"Order-2 scattering energies  (mean rel. diff = {d2:.3f} - DIFFERENT)")
-axes[2, 1].set_xlabel("Path index (subsampled)")
-axes[2, 1].legend()
-
-plt.suptitle("Texture Discrimination: identical PSD, different higher-order scattering", fontsize=13)
+plt.suptitle("texture discrimination: identical broadband PSD, only order-2 scattering separates them",
+             fontsize=13)
 plt.tight_layout()
-plt.savefig("demo3_texture.png", dpi=150, bbox_inches='tight')
 plt.show()
 ```
 
