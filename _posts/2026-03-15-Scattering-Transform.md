@@ -15,10 +15,10 @@ categories: media
 3. [Why Fourier Fails](#3-why-fourier-fails)
 4. [Building the Scattering Transform](#4-building-the-scattering-transform)
 5. [Key Mathematical Properties](#5-key-mathematical-properties)
-6. [Demo 1 - The Cascade: Energy Decay Across Layers](#demo-1--the-cascade-energy-decay-across-layers)
-7. [Demo 2 - Deformation Stability: Scattering vs. Fourier](#demo-2--deformation-stability-scattering-vs-fourier)
-8. [Demo 3 - Texture Discrimination: Same Spectrum, Different Structure](#demo-3--texture-discrimination-same-spectrum-different-structure)
-9. [Demo 4 - Multifractal Analysis: Capturing Intermittency](#demo-4--multifractal-analysis-capturing-intermittency)
+6. [Example 1 - The Cascade: Energy Decay Across Layers](#example-1--the-cascade-energy-decay-across-layers)
+7. [Example 2 - Deformation Stability: Scattering vs. Fourier](#example-2--deformation-stability-scattering-vs-fourier)
+8. [Example 3 - Texture Discrimination: Same Spectrum, Different Structure](#example-3--texture-discrimination-same-spectrum-different-structure)
+9. [Example 4 - Multifractal Analysis: Capturing Intermittency](#example-4--multifractal-analysis-capturing-intermittency)
 10. [Extensions and Applications](#10-extensions-and-applications)
 11. [Summary](#11-summary)
 
@@ -307,7 +307,7 @@ This example applies a smooth time warp (a sinusoidal displacement field) to a t
 
 ```python
 """
-Demo 2: Deformation Stability
+Example 2: Deformation Stability
 ==============================
 Empirically verifies that the scattering transform is Lipschitz continuous
 to deformations, while the Fourier modulus is not.
@@ -434,7 +434,7 @@ The theoretical explanation: the expected scattering coefficient \\(\mathbb{E}[S
 
 ```python
 """
-Demo 3: Texture Discrimination
+Example 3: Texture Discrimination
 ================================
 Two processes with identical power spectra but different higher-order statistics.
 First-order scattering fails to distinguish them; second-order succeeds.
@@ -589,7 +589,7 @@ and the deviation from linearity of \\(\log \tilde{S}_X(j)\\) vs. \\(j\\) measur
 
 ```python
 """
-Demo 4: Multifractal Analysis with Scattering Moments
+Example 4: Multifractal Analysis with Scattering Moments
 ======================================================
 Compare three stochastic processes with different intermittency:
   - Fractional Brownian Motion (fBm): Gaussian, self-similar, H=0.7
