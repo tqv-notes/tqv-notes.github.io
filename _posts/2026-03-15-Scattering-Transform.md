@@ -307,12 +307,12 @@ This example applies a smooth time warp (a sinusoidal displacement field) to a t
 
 ```python
 """
-Example 2: Deformation Stability
+example 2: deformation stability
 ==============================
-Empirically verifies that the scattering transform is Lipschitz continuous
+empirically verifies that the scattering transform is Lipschitz continuous
 to deformations, while the Fourier modulus is not.
 
-Install: pip install kymatio numpy scipy matplotlib
+install: pip install kymatio numpy scipy matplotlib
 """
 
 import numpy as np
@@ -320,20 +320,20 @@ import matplotlib.pyplot as plt
 from kymatio.numpy import Scattering1D
 from scipy.ndimage import map_coordinates
 
-T  = 2**12
+T  = 2**10
 J  = 5
 Q  = 8
 t  = np.linspace(0, 1, T)
 
 np.random.seed(42)
 
-# Test signal: two harmonics at very different scales
-signal = np.sin(2 * np.pi * 20 * t) + 0.5 * np.cos(2 * np.pi * 120 * t)
+# test signal: two harmonics at very different scales
+signal = np.sin(2 * np.pi * 20 * t) + 0.1 * np.cos(2 * np.pi * 60 * t)
 
-# Deformation operator
+# deformation operator
 def apply_deformation(x, tau_max_frac, freq=3):
     """
-    Warp signal x by a smooth sinusoidal displacement field:
+    warp signal x by a smooth sinusoidal displacement field:
         x_tau(t) = x(t - tau(t))
     tau(t) = tau_max * sin(2π * freq * t)
 
@@ -343,7 +343,7 @@ def apply_deformation(x, tau_max_frac, freq=3):
     warped_idx   = np.clip(np.arange(T) - displacement, 0, T - 1)
     return map_coordinates(x, [warped_idx], order=3, mode='nearest')
 
-# Sweep over deformation amplitudes
+# sweep over deformation amplitudes
 tau_values    = np.linspace(0.0, 0.025, 20)
 fourier_errors = []
 scat_errors    = []
@@ -359,7 +359,7 @@ for tau_max in tau_values:
     fourier_errors.append(np.linalg.norm(F_orig - F_w)  / np.linalg.norm(F_orig))
     scat_errors.append(   np.linalg.norm(Sx_orig - Sx_w) / np.linalg.norm(Sx_orig))
 
-# Qualitative example at a fixed deformation
+# qualitative example at a fixed deformation
 tau_demo   = 0.015
 signal_w   = apply_deformation(signal, tau_demo)
 F_w_demo   = np.abs(np.fft.rfft(signal_w))
@@ -370,30 +370,30 @@ order      = meta['order']
 fe_demo = np.linalg.norm(F_orig - F_w_demo)  / np.linalg.norm(F_orig)
 se_demo = np.linalg.norm(Sx_orig - Sx_w_demo) / np.linalg.norm(Sx_orig)
 
-print(f"Deformation tau_max = {tau_demo:.3f}")
+print(f"deformation tau_max = {tau_demo:.3f}")
 print(f"  Fourier modulus relative error:  {fe_demo:.4f}")
-print(f"  Scattering relative error:        {se_demo:.4f}")
-print(f"  Stability improvement:            {fe_demo/se_demo:.1f}x")
+print(f"  scattering relative error:       {se_demo:.4f}")
+print(f"  stability improvement:           {fe_demo/se_demo:.1f}x")
 
-# Plot
+# plot
 fig, axes = plt.subplots(2, 2, figsize=(14, 8))
 
-# Top-left: original vs. warped signal
+# original vs. warped signal
 axes[0, 0].plot(t[:300], signal[:300],   lw=1.2, color='#2c7bb6', label='original')
 axes[0, 0].plot(t[:300], signal_w[:300], lw=1.2, color='#d7191c', alpha=0.8, label='warped')
-axes[0, 0].set_title(f"Signal vs. warped  ($\\tau_{{\\max}} = {tau_demo}$)")
+axes[0, 0].set_title(f"signal vs. warped  ($\\tau_{{\\max}} = {tau_demo}$)")
 axes[0, 0].legend()
 
-# Top-right: Fourier modulus comparison
+# Fourier modulus comparison
 freqs = np.fft.rfftfreq(T)
 axes[0, 1].plot(freqs[:T//8], F_orig[:T//8],    lw=1.0, color='#2c7bb6', label='original')
 axes[0, 1].plot(freqs[:T//8], F_w_demo[:T//8],  lw=1.0, color='#d7191c', alpha=0.8,
                 label='warped')
 axes[0, 1].set_title(f"Fourier modulus  (error = {fe_demo:.3f})")
-axes[0, 1].set_xlabel("Frequency")
+axes[0, 1].set_xlabel("frequency")
 axes[0, 1].legend()
 
-# Bottom-left: scattering coefficients comparison (order-1 paths)
+# scattering coefficients comparison (order-1 paths)
 idx1 = np.where(order == 1)[0]
 mean_orig = np.mean(np.abs(Sx_orig[idx1]),  axis=1)
 mean_w    = np.mean(np.abs(Sx_w_demo[idx1]), axis=1)
@@ -401,24 +401,23 @@ x_idx     = np.arange(len(idx1))
 axes[1, 0].bar(x_idx - 0.2, mean_orig, width=0.4, color='#2c7bb6', label='original', alpha=0.85)
 axes[1, 0].bar(x_idx + 0.2, mean_w,    width=0.4, color='#d7191c', label='warped',   alpha=0.85)
 axes[1, 0].set_title(f"Order-1 scattering path energies  (error = {se_demo:.3f})")
-axes[1, 0].set_xlabel("Scale index")
+axes[1, 0].set_xlabel("scale index")
 axes[1, 0].legend()
 
-# Bottom-right: error vs. deformation amplitude
+# error vs. deformation amplitude
 axes[1, 1].plot(tau_values, fourier_errors, 'o-', color='#d7191c', lw=1.5,
                 label='Fourier modulus')
 axes[1, 1].plot(tau_values, scat_errors,    's-', color='#1a9641', lw=1.5,
-                label='Scattering')
-axes[1, 1].set_title("Relative error vs. deformation amplitude")
+                label='scattering')
+axes[1, 1].set_title("relative error vs. deformation amplitude")
 axes[1, 1].set_xlabel(r"$\tau_{\max}$ (fraction of signal length)")
-axes[1, 1].set_ylabel("Relative $L^2$ error")
+axes[1, 1].set_ylabel("relative $L^2$ error")
 axes[1, 1].legend()
 axes[1, 1].set_xlim(0, None)
 axes[1, 1].set_ylim(0, None)
 
-plt.suptitle("Deformation Stability: Scattering vs Fourier Modulus", fontsize=13)
+plt.suptitle("deformation stability: scattering vs Fourier modulus", fontsize=13)
 plt.tight_layout()
-plt.savefig("demo2_stability.png", dpi=150, bbox_inches='tight')
 plt.show()
 ```
 
