@@ -179,27 +179,27 @@ The proof hinges on controlling the commutator \\( \[W_J, L_\tau\] = W_J L_\tau 
 
 ---
 
-## Demo 1 - The Cascade: Energy Decay Across Layers
+## Example 1 - The Cascade: Energy Decay Across Layers
 
-This demo builds a synthetic multi-scale signal and visualizes how energy is distributed across scattering orders. The theoretical prediction - exponential decay with path depth - is confirmed empirically.
+This example builds a synthetic multi-scale signal and visualizes how energy is distributed across scattering orders. The theoretical prediction - exponential decay with path depth - is confirmed empirically.
 
 Important note for installation: `pip install kymatio numpy scipy matplotlib`
 
 ```python
 """
-Demo 1: The Scattering Cascade and Energy Decay
+example 1: the scattering cascade and energy decay
 ================================================
-Visualizes how energy distributes across scattering orders (0, 1, 2)
+visualizes how energy distributes across scattering orders (0, 1, 2)
 and confirms the theoretical exponential decay.
 
-Install: pip install kymatio numpy scipy matplotlib
+install: pip install kymatio numpy scipy matplotlib
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 from kymatio.numpy import Scattering1D
 
-# -- Signal parameters ----------------------------------------------------------
+# signal parameters
 T = 2**13    # signal length (must be power of 2)
 J = 6        # number of dyadic scales
 Q = 8        # wavelets per octave (frequency resolution)
@@ -207,7 +207,7 @@ t = np.linspace(0, 1, T)
 
 np.random.seed(0)
 
-# Construct a signal with energy at multiple scales:
+# construct a signal with energy at multiple scales:
 #   - slow carrier (scale ~1/5 Hz)
 #   - mid-frequency burst (scale ~1/80 Hz, localized at t=0.5)
 #   - high-frequency modulation (scale ~1/200 Hz)
@@ -219,61 +219,71 @@ signal = (
     + 0.05 * np.random.randn(T)
 )
 
-# -- Scattering transform -------------------------------------------------------
+# scattering transform
 scat = Scattering1D(J=J, shape=T, Q=Q)
 Sx   = scat(signal)          # shape: [num_paths, T // 2^J]
 meta = scat.meta()           # path metadata (order, scale, angle)
 order = meta['order']        # integer array: 0, 1, or 2 for each path
 
-print(f"Signal length:              {T}")
-print(f"Scattering output shape:    {Sx.shape}")
-print(f"Downsampling factor:        {T // Sx.shape[-1]}x  (scale 2^J = {2**J})")
-print(f"Total paths:                {Sx.shape[0]}")
+print(f"signal length:              {T}")
+print(f"scattering output shape:    {Sx.shape}")
+print(f"downsampling factor:        {T // Sx.shape[-1]}x  (scale 2^J = {2**J})")
+print(f"total paths:                {Sx.shape[0]}")
 for m in [0, 1, 2]:
     n = np.sum(order == m)
     E = np.sum(Sx[order == m]**2)
     print(f"  Order {m}: {n:4d} paths, energy fraction = {E / np.sum(Sx**2):.4f}")
 
-# -- Plot -----------------------------------------------------------------------
-fig, axes = plt.subplots(4, 1, figsize=(12, 10), gridspec_kw={'hspace': 0.45})
+fig = plt.figure(figsize=(13.5, 8.5))
 
-# 1. Original signal
+gs = fig.add_gridspec(4, 2, width_ratios=[60, 1.2], height_ratios=[1, 1, 1, 1])
+
+axes = [fig.add_subplot(gs[i, 0]) for i in range(4)]
+cax1 = fig.add_subplot(gs[2, 1])
+cax2 = fig.add_subplot(gs[3, 1])
+
+fig.subplots_adjust(left=0.065, right=0.94, top=0.91, bottom=0.075, hspace=0.62, wspace=0.06)
+
+# original signal
 axes[0].plot(t, signal, lw=0.6, color='#2c7bb6')
-axes[0].set_title("Input signal  (multi-scale: low carrier + mid burst + high modulation)")
-axes[0].set_xlabel("Time")
-axes[0].set_ylabel("Amplitude")
+axes[0].set_title("input signal  (multi-scale: low carrier + mid burst + high modulation)", pad=5)
+axes[0].set_xlabel("time", labelpad=3)
+axes[0].set_ylabel("amplitude")
+axes[0].autoscale(enable=True, axis='x', tight=True)
 
-# 2. Order-0 scattering (low-pass average of entire signal)
-axes[1].plot(Sx[order == 0].T, color='#d7191c', lw=1.5)
-axes[1].set_title(r"Order 0:  $S_J[\emptyset]\,x = x \otimes \phi_{2^J}$  - global low-pass envelope")
-axes[1].set_xlabel("Spatial position (downsampled)")
+# order-0 scattering
+S0 = Sx[order == 0]
+x0 = np.arange(S0.shape[-1])
 
-# 3. Order-1 coefficients as a heatmap over (time, scale)
-im1 = axes[2].imshow(
-    np.log1p(np.abs(Sx[order == 1])),
-    aspect='auto', cmap='YlOrRd', origin='lower'
-)
-axes[2].set_title("Order 1:  $S_J[\\lambda_1]\,x$  - energy by (scale, time)")
-axes[2].set_xlabel("Spatial position")
-axes[2].set_ylabel("Path index (∝ scale)")
-plt.colorbar(im1, ax=axes[2], label='log(1 + |coeff|)')
+axes[1].plot(x0, S0.T, color='#d7191c', lw=1.5)
+axes[1].set_title(r"order 0: $S_J[\emptyset] x = x \otimes \phi_{2^J}$  - global low-pass envelope", pad=5)
+axes[1].set_xlabel("spatial position (downsampled)", labelpad=3)
+axes[1].autoscale(enable=True, axis='x', tight=True)
 
-# 4. Order-2 coefficients
-im2 = axes[3].imshow(
-    np.log1p(np.abs(Sx[order == 2])),
-    aspect='auto', cmap='PuBuGn', origin='lower'
-)
-axes[3].set_title("Order 2:  $S_J[\\lambda_1, \\lambda_2]\,x$  - scale-interaction features")
-axes[3].set_xlabel("Spatial position")
-axes[3].set_ylabel("Path index")
-plt.colorbar(im2, ax=axes[3], label='log(1 + |coeff|)')
+# order-1 coefficients
+S1 = np.log1p(np.abs(Sx[order == 1]))
+im1 = axes[2].imshow(S1, aspect='auto', cmap='YlOrRd', origin='lower', extent=[0, S1.shape[1] - 1, 0, S1.shape[0] - 1])
+axes[2].set_title("order 1: $S_J[\\lambda_1] x$  - energy by (scale, time)", pad=5)
+axes[2].set_xlabel("spatial position", labelpad=3)
+axes[2].set_ylabel("path index ($\\propto$ scale)")
+fig.colorbar(im1, cax=cax1, label='log(1 + |coeff|)')
 
-plt.suptitle("Scattering Cascade: energy distributes across orders and decays", fontsize=13)
-plt.savefig("demo1_cascade.png", dpi=150, bbox_inches='tight')
+# order-2 coefficients
+S2 = np.log1p(np.abs(Sx[order == 2]))
+im2 = axes[3].imshow(S2, aspect='auto', cmap='PuBuGn', origin='lower', extent=[0, S2.shape[1] - 1, 0, S2.shape[0] - 1])
+axes[3].set_title("order 2: $S_J[\\lambda_1, \\lambda_2] x$  - scale-interaction features", pad=5)
+axes[3].set_xlabel("spatial position", labelpad=3)
+axes[3].set_ylabel("path index")
+fig.colorbar(im2, cax=cax2, label='log(1 + |coeff|)')
+
+for ax in axes:
+    ax.tick_params(axis='both', pad=2)
+
+fig.suptitle("scattering cascade: energy distributes across orders and decays", fontsize=13)
 plt.show()
 
-# -- Energy decay table ---------------------------------------------------------
-print("\n--- Energy fraction per order ---")
+# energy decay table
+print("\n=== Energy fraction per order ===")
 total_energy = np.sum(Sx**2)
 for m in [0, 1, 2]:
     frac = np.sum(Sx[order == m]**2) / total_energy
@@ -282,18 +292,18 @@ for m in [0, 1, 2]:
 
 **Expected output:**
 ```
-Order 0:     1 path,  energy fraction ≈ 0.44
-Order 1:    ~48 paths, energy fraction ≈ 0.51
-Order 2:  ~384 paths, energy fraction ≈ 0.05
+Order 0:    1 paths, energy fraction = 0.9986
+Order 1:   38 paths, energy fraction = 0.0014
+Order 2:   87 paths, energy fraction = 0.0000
 ```
 
 The exponential decay is clear: order-0 captures the bulk of the DC energy, order-1 captures frequency-band energy, and order-2 has small but non-trivial residual energy encoding higher-order structure.
 
 ---
 
-## Demo 2 - Deformation Stability: Scattering vs. Fourier
+## Example 2 - Deformation Stability: Scattering vs. Fourier
 
-This demo applies a smooth time warp (a sinusoidal displacement field) to a test signal and measures the resulting error in both the Fourier modulus and the scattering representation. The scattering error should be dramatically smaller.
+This example applies a smooth time warp (a sinusoidal displacement field) to a test signal and measures the resulting error in both the Fourier modulus and the scattering representation. The scattering error should be dramatically smaller.
 
 ```python
 """
@@ -320,7 +330,7 @@ np.random.seed(42)
 # Test signal: two harmonics at very different scales
 signal = np.sin(2 * np.pi * 20 * t) + 0.5 * np.cos(2 * np.pi * 120 * t)
 
-# -- Deformation operator -------------------------------------------------------
+# Deformation operator
 def apply_deformation(x, tau_max_frac, freq=3):
     """
     Warp signal x by a smooth sinusoidal displacement field:
@@ -333,7 +343,7 @@ def apply_deformation(x, tau_max_frac, freq=3):
     warped_idx   = np.clip(np.arange(T) - displacement, 0, T - 1)
     return map_coordinates(x, [warped_idx], order=3, mode='nearest')
 
-# -- Sweep over deformation amplitudes -----------------------------------------
+# Sweep over deformation amplitudes
 tau_values    = np.linspace(0.0, 0.025, 20)
 fourier_errors = []
 scat_errors    = []
@@ -349,7 +359,7 @@ for tau_max in tau_values:
     fourier_errors.append(np.linalg.norm(F_orig - F_w)  / np.linalg.norm(F_orig))
     scat_errors.append(   np.linalg.norm(Sx_orig - Sx_w) / np.linalg.norm(Sx_orig))
 
-# -- Qualitative example at a fixed deformation --------------------------------
+# Qualitative example at a fixed deformation
 tau_demo   = 0.015
 signal_w   = apply_deformation(signal, tau_demo)
 F_w_demo   = np.abs(np.fft.rfft(signal_w))
@@ -365,7 +375,7 @@ print(f"  Fourier modulus relative error:  {fe_demo:.4f}")
 print(f"  Scattering relative error:        {se_demo:.4f}")
 print(f"  Stability improvement:            {fe_demo/se_demo:.1f}x")
 
-# -- Plot -----------------------------------------------------------------------
+# Plot
 fig, axes = plt.subplots(2, 2, figsize=(14, 8))
 
 # Top-left: original vs. warped signal
@@ -416,9 +426,9 @@ The bottom-right panel is the key result: the Fourier error grows rapidly and no
 
 ---
 
-## Demo 3 - Texture Discrimination: Same Spectrum, Different Structure
+## Example 3 - Texture Discrimination: Same Spectrum, Different Structure
 
-This demo reproduces the central experiment from Section 4.2 of Mallat (2012): two stochastic processes with **identical power spectra** (i.e., identical second-order statistics) but different higher-order statistics. The Fourier modulus cannot distinguish them; second-order scattering can.
+This example reproduces the central experiment from Section 4.2 of Mallat (2012): two stochastic processes with **identical power spectra** (i.e., identical second-order statistics) but different higher-order statistics. The Fourier modulus cannot distinguish them; second-order scattering can.
 
 The theoretical explanation: the expected scattering coefficient \\(\mathbb{E}[S_J[p]X]\\) for a path \\(p\\) of length \\(m\\) captures moments of \\(X\\) up to order \\(2^m\\). First-order scattering (\\(m=1\\)) depends only on second-order moments (the power spectrum); second-order scattering (\\(m=2\\)) depends on up to fourth-order moments, enabling discrimination.
 
@@ -443,7 +453,7 @@ T   = 2**14     # long signal for reliable moment estimation
 J   = 7
 Q   = 8
 
-# -- Shared spectral envelope ---------------------------------------------------
+# Shared spectral envelope
 # Both processes are constructed by filtering in the Fourier domain.
 # The envelope is the same → same PSD.
 def spectral_envelope(T):
@@ -451,7 +461,7 @@ def spectral_envelope(T):
     envelope = np.exp(-((freqs - 0.05)**2) / (2 * 0.008**2))   # Gaussian peak at f=0.05
     return envelope
 
-# -- Process A: Gaussian stationary texture ------------------------------------
+# Process A: Gaussian stationary texture
 def gaussian_texture(T, rng):
     white    = rng.standard_normal(T)
     W        = np.fft.rfft(white)
@@ -459,7 +469,7 @@ def gaussian_texture(T, rng):
     signal   = np.fft.irfft(W * env, n=T)
     return signal / signal.std()
 
-# -- Process B: Sparse (non-Gaussian) texture ----------------------------------
+# Process B: Sparse (non-Gaussian) texture
 # Sparse random impulses convolved with the same spectral envelope.
 # The power spectrum is the same (convolution theorem), but the signal
 # has heavy tails and clustering → different 4th-order moments.
@@ -474,20 +484,20 @@ def sparse_texture(T, rng, density=0.008):
 proc_A = gaussian_texture(T, rng)
 proc_B = sparse_texture(T, rng)
 
-# -- Power spectral density comparison -----------------------------------------
+# Power spectral density comparison
 PSD_A = np.abs(np.fft.rfft(proc_A))**2
 PSD_B = np.abs(np.fft.rfft(proc_B))**2
 psd_corr = np.corrcoef(PSD_A, PSD_B)[0, 1]
 print(f"PSD correlation (A vs B): {psd_corr:.5f}  <-- near 1.0 (indistinguishable by spectrum)")
 
-# -- Kurtosis: direct evidence of non-Gaussianity ------------------------------
+# Kurtosis: direct evidence of non-Gaussianity
 from scipy.stats import kurtosis
 kurt_A = kurtosis(proc_A)
 kurt_B = kurtosis(proc_B)
 print(f"Kurtosis A (Gaussian):   {kurt_A:.2f}  <-- near 0")
 print(f"Kurtosis B (sparse):     {kurt_B:.2f}  <-- large positive (heavy tails)")
 
-# -- Scattering representations ------------------------------------------------
+# Scattering representations
 scat  = Scattering1D(J=J, shape=T, Q=Q)
 Sx_A  = scat(proc_A)
 Sx_B  = scat(proc_B)
@@ -507,7 +517,7 @@ for m in [1, 2]:
     print(f"Mean relative scattering difference (order {m}): {avg_diff:.4f}"
           f"  <-- {'LOW: indistinguishable' if avg_diff < 0.1 else 'HIGH: discriminated!'}")
 
-# -- Plot -----------------------------------------------------------------------
+# Plot
 fig, axes = plt.subplots(3, 2, figsize=(14, 11))
 
 # Row 0: sample realizations
@@ -568,7 +578,7 @@ The result is stark: order-1 scattering energies are nearly identical between th
 
 ---
 
-## Demo 4 - Multifractal Analysis: Capturing Intermittency
+## Example 4 - Multifractal Analysis: Capturing Intermittency
 
 One of the most powerful applications of scattering is robust estimation of *multifractal* properties of stochastic processes. Classical wavelet moment estimators are unstable for heavy-tailed processes because high polynomial moments have large variance. Scattering moments are computed with a non-expansive operator and are therefore statistically stable.
 
@@ -599,7 +609,7 @@ T   = 2**14
 J   = 8
 Q   = 1   # Q=1 for multiscale analysis (log-scale resolution)
 
-# -- Process generators ---------------------------------------------------------
+# Process generators
 def fractional_brownian_motion(T, H, rng):
     """
     Generate fBm via spectral synthesis (Davies-Harte method approximation).
@@ -647,7 +657,7 @@ def multifractal_random_walk(T, lambda2, rng, n_scales=10):
     signal   = np.cumsum(signal) / np.sqrt(T)
     return (signal - signal.mean()) / signal.std()
 
-# -- Generate processes ---------------------------------------------------------
+# Generate processes
 fbm = fractional_brownian_motion(T, H=0.7, rng=rng)
 ou  = ornstein_uhlenbeck(T, theta=50, rng=rng)
 mrw = multifractal_random_walk(T, lambda2=0.04, rng=rng)
@@ -655,7 +665,7 @@ mrw = multifractal_random_walk(T, lambda2=0.04, rng=rng)
 processes = {'fBm (H=0.7)': fbm, 'OU process': ou, 'MRW (intermittent)': mrw}
 colors     = {'fBm (H=0.7)': '#2c7bb6', 'OU process': '#1a9641', 'MRW (intermittent)': '#d7191c'}
 
-# -- Scattering moments ---------------------------------------------------------
+# Scattering moments
 scat  = Scattering1D(J=J, shape=T, Q=Q)
 meta  = scat.meta()
 order = meta['order']
