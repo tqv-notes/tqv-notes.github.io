@@ -75,7 +75,7 @@ The \\(\frac{1}{\sqrt{D}}\\) (resp. \\(\sqrt{2/D}\\)) factor turns the *sum* int
 import numpy as np
 
 def rbf_kernel(X, Y, sigma=1.0):
-    """Exact Gaussian (RBF) Gram matrix."""
+    """exact Gaussian (RBF) Gram matrix."""
     sq = (
         np.sum(X**2, axis=1)[:, None]
         + np.sum(Y**2, axis=1)[None, :]
@@ -84,7 +84,7 @@ def rbf_kernel(X, Y, sigma=1.0):
     return np.exp(-sq / (2 * sigma**2))
 
 class RFF:
-    """Random Fourier Features for the RBF kernel (cosine map)."""
+    """random Fourier features for the RBF kernel (cosine map)."""
     def __init__(self, n_features=200, sigma=1.0, seed=0):
         self.D, self.sigma, self.rng = n_features, sigma, np.random.default_rng(seed)
 
@@ -99,7 +99,7 @@ class RFF:
         proj = X @ self.W + self.b
         return np.sqrt(2.0 / self.D) * np.cos(proj)
 
-# Demo: compare approximate vs. exact kernel values
+# compare approximate vs. exact kernel values
 rng = np.random.default_rng(1)
 X = rng.standard_normal((5, 3))
 sigma = 1.5
@@ -110,7 +110,7 @@ Z = rff.transform(X)
 K_approx = Z @ Z.T
 K_exact  = rbf_kernel(X, X, sigma=sigma)
 
-print("Max abs error:", np.abs(K_approx - K_exact).max())
+print("max abs error:", np.abs(K_approx - K_exact).max())
 # -> a small number (~1e-2); shrinks as n_features grows
 ```
 
@@ -143,7 +143,7 @@ plt.loglog(Ds, errors[0] * np.sqrt(Ds[0]) / np.sqrt(Ds), "--",
            label=r"$O(1/\sqrt{D})$ reference")
 plt.xlabel("number of random features $D$")
 plt.ylabel("relative Frobenius error")
-plt.legend(); plt.title("Random-feature kernel approximation error")
+plt.legend(); plt.title("random-feature kernel approximation error")
 plt.show()
 ```
 
@@ -159,7 +159,7 @@ against exact kernel ridge regression on a noisy 1-D function.
 import numpy as np
 import matplotlib.pyplot as plt
 
-# --- synthetic data ---
+# synthetic data
 rng = np.random.default_rng(42)
 n = 400
 X = np.sort(rng.uniform(-4, 4, size=(n, 1)), axis=0)
@@ -167,24 +167,24 @@ y = np.sin(2 * X[:, 0]) * np.exp(-0.1 * X[:, 0] ** 2) + 0.1 * rng.standard_norma
 
 sigma, lam = 0.5, 1e-3
 
-# --- exact kernel ridge regression:  alpha = (K + lam I)^-1 y ---
+# exact kernel ridge regression:  alpha = (K + lam I)^-1 y
 K = rbf_kernel(X, X, sigma=sigma)
 alpha = np.linalg.solve(K + lam * np.eye(n), y)
 
 Xt = np.linspace(-4, 4, 300)[:, None]
 y_exact = rbf_kernel(Xt, X, sigma=sigma) @ alpha
 
-# --- random-feature ridge regression:  w = (Z^T Z + lam I)^-1 Z^T y ---
+# random-feature ridge regression:  w = (Z^T Z + lam I)^-1 Z^T y
 rff = RFF(n_features=300, sigma=sigma, seed=0).fit(X)
 Z = rff.transform(X)
 w = np.linalg.solve(Z.T @ Z + lam * np.eye(Z.shape[1]), Z.T @ y)
 y_rff = rff.transform(Xt) @ w
 
-# --- plot ---
+# plot
 plt.scatter(X, y, s=8, alpha=0.3, label="data")
 plt.plot(Xt, y_exact, "k-", lw=2, label="exact KRR")
 plt.plot(Xt, y_rff, "r--", lw=2, label="RFF ridge (D=300)")
-plt.legend(); plt.title("Kernel ridge regression vs. random features")
+plt.legend(); plt.title("kernel ridge regression vs. random features")
 plt.show()
 ```
 
