@@ -572,14 +572,14 @@ and the deviation from linearity of \\(\log \tilde{S}_X(j)\\) vs. \\(j\\) measur
 
 ```python
 """
-Example 4: Multifractal Analysis with Scattering Moments
+example 4: multifractal analysis with scattering moments
 ======================================================
-Compare three stochastic processes with different intermittency:
-  - Fractional Brownian Motion (fBm): Gaussian, self-similar, H=0.7
+compare three stochastic processes with different intermittency:
+  - fractional Brownian Motion (fBm): Gaussian, self-similar, H=0.7
   - Ornstein-Uhlenbeck (OU):          Gaussian stationary, finite-range correlation
-  - Multifractal Random Walk (MRW):   Non-Gaussian, intermittent
+  - multifractal Random Walk (MRW):   Non-Gaussian, intermittent
 
-Install: pip install kymatio numpy scipy matplotlib
+install: pip install kymatio numpy scipy matplotlib
 """
 
 import numpy as np
@@ -592,11 +592,11 @@ T   = 2**14
 J   = 8
 Q   = 1   # Q=1 for multiscale analysis (log-scale resolution)
 
-# Process generators
+# process generators
 def fractional_brownian_motion(T, H, rng):
     """
-    Generate fBm via spectral synthesis (Davies-Harte method approximation).
-    H in (0,1): Hurst exponent. H=0.5 → standard Brownian motion.
+    generate fBm via spectral synthesis (Davies-Harte method approximation).
+    H in (0,1): Hurst exponent. H=0.5 -> standard Brownian motion.
     """
     freqs   = np.fft.rfftfreq(T)[1:]       # skip DC
     phases  = rng.uniform(0, 2 * np.pi, len(freqs))
@@ -608,7 +608,7 @@ def fractional_brownian_motion(T, H, rng):
 
 def ornstein_uhlenbeck(T, theta, rng):
     """
-    OU process: dX = -theta*X dt + dW. Stationary, short-range correlation.
+    OU process: dX = -theta*X dt + dW. stationary, short-range correlation.
     theta: mean-reversion speed.
     """
     x  = np.zeros(T)
@@ -619,14 +619,14 @@ def ornstein_uhlenbeck(T, theta, rng):
 
 def multifractal_random_walk(T, lambda2, rng, n_scales=10):
     """
-    Multifractal Random Walk (Bacry & Muzy, 2003) approximation.
-    lambda2 > 0 controls intermittency (larger → more intermittent).
-    Constructed as: X(t) = sum_j B_j(t) * exp(omega_j(t))
+    multifractal random walk (Bacry & Muzy, 2003) approximation.
+    lambda2 > 0 controls intermittency (larger -> more intermittent).
+    constructed as: X(t) = sum_j B_j(t) * exp(omega_j(t))
     where omega_j are correlated log-normal multipliers.
     """
-    # Approximate via log-normal cascade
+    # approximate via log-normal cascade
     freqs = np.fft.rfftfreq(T)[1:]
-    # Logarithmic covariance: C(j1-j2) = lambda2 * log(T/|j1-j2|)
+    # logarithmic covariance: C(j1-j2) = lambda2 * log(T/|j1-j2|)
     log_vol = np.zeros(T)
     for _ in range(n_scales):
         phase    = rng.uniform(0, 2 * np.pi, len(freqs))
@@ -636,19 +636,19 @@ def multifractal_random_walk(T, lambda2, rng, n_scales=10):
     envelope = np.exp(log_vol - log_vol.var() / 2)
     noise    = rng.standard_normal(T)
     signal   = noise * envelope
-    # Integrate to get random walk
+    # integrate to get random walk
     signal   = np.cumsum(signal) / np.sqrt(T)
     return (signal - signal.mean()) / signal.std()
 
-# Generate processes
+# generate processes
 fbm = fractional_brownian_motion(T, H=0.7, rng=rng)
 ou  = ornstein_uhlenbeck(T, theta=50, rng=rng)
 mrw = multifractal_random_walk(T, lambda2=0.04, rng=rng)
 
 processes = {'fBm (H=0.7)': fbm, 'OU process': ou, 'MRW (intermittent)': mrw}
-colors     = {'fBm (H=0.7)': '#2c7bb6', 'OU process': '#1a9641', 'MRW (intermittent)': '#d7191c'}
+colors    = {'fBm (H=0.7)': '#2c7bb6', 'OU process': '#1a9641', 'MRW (intermittent)': '#d7191c'}
 
-# Scattering moments
+# scattering moments
 scat  = Scattering1D(J=J, shape=T, Q=Q)
 meta  = scat.meta()
 order = meta['order']
@@ -656,13 +656,13 @@ scales_j1 = meta['j'][order == 1, 0]    # scale index for order-1 paths
 
 def renormalized_scattering(x, Sx, order, scales_j1):
     """
-    Compute normalized first-order scattering moments:
+    compute normalized first-order scattering moments:
         tilde_S(j) = E[|U[j]x|] (approximated by spatial mean)
     and return log2(tilde_S(j)) vs j for scaling analysis.
     """
     S1 = Sx[order == 1]                  # shape: [n_scales, T//2^J]
     E1 = np.mean(np.abs(S1), axis=1)     # mean over time positions
-    # Normalize by the coarsest scale
+    # normalize by the coarsest scale
     E1_norm = E1 / (E1[-1] + 1e-12)
     return scales_j1, np.log2(E1_norm + 1e-12)
 
@@ -673,17 +673,17 @@ for col, (name, proc) in enumerate(processes.items()):
     kurt  = kurtosis(np.diff(proc))     # kurtosis of increments
     Sx    = scat(proc)
 
-    # Top: signal realization
+    # signal realization
     axes[0, col].plot(proc[:1000], lw=0.6, color=color)
     axes[0, col].set_title(f"{name}\n(increment kurtosis = {kurt:.1f})")
-    axes[0, col].set_xlabel("Time")
+    axes[0, col].set_xlabel("time")
     if col == 0:
-        axes[0, col].set_ylabel("Amplitude")
+        axes[0, col].set_ylabel("amplitude")
 
-    # Bottom: log-scattering vs. scale (slope = Hurst exponent for self-similar)
+    # log-scattering vs. scale (slope = Hurst exponent for self-similar)
     j_idx, log_E = renormalized_scattering(proc, Sx, order, scales_j1)
 
-    # Fit a line to the scaling region (all scales)
+    # fit a line to the scaling region (all scales)
     valid = np.isfinite(log_E)
     if valid.sum() >= 2:
         p = np.polyfit(j_idx[valid], log_E[valid], 1)
@@ -698,16 +698,15 @@ for col, (name, proc) in enumerate(processes.items()):
     axes[1, col].plot(j_idx, fit_line, '--', color='black', lw=1.2, alpha=0.6,
                       label=f'slope ≈ {H_est:.2f}')
     axes[1, col].set_title(f"Log-scattering scaling  (slope = H estimate)")
-    axes[1, col].set_xlabel("Scale j")
+    axes[1, col].set_xlabel("scale j")
     if col == 0:
         axes[1, col].set_ylabel(r"$\log_2 \tilde{S}(j)$")
     axes[1, col].legend(fontsize=9)
 
     print(f"{name:25s}  kurtosis = {kurt:6.1f},  estimated H = {H_est:.3f}")
 
-plt.suptitle("Multifractal Analysis via Scattering Moments", fontsize=13)
+plt.suptitle("multifractal analysis via scattering moments", fontsize=13)
 plt.tight_layout()
-plt.savefig("demo4_multifractal.png", dpi=150, bbox_inches='tight')
 plt.show()
 ```
 
