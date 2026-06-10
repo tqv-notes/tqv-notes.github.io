@@ -13,7 +13,7 @@ The benchmark is part of the Hugging Face Agents Course (Unit 4), where particip
 
 ## Architecture Evolution
 
-Here, I will describe the evolution of different attempts to build an AI agent for GAIA benchmark. 
+Here, I will describe the evolution of different attempts to build an AI agent for GAIA benchmark. The final AI agent can be found here: https://github.com/tqv-notes/gaia_agent.
 
 Important note: I implemented a custom tool-use agent directly on the Anthropic API, without using agent frameworks like smolagents, LangGraph, or LlamaIndex. The core is a ReAct-style loop - the LLM reasons, calls tools, observes results, and repeats - wrapped with deterministic preprocessing and postprocessing stages. This framework-free approach traded convenience for full control over file handling, error recovery, and answer formatting.
 
