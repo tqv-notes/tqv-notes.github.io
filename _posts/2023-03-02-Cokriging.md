@@ -244,7 +244,16 @@ The theory post derives the cokriging system in terms of covariances \\(C_{ij}\\
 
 ### 1. From covariances to variograms
 
-Implementations usually work with variograms \\(\gamma_{ij}(h) = C_{ij}(0) - C_{ij}(h)\\) rather than covariances, because the empirical variogram is easier to estimate (it does not require knowing the means). The two formulations give the *same weights*: substitute \\(C_{ij} = C_{ij}(0) - \gamma_{ij}\\) into the cokriging system and use the constraints \\(\sum_{\alpha_1} \lambda^{(1)}_{\alpha_1} = 1\\), \\(\sum_{\alpha_2} \lambda^{(2)}_{\alpha_2} = 0\\); all the \\(C_{ij}(0)\\) terms either cancel or are absorbed into the Lagrange multipliers (which flip sign). The system we solve in the code is therefore
+Implementations usually work with variograms \\(\gamma_{ij}(h) = C_{ij}(0) - C_{ij}(h)\\) rather than covariances, because the empirical variogram is easier to estimate (it does not require knowing the means). The two formulations give the *same weights*: substitute \\(C_{ij} = C_{ij}(0) - \gamma_{ij}\\) into the cokriging system and use the constraints:
+
+$$
+\begin{aligned}
+\sum_{\alpha_1} \lambda^{(1)}_{\alpha_1} &= 1,\\ 
+\sum_{\alpha_2} \lambda^{(2)}_{\alpha_2} &= 0; 
+\end{aligned}
+$$
+
+all the \\(C_{ij}(0)\\) terms either cancel or are absorbed into the Lagrange multipliers (which flip sign). The system we solve in the code is therefore
 
 $$
 \begin{pmatrix}
@@ -473,4 +482,4 @@ On \\([0, 0.6]\\), where primary data exist, kriging and cokriging agree. Beyond
 
 - **Connection to multi-output GPs.** What we built is exactly a two-task GP with an ICM/LMC kernel \\(K((x,i),(x',j)) = B_{ij} k_m(x,x') + \delta_{ij} \sigma_i^2\\), plus an improper uniform prior on per-task constant means (that is what the ordinary-kriging constraints amount to). The variogram-fitting step replaces maximum-likelihood training; libraries such as GPyTorch (`MultitaskKernel`) do the same thing with MLE and would be the natural next step for higher dimensions or more outputs.
 - **Method-of-moments vs MLE.** Variogram fitting is robust and visualizable (you can *see* whether the model fits), but uses only binned second moments. MLE uses all the data jointly and handles irregular/heterotopic designs without a collocation step - at the price of \\(O((n_1+n_2)^3)\\) per gradient step and less interpretability.
-- **More structures.** The LMC with $L > 1$ structures (e.g. Matérn + nugget + long-range component) is the direct generalization: \\(\gamma_{ij}(h) = \sum_l B^{(l)}_{ij} \gamma_l(h)\\), one Cholesky-parametrized \\(B^{(l)}\\) per structure. The code above is the \\(L = 1\\) special case.
+- **More structures.** The LMC with \\(L > 1\\) structures (e.g. Matérn + nugget + long-range component) is the direct generalization: \\(\gamma_{ij}(h) = \sum_l B^{(l)}_{ij} \gamma_l(h)\\), one Cholesky-parametrized \\(B^{(l)}\\) per structure. The code above is the \\(L = 1\\) special case.
