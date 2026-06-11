@@ -11,29 +11,29 @@ GAIA is a benchmark designed to test AI assistants on real-world tasks that requ
 
 The benchmark is part of the Hugging Face Agents Course (Unit 4), where participants build an agent, deploy it on HF Spaces, and submit answers to a scoring API that evaluates 20 validation questions.
 
-## Architecture Evolution
+## Architecture evolution
 
 Here, I will describe the evolution of different attempts to build an AI agent for GAIA benchmark. The final AI agent can be found here: [AI agent github](https://github.com/tqv-notes/gaia_agent).
 
 Important note: I implemented a custom tool-use agent directly on the Anthropic API, without using agent frameworks like smolagents, LangGraph, or LlamaIndex. The core is a ReAct-style loop - the LLM reasons, calls tools, observes results, and repeats - wrapped with deterministic preprocessing and postprocessing stages. This framework-free approach traded convenience for full control over file handling, error recovery, and answer formatting.
 
-### Attempt 1: Naive LLM Loop (0%)
+### Attempt 1: Naive LLM loop (0%)
 
 The starting point was a template with a `BasicAgent` that returned a default answer. Replacing it with a simple Claude API call and tool definitions got the structure right, but the first real run scored 0% - the model string was outdated (`claude-sonnet-4-20250514` had been deprecated), and every API call returned a 404.
 
 Lesson: model identifiers change. Hardcoding them without a fallback is fragile.
 
-### Attempt 2: Single-Loop Agent with Tools (25-35%)
+### Attempt 2: Single-loop agent with tools (25-35%)
 
 After fixing the model name to `claude-sonnet-4-6`, the agent could reason and call tools: web search (DuckDuckGo), webpage fetching, and Python code execution. This got 25% on the first run and 35% with retry logic for rate limits.
 
 The main failure modes were clear from the logs. File-dependent questions (chess images, audio recordings, Excel spreadsheets, Python scripts) all failed because the scoring API's file endpoint returned 404. YouTube videos were inaccessible due to SSL errors from the HF Space's network. And DuckDuckGo returned "No results" for roughly 80% of queries - likely IP-level throttling on the shared HF Space infrastructure.
 
-### Attempt 3: Better Tools and Prompting (50%)
+### Attempt 3: Better tools and prompting (50%)
 
 Three changes pushed the score to 50%. First, adding a Wikipedia tool that fetched full page HTML rather than relying on search snippets. Many GAIA questions are factual and Wikipedia contains the answer - but only if you get the complete page, not a 200-character search snippet. Second, adding a YouTube transcript tool using `youtube-transcript-api`. Third, improving the system prompt with concrete format examples, since GAIA's exact-match grading means `**broccoli**` (with markdown bold) is wrong even though the content is correct.
 
-### Attempt 4: Deterministic Preprocessing (65%)
+### Attempt 4: Deterministic preprocessing (65%)
 
 For this step, the key insight from detailed failure analysis: Stop asking the LLM to decide when and how to process files. Do it deterministically before the LLM ever sees the question.
 
@@ -47,16 +47,16 @@ extract answer --> regex cleanup --> submit
 
 Specific preprocessing steps, all executed in Python before the agent loop:
 
-- **Python files**: executed via subprocess, both source code and stdout included in the prompt
-- **Excel files**: read with pandas, columns/shape/first 30 rows/column sums all precomputed
-- **Audio files**: transcribed with Whisper (tiny model to avoid OOM on free Spaces)
+- **python files**: executed via subprocess, both source code and stdout included in the prompt
+- **excel files**: read with pandas, columns/shape/first 30 rows/column sums all precomputed
+- **audio files**: transcribed with Whisper (tiny model to avoid OOM on free Spaces)
 - **PDFs**: text extracted with PyPDF2
-- **Images**: attached directly to Claude's vision API
-- **Reversed text**: detected by counting English stopwords in the original vs. reversed string
+- **images**: attached directly to Claude's vision API
+- **reversed text**: detected by counting English stopwords in the original vs. reversed string
 
 The LLM formatter for answer cleanup was also replaced with deterministic regex. An earlier version used a cheap LLM call to clean up verbose answers, but this occasionally mutated correct answers - fatal for exact-match scoring.
 
-### Attempt 5: Tavily Search and Dataset File Fix (75%)
+### Attempt 5: Tavily search and dataset file fix (75%)
 
 Two final fixes addressed the remaining infrastructure issues. DuckDuckGo's unreliability from HF Spaces was mitigated by adding Tavily as the primary search engine (free tier, 1000 searches/month), with DDG as fallback. Tavily also returns a direct `answer` field that often contains exactly what GAIA needs.
 
@@ -66,7 +66,7 @@ https://huggingface.co/datasets/gaia-benchmark/GAIA/resolve/main/2023/validation
 </div>
 This should unlock the 5 file-dependent questions that have been failing since the beginning.
 
-## Lessons Learned
+## Lessons learned
 
 **1. The LLM is not the bottleneck - the plumbing is.**
 
@@ -88,7 +88,7 @@ DuckDuckGo works locally but is heavily throttled from shared cloud IPs. The Wik
 
 A direct comparison showed Claude Sonnet at 50% vs. GPT-4.1 at 20% with the same tool set and prompts. Claude was notably better at deciding when to use tools, recovering from failed searches by trying alternative queries, and following file processing instructions. GPT-4.1's `tool_choice="auto"` was less reliable for multi-step reasoning.
 
-## What Would Get to 80%+
+## What would get to 80%+
 
 Based on the failure analysis, reaching higher accuracy would require addressing the remaining hard questions: YouTube videos where transcripts aren't available (frame extraction + OCR), web pages that require JavaScript rendering (Playwright), and multi-hop research questions where the agent needs to chain 3-4 specific web lookups without getting lost. Adding a verification pass - re-checking the answer against the original question before submitting - would also catch formatting errors that slip through regex cleanup.
 
