@@ -9,7 +9,7 @@ For conventional kriging (also known as gaussian process regression), only one s
 
 In this note, we introduce the cokriging framework to be able to jointly model two different output channels. This technique is known as 'multi-output gaussian process regression' in machine learning community. Both 'kriging' and 'cokriging' terminology are from geostatistical community.
 
-## Mathematical formulation of cokriging
+# Mathematical formulation of cokriging
 
 Consider a situation where we have two kinds of data:
 - Primary data: \\( \\{ z_1(u_{\alpha_1}) \\}\_{\alpha_1 = 1 ... n_1} \\)
@@ -232,17 +232,17 @@ $$
 
 With \\(c_l(h)\\) are permissible covariance models, the sufficient condition for \\(C_{ij}(h)\\) to be a permisssible model of coregionalization is that all the coregionalization matrices \\( B_l = [b_{ij}^l] \\) are positive simi-definite.
 
-## Cokriging in practice: a Python/PyTorch tutorial
+# Cokriging in practice: a Python/PyTorch tutorial
 
 In this section, we build ordinary cokriging from scratch on a 1D toy problem: NumPy for the data and the kriging systems, PyTorch for fitting the variogram model by gradient descent. The full script is at the end.
 
 The setting: a **primary** variable measured sparsely (only on part of the domain) and a **secondary** variable that is cheap to measure and densely sampled everywhere. Because the two are correlated, the secondary data should improve the prediction of the primary one - that is the whole point of cokriging.
 
-### Background needed for the implementation
+## Background needed for the implementation
 
 The theory post derives the cokriging system in terms of covariances \\(C_{ij}\\). Three practical ingredients are still missing before we can write code.
 
-#### 1. From covariances to variograms
+### 1. From covariances to variograms
 
 Implementations usually work with variograms \\(\gamma_{ij}(h) = C_{ij}(0) - C_{ij}(h)\\) rather than covariances, because the empirical variogram is easier to estimate (it does not require knowing the means). The two formulations give the *same weights*: substitute \\(C_{ij} = C_{ij}(0) - \gamma_{ij}\\) into the cokriging system and use the constraints \\(\sum_{\alpha_1} \lambda^{(1)}_{\alpha_1} = 1\\), \\(\sum_{\alpha_2} \lambda^{(2)}_{\alpha_2} = 0\\); all the \\(C_{ij}(0)\\) terms either cancel or are absorbed into the Lagrange multipliers (which flip sign). The system we solve in the code is therefore
 
@@ -269,7 +269,7 @@ Z_1^\ast(u) = \boldsymbol{\lambda}_1^T \mathbf{Z}_1 + \boldsymbol{\lambda}_2^T \
 \sigma^2(u) = \boldsymbol{\lambda}_1^T \boldsymbol{\gamma}_{11}(u) + \boldsymbol{\lambda}_2^T \boldsymbol{\gamma}_{21}(u) + \tilde\mu_1 .
 $$
 
-#### 2. Empirical (cross-)variograms
+### 2. Empirical (cross-)variograms
 
 The classical (Matheron) estimator bins all data pairs by their separation \\(h\\):
 
@@ -285,7 +285,7 @@ $$
 
 and therefore needs both variables at the *same* locations - in the code we keep only the collocated points. Practical rules: ignore lags beyond half the maximum distance (too few pairs), skip empty bins, and - when the data sit on a regular grid - make sure all pairs with the same nominal lag land in the same bin. The last point is easy to get wrong: floating-point jitter in \\(\|x_i - x_j\|\\) splits equal-lag pairs across two adjacent bins whenever a lag coincides with a bin edge, and since the two subsets are position-correlated their means can differ a lot (the empirical variogram then shows a spurious "two-branch" pattern). Rounding the distances before binning fixes it.
 
-#### 3. Nugget effect and a valid coregionalization model
+### 3. Nugget effect and a valid coregionalization model
 
 Measurement noise shows up as a **nugget**: a jump of the variogram at the origin, \\(\gamma_{ii}(h) = c_{0,i} + \text{(continuous part)}\\) for \\(h > 0\\), with \\(\gamma_{ii}(0) = 0\\). If the noises on the two variables are independent, the cross-variogram has *no* nugget. In the kriging matrix the nugget appears on all off-diagonal entries of the diagonal blocks (and on the right-hand side, since a prediction point is not a data point) - this is exactly a Gaussian noise term in GP language.
 
@@ -299,9 +299,9 @@ $$
 
 i.e. a Matérn-5/2 variogram with unit sill shared by all three (cross-)variograms, scaled by a coregionalization matrix \\(B\\). The model is valid iff \\(B \succeq 0\\). In the MATLAB version this is enforced with a nonlinear constraint \\(B_{12}^2 \le B_{11} B_{22}\\) inside `fmincon`; in PyTorch there is a neater trick - parametrize \\(B = L L^T\\) with \\(L\\) lower-triangular (positive diagonal via softplus). Then \\(B\\) is positive semi-definite *by construction* and the fit becomes an unconstrained problem that plain Adam can handle. We use the Matérn-5/2 closed form rather than the general-\\(\nu\\) Matérn because the latter needs the modified Bessel function \\(K_\nu\\), which is not available (differentiably) in PyTorch.
 
-### Implementation
+## Implementation
 
-#### Step 1 - toy data
+### Step 1 - toy data
 
 Two noisy, phase-shifted cosines. The primary variable is only observed on \\([0, 0.6]\\); the secondary one covers \\([0, 1]\\).
 
@@ -319,7 +319,7 @@ Y1 = np.cos(2 * np.pi * X1 + 1.5) + 0.03 * rng.standard_normal(X1.shape)
 Y2 = np.cos(2 * np.pi * X2 + 1.0) + 0.03 * rng.standard_normal(X2.shape)
 ```
 
-#### Step 2 - empirical variograms
+### Step 2 - empirical variograms
 
 ```python
 def empirical_variogram(X, Y, n_bins=20):
@@ -358,7 +358,7 @@ h12, g12 = empirical_cross_variogram(X1, Y1, X2, Y2)    # cross
 
 A remark on data quality: the primary window \\([0, 0.6]\\) covers barely more than half a period of the cosine, so its empirical variogram is necessarily noisy - averaging over positions is a poor substitute for averaging over realizations when the signal is periodic and the window short (the process is far from ergodic at these lags). The dense secondary variogram is much cleaner, which is precisely why borrowing its structure through the cross-variogram pays off.
 
-#### Step 3 - fit the LMC with PyTorch
+### Step 3 - fit the LMC with PyTorch
 
 The only trainable objects are the raw Cholesky factor of \\(B\\), the log-scale length \\(\ell\\), and the two nuggets. The loss is the sum of mean-squared errors between the three model variograms and their empirical counterparts - the same least-squares criterion as the MATLAB version, but with no constraint, thanks to the Cholesky parametrization. A few random restarts guard against bad local minima.
 
@@ -413,7 +413,7 @@ def gamma_model(h, i, j):
 
 Note how the nugget multiplies `(h > 0)`: the model variogram is exactly zero at zero lag, and jumps to \\(c_{0,i}\\) for any positive lag - this single line takes care of all the noise bookkeeping in the kriging matrices below.
 
-#### Step 4 - ordinary kriging (baseline) and ordinary cokriging
+### Step 4 - ordinary kriging (baseline) and ordinary cokriging
 
 Both are "build matrix, solve, dot with data". Kriging on the primary data alone:
 
@@ -461,7 +461,7 @@ S_cokrig = np.sqrt(np.maximum((lam * b).sum(axis=0), 0))
 
 The prediction variance \\(\boldsymbol{\lambda}^T \boldsymbol{\gamma}(u) + \tilde\mu_1\\) is conveniently just `(lam * b).sum(axis=0)`, because the Lagrange rows of `b` are \\((1, 0)\\).
 
-#### Step 5 - results
+### Step 5 - results
 
 On \\([0, 0.6]\\), where primary data exist, kriging and cokriging agree. Beyond \\(x = 0.6\\) ordinary kriging has no information and relaxes to the data mean, while cokriging keeps tracking the shape of the densely-sampled secondary variable - with a variance that stays finite because the cross-correlation is imperfect.
 
@@ -469,7 +469,7 @@ On \\([0, 0.6]\\), where primary data exist, kriging and cokriging agree. Beyond
 
 ![cokriging vs kriging prediction](cokriging_prediction.png)
 
-### Remarks
+## Remarks
 
 - **Connection to multi-output GPs.** What we built is exactly a two-task GP with an ICM/LMC kernel \\(K((x,i),(x',j)) = B_{ij} k_m(x,x') + \delta_{ij} \sigma_i^2\\), plus an improper uniform prior on per-task constant means (that is what the ordinary-kriging constraints amount to). The variogram-fitting step replaces maximum-likelihood training; libraries such as GPyTorch (`MultitaskKernel`) do the same thing with MLE and would be the natural next step for higher dimensions or more outputs.
 - **Method-of-moments vs MLE.** Variogram fitting is robust and visualizable (you can *see* whether the model fits), but uses only binned second moments. MLE uses all the data jointly and handles irregular/heterotopic designs without a collocation step - at the price of \\(O((n_1+n_2)^3)\\) per gradient step and less interpretability.
