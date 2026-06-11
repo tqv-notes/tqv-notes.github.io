@@ -188,7 +188,7 @@ The variational posterior over everything is chosen as
 
 $$q(\{f_l, u_l\}_{l=1}^L) = \prod_{l=1}^{L} \underbrace{p(f_l \mid u_l; h_{l-1}, Z_l)}_{\text{exact GP conditional}}\; q(u_l)$$
 
-Two things to notice. First, the only free variational parameters are \\(\{m_l, S_l, Z_l\}\\) - the conditionals \\(p(f_l|u_l)\\) are kept *exact*, not approximated. Second, and crucially, \\(q\\) does **not** assume independence between layers: \\(f_l\\) depends on the actual output \\(h_{l-1}\\) of the layer below. Marginalizing \\(u_l\\) analytically gives, for each layer,
+Two things to notice. First, the only free variational parameters are \\(\{m_l, S_l, Z_l\}\\) - the conditionals \\(p(f_l\|u_l)\\) are kept *exact*, not approximated. Second, and crucially, \\(q\\) does **not** assume independence between layers: \\(f_l\\) depends on the actual output \\(h_{l-1}\\) of the layer below. Marginalizing \\(u_l\\) analytically gives, for each layer,
 
 $$q(f_l \mid h_{l-1}) = \mathcal{N}\!\left(\mu_l(h_{l-1}),\, \Sigma_l(h_{l-1})\right)$$
 
