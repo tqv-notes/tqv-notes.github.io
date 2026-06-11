@@ -86,13 +86,13 @@ $$
 \Omega = \{x \in D : \phi(x) < 0\}, \qquad \partial\Omega = \{\phi = 0\},
 $$
 
-with \\(\phi > 0\\) in the void. The outward normal is \\(n = \nabla\phi / |\nabla\phi|\\). If the front moves with normal speed \\(v_n\\), the level-set function satisfies the Hamilton-Jacobi transport equation
+with \\(\phi > 0\\) in the void. The outward normal is \\(n = \nabla\phi / \|\nabla\phi\|\\). If the front moves with normal speed \\(v_n\\), the level-set function satisfies the Hamilton-Jacobi transport equation
 
 $$
 \frac{\partial \phi}{\partial t} + v_n\, |\nabla \phi| = 0.
 $$
 
-A short derivation: a point $x(t)$ on the front satisfies \\(\phi(x(t),t)=0\\) and \\(\dot x = v_n n\\); differentiating in \\(t\\) gives \\(\partial_t\phi + v_n\, n\cdot\nabla\phi = \partial_t\phi + v_n|\nabla\phi| = 0\\).
+A short derivation: a point $x(t)$ on the front satisfies \\(\phi(x(t),t)=0\\) and \\(\dot x = v_n n\\); differentiating in \\(t\\) gives \\(\partial_t\phi + v_n\, n\cdot\nabla\phi = \partial_t\phi + v_n\|\nabla\phi\| = 0\\).
 
 Two things make this representation powerful here. First, \\(v_n = A\,e(u):e(u) - \ell\\) extends naturally off the boundary - the energy density is defined everywhere in \\(D\\) - so the equation can be solved on the whole grid with no interface extraction. Second, topological changes are free: when two holes merge or a thin bar pinches off, \\(\phi\\) stays perfectly smooth even though \\(\partial\Omega\\) changes topology. Each *instant* of the evolution is a pure Hadamard boundary variation; the level-set transport simply composes infinitely many of them, and topology transitions happen in passing. (One genuine limitation remains: in 2D the evolution cannot *nucleate* new holes in the interior, which is why the initial design is seeded with holes. The topological derivative is the standard remedy; we do not need it for a tutorial.)
 
