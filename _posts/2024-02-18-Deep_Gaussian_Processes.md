@@ -342,7 +342,7 @@ class DeepGP(torch.nn.Module):
 This is the entire algorithm:
 
 - `propagate` is the doubly stochastic trick - `F` has shape `(S, N, D)` and each layer call resamples. 
-- In `elbo`, note we *don't* sample the last layer: for a Gaussian likelihood, \\(\mathbb{E}_{\mathcal{N}(f|\mu,v)}[\log\mathcal{N}(y|f,\sigma^2)] = \log\mathcal{N}(y|\mu,\sigma^2) - \frac{v}{2\sigma^2}\\) is closed-form (that's the `variational_expectations` call in GPflow). One less variance source.
+- In `elbo`, note we *don't* sample the last layer: for a Gaussian likelihood, \\(\mathbb{E}_{\mathcal{N}(f\|\mu,v)}[\log\mathcal{N}(y\|f,\sigma^2)] = \log\mathcal{N}(y\|\mu,\sigma^2) - \frac{v}{2\sigma^2}\\) is closed-form (that's the `variational_expectations` call in GPflow). One less variance source.
 - `(num_data / len(X))` is the minibatch rescaling - the second "stochastic".
 
 ### 2.4 Prediction
