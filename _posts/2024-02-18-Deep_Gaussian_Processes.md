@@ -174,15 +174,13 @@ Note also that \\( m_l m_l^T + S_l \\) is the explicit result of \\( \mathbb{E}_
 
 This note has two parts: first, what "doubly stochastic" DGP inference (Salimbeni & Deisenroth, NeurIPS 2017, [arXiv:1705.08933](https://arxiv.org/abs/1705.08933)) is and how it differs from the nested variational compression; second, a self-contained ~150-line PyTorch implementation (no GPflow/GPyTorch) is provided.
 
----
-
 ## Part 1 - The doubly stochastic DGP
 
 ### Setup
 
 $$y = f_L(f_{L-1}(\cdots f_1(X)\cdots)) + \epsilon,\qquad f_l \sim \mathcal{GP}$$
 
-Each layer gets inducing points $\{Z_l, u_l = f_l(Z_l)\}$ and a variational distribution $q(u_l) = \mathcal{N}(m_l, S_l)$. So far identical to nested variational compression.
+Each layer gets inducing points \\(\{Z_l, u_l = f_l(Z_l)\}\\) and a variational distribution \\(q(u_l) = \mathcal{N}(m_l, S_l)\\). So far identical to nested variational compression.
 
 ### The key simplification
 
@@ -190,11 +188,11 @@ The variational posterior over everything is chosen as
 
 $$q(\{f_l, u_l\}_{l=1}^L) = \prod_{l=1}^{L} \underbrace{p(f_l \mid u_l; h_{l-1}, Z_l)}_{\text{exact GP conditional}}\; q(u_l)$$
 
-Two things to notice. First, the only free variational parameters are $\{m_l, S_l, Z_l\}$ - the conditionals $p(f_l|u_l)$ are kept *exact*, not approximated. Second, and crucially, $q$ does **not** assume independence between layers: $f_l$ depends on the actual output $h_{l-1}$ of the layer below. Marginalizing $u_l$ analytically gives, for each layer,
+Two things to notice. First, the only free variational parameters are \\(\{m_l, S_l, Z_l\}\\) - the conditionals \\(p(f_l|u_l)\\) are kept *exact*, not approximated. Second, and crucially, \\(q\\) does **not** assume independence between layers: \\(f_l\\) depends on the actual output \\(h_{l-1}\\) of the layer below. Marginalizing \\(u_l\\) analytically gives, for each layer,
 
 $$q(f_l \mid h_{l-1}) = \mathcal{N}\!\left(\mu_l(h_{l-1}),\, \Sigma_l(h_{l-1})\right)$$
 
-with the standard sparse-GP equations ($\mu_l = K_{h u}K_{uu}^{-1}m_l$ and $\Sigma_l = K_{hh} - K_{hu}K_{uu}^{-1}(K_{uu}-S_l)K_{uu}^{-1}K_{uh}$).
+with the standard sparse-GP equations (\\(\mu_l = K_{h u}K_{uu}^{-1}m_l\\) and \\(\Sigma_l = K_{hh} - K_{hu}K_{uu}^{-1}(K_{uu}-S_l)K_{uu}^{-1}K_{uh}\\)).
 
 ### The ELBO and the two sources of stochasticity
 
@@ -202,7 +200,7 @@ The bound has exactly the same shape as single-layer SVGP (Hensman et al., 2013)
 
 $$\mathcal{L} = \sum_{n=1}^{N} \mathbb{E}_{q(f_L^{(n)})}\!\left[\log p(y_n \mid f_L^{(n)})\right] \;-\; \sum_{l=1}^{L} \mathrm{KL}\!\left[q(u_l)\,\|\,p(u_l)\right]$$
 
-The expectation $q(f_L^{(n)})$ - the marginal of the final layer at input $x_n$ - is intractable (it's a continuous mixture of Gaussians through the layers). But it depends only on the $n$-th input: within each layer the marginals factorize over data points. So you can **sample** it cheaply with the reparameterization trick:
+The expectation \\(q(f_L^{(n)})\\) - the marginal of the final layer at input \\(x_n\\) - is intractable (it's a continuous mixture of Gaussians through the layers). But it depends only on the \\(n\\)-th input: within each layer the marginals factorize over data points. So you can **sample** it cheaply with the reparameterization trick:
 
 $$\hat{h}_l^{(n)} = \mu_l(\hat{h}_{l-1}^{(n)}) + \sqrt{\Sigma_l(\hat{h}_{l-1}^{(n)})}\;\varepsilon_l^{(n)},\qquad \varepsilon \sim \mathcal{N}(0, I)$$
 
@@ -211,16 +209,16 @@ i.e. propagate each data point through the stack, sampling layer by layer, and e
 The two "doubly" stochastic parts:
 
 1. **Monte-Carlo sampling** of the intractable expectation through the layers (reparameterized, so it's differentiable).
-2. **Minibatching**: the likelihood term is a sum over $n$, so subsample and rescale by $N/|\mathcal{B}|$.
+2. **Minibatching**: the likelihood term is a sum over \\(n\\), so subsample and rescale by \\(N/|\mathcal{B}|\\).
 
 ### Contrast with nested variational compression:
 
 | | Nested variational compression (Hensman & Lawrence '14) | Doubly stochastic (Salimbeni & Deisenroth '17) |
 |---|---|---|
-| Inter-layer coupling | Cut: $q(h_l)$ approximated as Gaussian between layers | Kept: samples carry the full dependence |
-| Expectations over layers | Analytic $\psi_l, \Psi_l, \Phi_l$ statistics | Monte Carlo |
-| Kernel restrictions | Needs closed-form $\Psi$-statistics (essentially RBF/linear) | Any kernel |
-| Likelihood restrictions | Gaussian (for the closed forms) | Any (just needs $\log p(y|f)$ evaluable) |
+| Inter-layer coupling | Cut: \\(q(h_l)\\) approximated as Gaussian between layers | Kept: samples carry the full dependence |
+| Expectations over layers | Analytic \\(\psi_l, \Psi_l, \Phi_l\\) statistics | Monte Carlo |
+| Kernel restrictions | Needs closed-form \\(\Psi\\)-statistics (essentially RBF/linear) | Any kernel |
+| Likelihood restrictions | Gaussian (for the closed forms) | Any (just needs \\(\log p(y|f)\\) evaluable) |
 | Extra bound-loosening terms | Trace correction terms at every layer | None beyond standard SVGP-style bound |
 | Implementation | Heavy algebra | ~150 lines, autodiff does the work |
 
@@ -228,14 +226,12 @@ The practical lesson from the paper: the sampling approach is *simpler and tight
 
 Two implementation details from the paper that matter in practice:
 
-- **Whitened parameterization.** Parameterize $q(v)$ with $u = \mathrm{chol}(K_{zz})\,v$, so the prior on $v$ is $\mathcal{N}(0,I)$. The KL becomes the trivial $\mathrm{KL}[\mathcal{N}(m,S)\|\mathcal{N}(0,I)]$ and optimization is much better conditioned.
-- **Identity/linear mean functions for inner layers.** With zero mean functions, a deep GP prior collapses towards flat functions (Duvenaud et al., 2014). Salimbeni & Deisenroth give inner layers the identity (or a PCA-style linear map when dimensions differ) as mean function, so at initialization the whole stack is close to the identity and behaves like a single GP. Initialize $S_l \approx 10^{-5} I$ for inner layers so early training is nearly deterministic.
+- **Whitened parameterization.** Parameterize \\(q(v)\\) with \\(u = \mathrm{chol}(K_{zz})\,v\\), so the prior on \\(v\\) is \\(\mathcal{N}(0,I)\\). The KL becomes the trivial \\(\mathrm{KL}[\mathcal{N}(m,S)\|\mathcal{N}(0,I)]\\) and optimization is much better conditioned.
+- **Identity/linear mean functions for inner layers.** With zero mean functions, a deep GP prior collapses towards flat functions (Duvenaud et al., 2014). Salimbeni & Deisenroth give inner layers the identity (or a PCA-style linear map when dimensions differ) as mean function, so at initialization the whole stack is close to the identity and behaves like a single GP. Initialize \\(S_l \approx 10^{-5} I\\) for inner layers so early training is nearly deterministic.
 
 ### Prediction
 
-Propagate test points through the layers by sampling $S$ times; the predictive density is the Gaussian mixture $\frac{1}{S}\sum_s \mathcal{N}\!\left(y_\star \mid \mu_L^{(s)}, \Sigma_L^{(s)} + \sigma^2\right)$.
-
----
+Propagate test points through the layers by sampling \\(S\\) times; the predictive density is the Gaussian mixture \\(\frac{1}{S}\sum_s \mathcal{N}\!\left(y_\star \mid \mu_L^{(s)}, \Sigma_L^{(s)} + \sigma^2\right)\\).
 
 ## Part 2 - From-scratch PyTorch tutorial
 
@@ -269,7 +265,7 @@ Note the batch-friendly shapes: `X` can be `(S, N, D)` - sample dimension in fro
 
 ### 2.2 The sparse variational GP layer
 
-The heart of the method. Whitened: $q(v) = \mathcal{N}(m, LL^\top)$, $u = \mathrm{chol}(K_{zz})v$. With $A = \mathrm{chol}(K_{zz})^{-1}K_{zx}$:
+The heart of the method. Whitened: \\(q(v) = \mathcal{N}(m, LL^\top)\\), \\(u = \mathrm{chol}(K_{zz})v\\). With \\(A = \mathrm{chol}(K_{zz})^{-1}K_{zx}\\):
 
 $$\mu = A^\top m, \qquad \mathrm{diag}\,\Sigma = k_{\mathrm{diag}} - \mathrm{diag}(A^\top A) + \mathrm{diag}(A^\top L L^\top A)$$
 
@@ -301,7 +297,7 @@ class SVGPLayer(torch.nn.Module):
         return mean, var.clamp_min(1e-10)
 
     def sample(self, X):
-        """Reparameterized sample from q(f(X))."""
+        """reparameterized sample from q(f(X))."""
         mean, var = self.conditional(X)
         return mean + var.sqrt() * torch.randn_like(mean)
 
@@ -325,7 +321,7 @@ class DeepGP(torch.nn.Module):
         self.log_noise = torch.nn.Parameter(torch.tensor(math.log(noise_var)))
 
     def propagate(self, X, num_samples=5):
-        """Draw S samples of the final-layer marginals q(f_L)."""
+        """draw S samples of the final-layer marginals q(f_L)."""
         F = X.expand(num_samples, *X.shape)
         for layer in self.layers[:-1]:
             F = layer.sample(F)
@@ -346,7 +342,7 @@ class DeepGP(torch.nn.Module):
 This is the entire algorithm:
 
 - `propagate` is the doubly stochastic trick - `F` has shape `(S, N, D)` and each layer call resamples. 
-- In `elbo`, note we *don't* sample the last layer: for a Gaussian likelihood, $\mathbb{E}_{\mathcal{N}(f|\mu,v)}[\log\mathcal{N}(y|f,\sigma^2)] = \log\mathcal{N}(y|\mu,\sigma^2) - \frac{v}{2\sigma^2}$ is closed-form (that's the `variational_expectations` call in GPflow). One less variance source.
+- In `elbo`, note we *don't* sample the last layer: for a Gaussian likelihood, \\(\mathbb{E}_{\mathcal{N}(f|\mu,v)}[\log\mathcal{N}(y|f,\sigma^2)] = \log\mathcal{N}(y|\mu,\sigma^2) - \frac{v}{2\sigma^2}\\) is closed-form (that's the `variational_expectations` call in GPflow). One less variance source.
 - `(num_data / len(X))` is the minibatch rescaling - the second "stochastic".
 
 ### 2.4 Prediction
@@ -354,7 +350,7 @@ This is the entire algorithm:
 ```python
 @torch.no_grad()
 def predict(self, X, num_samples=100):
-    """Moments of the predictive mixture (1/S) sum_s N(m_s, v_s + s2)."""
+    """moments of the predictive mixture (1/S) sum_s N(m_s, v_s + s2)."""
     mean, var = self.propagate(X, num_samples)
     var = var + self.log_noise.exp()
     m = mean.mean(0)
