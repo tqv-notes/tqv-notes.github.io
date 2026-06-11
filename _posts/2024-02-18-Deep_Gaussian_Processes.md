@@ -209,7 +209,7 @@ i.e. propagate each data point through the stack, sampling layer by layer, and e
 The two "doubly" stochastic parts:
 
 1. **Monte-Carlo sampling** of the intractable expectation through the layers (reparameterized, so it's differentiable).
-2. **Minibatching**: the likelihood term is a sum over \\(n\\), so subsample and rescale by \\(N/|\mathcal{B}|\\).
+2. **Minibatching**: the likelihood term is a sum over \\(n\\), so subsample and rescale by \\(N/\|\mathcal{B}\|\\).
 
 ### Contrast with nested variational compression:
 
@@ -218,7 +218,7 @@ The two "doubly" stochastic parts:
 | Inter-layer coupling | Cut: \\(q(h_l)\\) approximated as Gaussian between layers | Kept: samples carry the full dependence |
 | Expectations over layers | Analytic \\(\psi_l, \Psi_l, \Phi_l\\) statistics | Monte Carlo |
 | Kernel restrictions | Needs closed-form \\(\Psi\\)-statistics (essentially RBF/linear) | Any kernel |
-| Likelihood restrictions | Gaussian (for the closed forms) | Any (just needs \\(\log p(y|f)\\) evaluable) |
+| Likelihood restrictions | Gaussian (for the closed forms) | Any (just needs \\(\log p(y\|f)\\) evaluable) |
 | Extra bound-loosening terms | Trace correction terms at every layer | None beyond standard SVGP-style bound |
 | Implementation | Heavy algebra | ~150 lines, autodiff does the work |
 
