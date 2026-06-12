@@ -270,7 +270,9 @@ $$
 \end{pmatrix}
 $$
 
-with \\(\[\boldsymbol{\Gamma}_{ij}\]_{\alpha\beta} = \gamma_{ij}(u_\alpha - u_\beta)\\), and the prediction and variance are
+with $[\boldsymbol{\Gamma}_{ij}]_{\alpha\beta} = \gamma_{ij}(u_\alpha - u_\beta)$, 
+
+and the prediction and variance are
 
 $$
 Z_1^\ast(u) = \boldsymbol{\lambda}_1^T \mathbf{Z}_1 + \boldsymbol{\lambda}_2^T \mathbf{Z}_2,
