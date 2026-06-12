@@ -270,7 +270,7 @@ $$
 \end{pmatrix}
 $$
 
-with $[\boldsymbol{\Gamma}_{ij}]_{\alpha\beta} = \gamma_{ij}(u_\alpha - u_\beta)$, 
+with $$[\boldsymbol{\Gamma}_{ij}]_{\alpha\beta} = \gamma_{ij}(u_\alpha - u_\beta)$$, 
 
 and the prediction and variance are
 
