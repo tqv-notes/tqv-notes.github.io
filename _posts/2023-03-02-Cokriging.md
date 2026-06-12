@@ -245,6 +245,7 @@ The theory post derives the cokriging system in terms of covariances \\(C_{ij}\\
 ### 1. From covariances to variograms
 
 Implementations usually work with variograms \\(\gamma_{ij}(h) = C_{ij}(0) - C_{ij}(h)\\) rather than covariances, because the empirical variogram is easier to estimate (it does not require knowing the means). The two formulations give the *same weights*: substitute \\(C_{ij} = C_{ij}(0) - \gamma_{ij}\\) into the cokriging system and use the constraints: 
+
 $$
 \begin{aligned}
 \sum_{\alpha_1} \lambda^{(1)}_{\alpha_1} &= 1,\\ 
