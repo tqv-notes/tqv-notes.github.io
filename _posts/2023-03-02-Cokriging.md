@@ -232,9 +232,9 @@ $$
 
 With \\(c_l(h)\\) are permissible covariance models, the sufficient condition for \\(C_{ij}(h)\\) to be a permisssible model of coregionalization is that all the coregionalization matrices \\( B_l = [b_{ij}^l] \\) are positive simi-definite.
 
-# Cokriging in practice: a Python/PyTorch tutorial
+# Cokriging in practice: a python/pytorch tutorial
 
-In this section, we build ordinary cokriging from scratch on a 1D toy problem: NumPy for the data and the kriging systems, PyTorch for fitting the variogram model by gradient descent. The full script is at the end.
+In this section, we build ordinary cokriging from scratch on a 1D toy problem: numpy for the data and the kriging systems, pytorch for fitting the variogram model by gradient descent. The full python script is provided in this github repository [cokriging_1d](https://github.com/tqv-notes/gaussian_process_tutorials/blob/main/cokriging_1d.py). The MATLAB version can be found via this [link](https://github.com/tqv-notes/gaussian_process_tutorials/tree/main/cokriging).
 
 The setting: a **primary** variable measured sparsely (only on part of the domain) and a **secondary** variable that is cheap to measure and densely sampled everywhere. Because the two are correlated, the secondary data should improve the prediction of the primary one - that is the whole point of cokriging.
 
@@ -263,7 +263,7 @@ $$
 \mathbf{0}^T & \mathbf{1}^T & 0 & 0
 \end{pmatrix}
 \begin{pmatrix}
-\boldsymbol{\lambda}_1 \\ \boldsymbol{\lambda}_2 \\ \tilde\mu_1 \\ \tilde\mu_2
+\boldsymbol{\lambda}_1 \\ \boldsymbol{\lambda}_2 \\ \mu_1 \\ \mu_2
 \end{pmatrix}
 =\begin{pmatrix}
 \boldsymbol{\gamma}_{11}(u) \\ \boldsymbol{\gamma}_{21}(u) \\ 1 \\ 0
@@ -277,7 +277,7 @@ and the prediction and variance are
 $$
 Z_1^\ast(u) = \boldsymbol{\lambda}_1^T \mathbf{Z}_1 + \boldsymbol{\lambda}_2^T \mathbf{Z}_2,
 \qquad
-\sigma^2(u) = \boldsymbol{\lambda}_1^T \boldsymbol{\gamma}_{11}(u) + \boldsymbol{\lambda}_2^T \boldsymbol{\gamma}_{21}(u) + \tilde\mu_1 .
+\sigma^2(u) = \boldsymbol{\lambda}_1^T \boldsymbol{\gamma}_{11}(u) + \boldsymbol{\lambda}_2^T \boldsymbol{\gamma}_{21}(u) + \mu_1 .
 $$
 
 ### 2. Empirical (cross-)variograms
