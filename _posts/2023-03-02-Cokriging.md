@@ -308,7 +308,7 @@ $$
 \gamma_m(h) = 1 - \left( 1 + \frac{\sqrt 5 h}{\ell} + \frac{5 h^2}{3 \ell^2} \right) e^{-\sqrt 5 h / \ell},
 $$
 
-i.e. a Matérn-5/2 variogram with unit sill shared by all three (cross-)variograms, scaled by a coregionalization matrix \\(B\\). The model is valid iff \\(B \succeq 0\\). In the MATLAB version this is enforced with a nonlinear constraint \\(B_{12}^2 \le B_{11} B_{22}\\) inside `fmincon`; in PyTorch there is a neater trick - parametrize \\(B = L L^T\\) with \\(L\\) lower-triangular (positive diagonal via softplus). Then \\(B\\) is positive semi-definite *by construction* and the fit becomes an unconstrained problem that plain Adam can handle. We use the Matérn-5/2 closed form rather than the general-\\(\nu\\) Matérn because the latter needs the modified Bessel function \\(K_\nu\\), which is not available (differentiably) in PyTorch.
+i.e. a Matérn-5/2 variogram with unit sill shared by all three (cross-)variograms, scaled by a coregionalization matrix \\(B\\). The model is valid iff \\(B \succeq 0\\). In the MATLAB version this is enforced with a nonlinear constraint \\(B_{12}^2 \le B_{11} B_{22}\\) inside `fmincon`; in pytorch there is a neater trick - parametrize \\(B = L L^T\\) with \\(L\\) lower-triangular (positive diagonal via softplus). Then \\(B\\) is positive semi-definite *by construction* and the fit becomes an unconstrained problem that plain Adam can handle. We use the Matérn-5/2 closed form rather than the general-\\(\nu\\) Matérn because the latter needs the modified Bessel function \\(K_\nu\\), which is not available (differentiably) in pytorch.
 
 ## Implementation
 
@@ -369,7 +369,7 @@ h12, g12 = empirical_cross_variogram(X1, Y1, X2, Y2)    # cross
 
 A remark on data quality: the primary window \\([0, 0.6]\\) covers barely more than half a period of the cosine, so its empirical variogram is necessarily noisy - averaging over positions is a poor substitute for averaging over realizations when the signal is periodic and the window short (the process is far from ergodic at these lags). The dense secondary variogram is much cleaner, which is precisely why borrowing its structure through the cross-variogram pays off.
 
-### Step 3 - fit the LMC with PyTorch
+### Step 3 - fit the LMC with pytorch
 
 The only trainable objects are the raw Cholesky factor of \\(B\\), the log-scale length \\(\ell\\), and the two nuggets. The loss is the sum of mean-squared errors between the three model variograms and their empirical counterparts - the same least-squares criterion as the MATLAB version, but with no constraint, thanks to the Cholesky parametrization. A few random restarts guard against bad local minima.
 
@@ -382,11 +382,11 @@ def matern52_vario(h, ell):
 def lmc_variograms(params, h11, h22, h12):
     raw_L, raw_ell, raw_c0 = params
     ell = torch.nn.functional.softplus(raw_ell)
-    c0 = torch.nn.functional.softplus(raw_c0)      # nuggets (noise)
+    c0 = torch.nn.functional.softplus(raw_c0) # nuggets (noise)
     L = torch.tril(raw_L)
     L = L - torch.diag(torch.diag(L)) \
           + torch.diag(torch.nn.functional.softplus(torch.diag(raw_L)))
-    B = L @ L.T                                    # PSD by construction
+    B = L @ L.T # PSD by construction
     return (B[0, 0] * matern52_vario(h11, ell) + c0[0],
             B[1, 1] * matern52_vario(h22, ell) + c0[1],
             B[0, 1] * matern52_vario(h12, ell)), B, ell, c0
@@ -470,7 +470,7 @@ Y_cokrig = lam[:n1 + n2].T @ np.concatenate([Y1, Y2])
 S_cokrig = np.sqrt(np.maximum((lam * b).sum(axis=0), 0))
 ```
 
-The prediction variance \\(\boldsymbol{\lambda}^T \boldsymbol{\gamma}(u) + \tilde\mu_1\\) is conveniently just `(lam * b).sum(axis=0)`, because the Lagrange rows of `b` are \\((1, 0)\\).
+The prediction variance \\(\boldsymbol{\lambda}^T \boldsymbol{\gamma}(u) + \mu_1\\) is conveniently just `(lam * b).sum(axis=0)`, because the Lagrange rows of `b` are \\((1, 0)\\).
 
 ### Step 5 - results
 
