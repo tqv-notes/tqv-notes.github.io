@@ -477,9 +477,11 @@ The prediction variance \\(\boldsymbol{\lambda}^T \boldsymbol{\gamma}(u) + \tild
 On \\([0, 0.6]\\), where primary data exist, kriging and cokriging agree. Beyond \\(x = 0.6\\) ordinary kriging has no information and relaxes to the data mean, while cokriging keeps tracking the shape of the densely-sampled secondary variable - with a variance that stays finite because the cross-correlation is imperfect.
 
 Below is the plot from variogram/cross-variogram fitting (to determine model parameters):
+
 ![variogram fits](/images/variogram_fits.png){:height="50%" width="100%"}
 
 And the final result for cokriging vs kriging is shown in the following plot:
+
 ![cokriging vs kriging prediction](/images/cokriging_prediction.png){:height="50%" width="100%"}
 
 ## Remarks
