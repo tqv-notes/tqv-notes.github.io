@@ -46,8 +46,8 @@ $$
 \begin{align*}
 \sigma_E^2(u) & = \text{var}\left[ Z^\ast_1(u) - Z_1(u)\right] \\
               & = \text{var}\left[ \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\alpha_1}) + \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) Z_2(u_{\alpha_2}) - Z_1(u)\right] \\
-              & = \sum_{\alpha_1,\alpha_1'} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_1'}^{(1)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_1(u_{\alpha_1'})\right] + \sum_{\alpha_2,\alpha_2'} \lambda_{\alpha_2}^{(2)} \lambda_{\alpha_2'}^{(2)} \text{cov}\left[ Z_2(u_{\alpha_2}), Z_2(u_{\alpha_2'})\right] + \sum_{\alpha_1,\alpha_2} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_2}^{(2)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_2(u_{\alpha_2})\right] \\
-              & ~ + \text{var}\left[ Z_1(u) \right] - \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \text{var}\left[ Z_1(u_{\alpha_1}), Z_1(u) \right] - \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) \text{var}\left[ Z_2(u_{\alpha_1}), Z_1(u) \right]
+              & = \sum_{\alpha_1,\alpha_1'} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_1'}^{(1)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_1(u_{\alpha_1'})\right] + \sum_{\alpha_2,\alpha_2'} \lambda_{\alpha_2}^{(2)} \lambda_{\alpha_2'}^{(2)} \text{cov}\left[ Z_2(u_{\alpha_2}), Z_2(u_{\alpha_2'})\right] + 2\sum_{\alpha_1,\alpha_2} \lambda_{\alpha_1}^{(1)} \lambda_{\alpha_2}^{(2)} \text{cov}\left[ Z_1(u_{\alpha_1}), Z_2(u_{\alpha_2})\right] \\
+              & ~ + \text{var}\left[ Z_1(u) \right] - 2\sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \text{var}\left[ Z_1(u_{\alpha_1}), Z_1(u) \right] - 2\sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) \text{var}\left[ Z_2(u_{\alpha_2}), Z_1(u) \right]
 \end{align*}
 $$
 
@@ -61,7 +61,7 @@ The best estimator should correspond to following system of equations:
 
 $$
 \begin{cases}
-\frac{1}{2} \frac{\partial \mathcal{L}}{\partial \alpha_i} & = 0 ~~~ \text{for}~ i = 1, 2 \\
+\frac{1}{2} \frac{\partial \mathcal{L}}{\partial \lambda^{(i)}_{\alpha_i}} & = 0 ~~~ \text{for}~ i = 1, 2 \\
 \frac{1}{2} \frac{\partial \mathcal{L}}{\partial \mu_i} & = 0 ~~~ \text{for}~ i = 1, 2
 \end{cases}
 $$
@@ -92,8 +92,8 @@ The variance of estimator at the optimal solution is:
 
 $$
 \begin{align*}
-\sigma^2(u) & = C_{11}(0) - \mu_1(u) - \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) C_{11}(u_{\alpha_1} - u) - \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) C_{21}(u_{\alpha_2} - u) \\
-& = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) (C_{11}(0)-C_{11}(u_{\alpha_1} - u)) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) (C_{21}(0)-C_{21}(u_{\alpha_2} - u)) \\
+\sigma^2(u) & = C_{11}(0) - \mu_1(u) - \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) C_{11}(u_{\alpha_1} - u) - \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) C_{21}(u_{\alpha_2} - u) \\
+& = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) (C_{11}(0)-C_{11}(u_{\alpha_1} - u)) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) (C_{21}(0)-C_{21}(u_{\alpha_2} - u)) \\
 & = - \mu_1(u) + \sum_{\alpha_1=1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) \gamma_{11}(u_{\alpha_1} - u) + \sum_{\alpha_2=1}^{n_2} \lambda_{\alpha_1}^{(2)}(u) \gamma_{21}(u_{\alpha_2} - u)
 \end{align*}
 $$
@@ -105,7 +105,7 @@ In matrix notation, the optimal estimator can be found via solving the following
 $$
 \begin{pmatrix}
   \mathbf{K}_{1,1} & \mathbf{K}_{1,2} & \mathbf{1}_1 & \mathbf{0}_1 \\
-  \mathbf{K}_{2,1} & \mathbf{K}_{2,2} & \mathbf{0}_2 & \mathbf{1}_1 \\
+  \mathbf{K}_{2,1} & \mathbf{K}_{2,2} & \mathbf{0}_2 & \mathbf{1}_2 \\
   \mathbf{1}_1^T   & \mathbf{0}_2^T   & 0   & 0  \\
   \mathbf{0}_1^T   & \mathbf{1}_2^T   & 0   & 0 
  \end{pmatrix}
@@ -169,13 +169,13 @@ $$
 Z_1^\ast(u) & = \sum_{\alpha_1 = 1}^{n_1} \lambda_{\alpha_1}^{(1)}(u) Z_1(u_{\alpha_1}) + \sum_{\alpha_2 = 1}^{n_2} \lambda_{\alpha_2}^{(2)}(u) Z_2(u_{\alpha_2})\\
             & =  
 \begin{pmatrix}
-  \mathbf{Z}_{1}(u) & \mathbf{Z}_{2}(u) & 0 & 0
+  \mathbf{Z}_{1}^T(u) & \mathbf{Z}^T_{2}(u) & 0 & 0
  \end{pmatrix}            
  \begin{pmatrix}
-  \lambda_1^{(1)}(u) \\
-  \lambda_2^{(1)}(u) \\
-  \vdots \\
-  \lambda_{n_1}^{(1)}(u)
+  \boldsymbol{\lambda_1}^{(1)}(u) \\
+  \boldsymbol{\lambda_2}^{(1)}(u) \\
+  \mu_1(u) \\
+  \mu_2(u)
  \end{pmatrix}\\
             & =  
 \begin{pmatrix}
@@ -207,7 +207,7 @@ $$
 Since the covarinace is given by \\( C(h) = \mathbb{E}[Z(u)Z(u+h)] - \mu^2\\) with \\(\mu = \mathbb{E}[Z(u)]\\), then we have:
 
 $$
-2\gamma (h) = C(0) - C(h)
+\gamma (h) = C(0) - C(h)
 $$
 
 The standard definition of cross-variogram is:
@@ -221,13 +221,13 @@ $$
 Within the linear model of coregionalization framework, each stationary function \\( Z_i(u) \\) is a linear combination of independent stationary function \\( Y_k^l(u) \\) with zero mean and covariance \\(c_l(h)\\) as below:
 
 $$
-Z_l(u) = \sum_{l=1}^{L} \sum_{k=1}^{N_l} a_{ik}^l Y_k^l(u) + m_i ~~~ \forall i
+Z_i(u) = \sum_{l=1}^{L} \sum_{k=1}^{N_l} a_{ik}^l Y_k^l(u) + m_i ~~~ \forall i
 $$
 
 From this definition, we can deduce the relation between the (cross-) covariance of \\(Z_i(u)\\) and the covariances of independent stationary functions \\(c_l(h)\\) as:
 
 $$
-C_{ij}(h) = \sum_{l=0}^{L} \left( \sum_{k=1}^{N_l} a_{ik}^l a_{jk}^l\right) c_l(h) = \sum_{l=0}^L b_{ij}^l c_i(h)
+C_{ij}(h) = \sum_{l=1}^{L} \left( \sum_{k=1}^{N_l} a_{ik}^l a_{jk}^l\right) c_l(h) = \sum_{l=1}^L b_{ij}^l c_i(h)
 $$
 
 With \\(c_l(h)\\) are permissible covariance models, the sufficient condition for \\(C_{ij}(h)\\) to be a permisssible model of coregionalization is that all the coregionalization matrices \\( B_l = [b_{ij}^l] \\) are positive simi-definite.
