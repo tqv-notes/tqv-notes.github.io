@@ -334,7 +334,7 @@ Y2 = np.cos(2 * np.pi * X2 + 1.0) + 0.03 * rng.standard_normal(X2.shape)
 
 ```python
 def empirical_variogram(X, Y, n_bins=20):
-    """Binned semivariogram: gamma(h) = 0.5 * E[(Z(u+h) - Z(u))^2]."""
+    """binned semivariogram: gamma(h) = 0.5 * E[(Z(u+h) - Z(u))^2]."""
     dist = np.abs(X[:, None] - X[None, :]).ravel()
     sqdiff = ((Y[:, None] - Y[None, :]) ** 2).ravel()
     return _bin_variogram(dist, 0.5 * sqdiff, n_bins)
@@ -349,7 +349,7 @@ def empirical_cross_variogram(X1, Y1, X2, Y2, n_bins=20):
     return _bin_variogram(dist, 0.5 * cross, n_bins)
 
 def _bin_variogram(dist, gam, n_bins):
-    # Round distances so that pairs with the same nominal lag always fall in
+    # round distances so that pairs with the same nominal lag always fall in
     # the same bin (see background section 2).
     dist = np.round(dist, 9)
     # only use lags up to half the maximum distance (few pairs beyond that)
@@ -416,7 +416,7 @@ with torch.no_grad():
 B, ell, c0 = B.numpy(), ell.item(), c0.numpy()
 
 def gamma_model(h, i, j):
-    """Fitted variogram model gamma_ij at lag(s) h (NumPy in, NumPy out)."""
+    """fitted variogram model gamma_ij at lag(s) h (NumPy in, NumPy out)."""
     with torch.no_grad():
         g = float(B[i, j]) * matern52_vario(t(h), t(ell)).numpy()
     return g + (c0[i] if i == j else 0.0) * (np.asarray(h) > 0)
