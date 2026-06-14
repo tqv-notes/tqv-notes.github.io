@@ -343,4 +343,4 @@ if __name__ == "__main__":
 
 All three methods reach the noise floor (\\(\approx 1.9~10^{-4}\\) at 50 dB SNR); AMP gets there around iteration 15, FISTA around 105, ISTA around 220.
 
-![AMP vs FISTA vs ISTA convergence](/images/amp_fista_ista.png)
+![AMP vs FISTA vs ISTA convergence](/images/amp_fista_ista.png){:height="50%" width="100%"}
