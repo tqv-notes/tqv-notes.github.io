@@ -168,3 +168,179 @@ q^{(t+1)}(x_i|y)    &= \mathcal{N}\left( x_i\middle| \hat{x}^{(t+1)}_{i}, \hat{v
 r^{(t)}_{i}         &= \Sigma_{i}^{(t)} \sum_{a=1}^{M} \frac{h_{ai} (y_a-Z^{(t)}_{i\leftarrow a})}{1+V^{(t)}_{i\leftarrow a}}
 \end{align*}
 $$
+
+## Practical implementation with python
+
+The tutorial solves the following **LASSO** problem:
+
+$$\hat x=\arg\min_x\ \tfrac12\|y-Hx\|_2^2+\lambda\|x\|_1,$$
+
+with \\(y=Hx+n\\), \\(x\in\mathbb{R}^N\\) sparse, \\(H\in\mathbb{R}^{M\times N}\\), \\(M<N\\). Three algorithms attack the same problem.
+
+**Soft-thresholding** is the proximal operator of the \\(\ell_1\\) norm and the shared building block:
+
+$$\eta(r,\theta)=\text{sign}(r)\,\max(|r|-\theta,0).$$
+
+**ISTA** is plain proximal gradient descent. With step \\(\alpha\\) (stable iff \\(\alpha<2/L\\), where \\(L=\|H\|_2^2\\) is the Lipschitz constant of the smooth part):
+
+$$x^{(t+1)}=\eta\!\big(x^{(t)}-\alpha H^\top(Hx^{(t)}-y),\ \alpha\lambda\big).$$
+
+**FISTA** adds Nesterov momentum, extrapolating before the gradient step. This turns the \\(O(1/t)\\) rate of ISTA into \\(O(1/t^2)\\):
+
+$$z^{(t)}=x^{(t)}+\tfrac{t-2}{t+1}\big(x^{(t)}-x^{(t-1)}\big),\qquad
+x^{(t+1)}=\eta\!\big(z^{(t)}-\alpha H^\top(Hz^{(t)}-y),\ \alpha\lambda\big).$$
+
+**AMP** is ISTA plus the **Onsager correction**. The residual carries a memory term built from the average denoiser derivative \\(\langle\eta'\rangle\\) (= the fraction of currently-active components):
+
+$$
+\begin{aligned}
+z^{(t)} &= y-Hx^{(t)} + \tfrac{1}{\delta}\,z^{(t-1)}\,\langle\eta'(x^{(t-1)}+H^\top z^{(t-1)})\rangle,\\
+x^{(t+1)} &= \eta\!\big(x^{(t)}+H^\top z^{(t)},\ \theta_t\big),
+\end{aligned}
+$$
+
+with \\(\delta=M/N\\). That one extra term decorrelates the residual so the denoiser always sees "signal + AWGN" (state evolution), which is why AMP needs an order of magnitude fewer iterations.
+
+**Signal model** (Bernoulli–Gaussian): each entry of \\(x\\) is nonzero with probability \\(\rho\\) and, when nonzero, is \\(\mathcal{N}(0,1/\rho)\\); \\(H\\) has i.i.d. \\(\mathcal{N}(0,1/M)\\) entries; noise variance is set from the SNR via \\(\nu_w=10^{-\text{SNR}_{\rm dB}/10}\\).
+
+Below is the self-contained python scripts that compares the convergence of AMP, FISTA and ISTA method:
+
+```python
+"""
+Approximate Message Passing (AMP) for the LASSO, compared with ISTA and FISTA.
+
+this script compares AMP, FISTA, and ISTA on the LASSO-style problem
+
+    minimize_x 0.5 ||y - A x||_2^2 + lambda ||x||_1,
+
+where y = A x0 + noise and x0 is sparse.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# problem generator: Bernoulli-Gaussian signal + Gaussian sensing matrix
+def make_problem(N, M, rho, snr_dB, rng):
+    """draw one instance of  y = H x + n."""
+    # Bernoulli-Gaussian sparse signal: each entry nonzero with probability rho.
+    x = np.sqrt(1.0 / rho) * rng.standard_normal(N)
+    x *= (rng.random(N) < rho)
+
+    # sensing matrix with entries ~ N(0, 1/M): columns are O(1)-normalized.
+    H = rng.standard_normal((M, N)) / np.sqrt(M)
+
+    nuw = 10.0 ** (-snr_dB / 10.0)          # noise variance from the SNR
+    n = np.sqrt(nuw) * rng.standard_normal(M)
+    y = H @ x + n
+    return x, H, y
+
+# soft-thresholding: the proximal operator of the l1 norm, eta(r, thr)
+def soft(r, thr):
+    return np.sign(r) * np.maximum(np.abs(r) - thr, 0.0)
+
+def nmse(x_hat, x):
+    return np.linalg.norm(x_hat - x) ** 2 / np.linalg.norm(x) ** 2
+
+# ISTA: plain proximal gradient descent
+def ista(H, y, x_true, lam, n_iter, step=None):
+    N = H.shape[1]
+    if step is None:                       
+        step = 1.9 / np.linalg.norm(H, 2) ** 2 # just under the 2/L stability limit
+    x_hat = np.zeros(N)
+    mse = np.empty(n_iter)
+    for t in range(n_iter):
+        grad = H.T @ (H @ x_hat - y)
+        x_hat = soft(x_hat - step * grad, lam * step)
+        mse[t] = nmse(x_hat, x_true)
+    return mse
+
+# FISTA: ISTA + Nesterov momentum (with light damping for stability)
+def fista(H, y, x_true, lam, n_iter, step=None, damp=0.85):
+    N = H.shape[1]
+    if step is None:                       
+        step = 1.0 / np.linalg.norm(H, 2) ** 2 # 1/L: momentum needs the safe step
+    x_prev = np.zeros(N)      # x^{(t-1)}
+    x_prev2 = np.zeros(N)     # x^{(t-2)}
+    x_damp = np.zeros(N)
+    mse = np.empty(n_iter)
+    for t in range(1, n_iter + 1):
+        mom = (t - 2) / (t + 1) # Nesterov extrapolation weight
+        z = x_prev + mom * (x_prev - x_prev2)
+        grad = H.T @ (H @ z - y)
+        x_hat = soft(z - step * grad, lam * step)
+        mse[t - 1] = nmse(x_hat, x_true)
+        x_hat = damp * x_hat + (1 - damp) * x_damp   # damping
+        x_damp = x_hat
+        x_prev2, x_prev = x_prev, x_hat
+    return mse
+
+# AMP: ISTA + Onsager correction term (the key ingredient)
+def amp(H, y, x_true, lam, n_iter, damp=0.95):
+    M, N = H.shape
+    delta = M / N
+    x_hat = np.zeros(N)
+    z = np.zeros(M)
+    z_old = np.zeros(M)
+    onsager = np.zeros(M)
+    gamma = 1.0 # effective extra threshold
+    mse = np.empty(n_iter)
+    for t in range(n_iter):
+        # residual carrying the Onsager memory term.
+        z = y - H @ x_hat + onsager
+        z = damp * z + (1 - damp) * z_old  # damping for finite-size stability
+        z_old = z
+
+        thr = lam + gamma
+        r = x_hat + H.T @ z
+        x_hat = soft(r, thr)
+
+        # <eta'> = fraction of components above threshold = average derivative.
+        df = np.mean(np.abs(r) > thr)
+        onsager = (1.0 / delta) * z * df   # Onsager reaction term
+        gamma = thr / delta * df           # state-evolution threshold update
+
+        mse[t] = nmse(x_hat, x_true)
+    return mse
+
+def main():
+    N, M = 1024, 512
+    rho = 0.05
+    snr_dB = 50
+    lam = 0.05
+    n_iter = 300
+    n_trials = 10
+
+    rng = np.random.default_rng(0)
+    acc = {"AMP": 0.0, "FISTA": 0.0, "ISTA": 0.0}
+    for _ in range(n_trials):
+        x, H, y = make_problem(N, M, rho, snr_dB, rng)
+        acc["AMP"] += amp(H, y, x, lam, n_iter)
+        acc["FISTA"] += fista(H, y, x, lam, n_iter)
+        acc["ISTA"] += ista(H, y, x, lam, n_iter)
+    for k in acc:
+        acc[k] /= n_trials
+    
+    plt.figure(figsize=(7, 4))
+    plt.semilogy(acc["AMP"], "-o", color="b", markevery=8, mfc="none", label="AMP")
+    plt.semilogy(acc["FISTA"], "-s", color="r", markevery=8, mfc="none", label="FISTA")
+    plt.semilogy(acc["ISTA"], "-*", color="k", markevery=8, label="ISTA")
+    plt.xlabel("iteration")
+    plt.ylabel("normalized MSE")
+    plt.legend()
+    plt.grid(True, which="both", ls=":")
+    plt.tight_layout()
+    plt.show()
+    print("AMP   final NMSE:", acc["AMP"][-1])
+    print("FISTA final NMSE:", acc["FISTA"][-1])
+    print("ISTA  final NMSE:", acc["ISTA"][-1])
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Results
+
+All three methods reach the noise floor (\\(\approx 1.9~10^{-4}\\) at 50 dB SNR); AMP gets there around iteration 15, FISTA around 105, ISTA around 220.
+
+![AMP vs FISTA vs ISTA convergence](/images/amp_fista_ista.png)
