@@ -28,7 +28,7 @@ $$
 J(\Omega) = \int_{\Gamma_N} g \cdot u \, ds = \int_\Omega A\,e(u) : e(u)\, dx,
 $$
 
-minimized subject to a volume constraint \\(\|\Omega\| = V_{\text{target}}\\). Minimizing compliance means maximizing stiffness for a fixed amount of material.
+minimized subject to a volume constraint \\(\|\Omega\| = V_{\text{target}}\\). Minimizing compliance means maximizing stiffness for a fixed amount of material. (Note: \\(A:B\\) is the [Frobenius inner product](https://en.wikipedia.org/wiki/Frobenius_inner_product) betwee tensors/vectors).
 
 ## 2. Hadamard's boundary variation
 
