@@ -5,7 +5,7 @@ layout: post
 categories: media
 ---
 
-Topology optimization asks a deceptively simple question: given a design domain, boundary conditions, and a material budget, what is the stiffest structure you can build? The density-based SIMP method is the best-known answer (see for example [this tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/matlab-1-.pdf)), but there is an older and mathematically richer one: treat the *shape itself* as the optimization variable and differentiate with respect to it. That is Hadamard's boundary variation method, dating back to 1907, turned into a practical algorithm by the level-set framework of Allaire, Jouve and Toader (2004) and Wang, Wang and Guo (2003).
+Topology optimization asks a deceptively simple question: given a design domain, boundary conditions, and a material budget, what is the stiffest structure you can build? The density-based SIMP method is the best-known answer (see for example [this "88-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/matlab-1-.pdf)), but there is an older and mathematically richer one: treat the *shape itself* as the optimization variable and differentiate with respect to it. That is Hadamard's boundary variation method, dating back to 1907, turned into a practical algorithm by the level-set framework of Allaire, Jouve and Toader (2004) and Wang, Wang and Guo (2003).
 
 This post explains the technical content of the tutorial code piece by piece: the shape derivative, why it lives only on the boundary, how a Hamilton-Jacobi equation turns it into an algorithm, and the numerical details that make the loop stable.
 
@@ -114,7 +114,7 @@ so the interface is smoothed over a band of width \\(\sim 3h\\). This both appro
 
 ## 6. Finite elements
 
-The FEM block is the standard vectorized Q4 setup familiar from the "88-line" topology optimization code: a single precomputed \\(8\times 8\\) element stiffness matrix `KE` (plane stress, unit square element), an `edofMat` connectivity table built once, and a sparse global assembly
+The FEM block is the standard vectorized Q4 ("4-node bilinear quadrilateral" in finite element analysis) setup familiar from the "88-line" topology optimization code: a single precomputed \\(8\times 8\\) element stiffness matrix `KE` (plane stress, unit square element), an `edofMat` connectivity table built once, and a sparse global assembly
 
 ```python
 sK = (KE.ravel()[None, :] * rho.ravel()[:, None]).ravel()
