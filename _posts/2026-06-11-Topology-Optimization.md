@@ -5,7 +5,7 @@ layout: post
 categories: media
 ---
 
-Topology optimization asks a deceptively simple question: given a design domain, boundary conditions, and a material budget, what is the stiffest structure you can build? The density-based SIMP method is the best-known answer (see for example [this "99-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/matlab-1-.pdf) or the updated ["88-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/topopt88.pdf)), but there is an older and mathematically richer one: treat the *shape itself* as the optimization variable and differentiate with respect to it. That is Hadamard's boundary variation method, dating back to 1907, turned into a practical algorithm by the level-set framework of Allaire, Jouve and Toader (2004) and Wang, Wang and Guo (2003).
+Topology optimization asks a deceptively simple question: given a design domain, boundary conditions, and a material budget, what is the stiffest structure you can build? The density-based SIMP method is the best-known answer (see for example, the classic ["99-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/matlab-1-.pdf) or the updated ["88-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/topopt88.pdf)), but there is an older and mathematically richer one: treat the *shape itself* as the optimization variable and differentiate with respect to it. That is Hadamard's boundary variation method, dating back to 1907, turned into a practical algorithm by the level-set framework of Allaire, Jouve and Toader (2004) and Wang, Wang and Guo (2003).
 
 This post explains the technical content of the tutorial code piece by piece: the shape derivative, why it lives only on the boundary, how a Hamilton-Jacobi equation turns it into an algorithm, and the numerical details that make the loop stable.
 
@@ -114,7 +114,7 @@ so the interface is smoothed over a band of width \\(\sim 3h\\). This both appro
 
 ## 6. Finite elements
 
-The FEM block is the standard vectorized Q4 ("4-node bilinear quadrilateral" in finite element analysis) setup familiar from the "88-line" topology optimization code: a single precomputed \\(8\times 8\\) element stiffness matrix `KE` (plane stress, unit square element), an `edofMat` connectivity table built once, and a sparse global assembly
+The FEM block is the standard vectorized Q4 ("4-node bilinear quadrilateral" as in finite element analysis) setup familiar from the "88-line" topology optimization code: a single precomputed \\(8\times 8\\) element stiffness matrix `KE` (plane stress, unit square element), an `edofMat` connectivity table built once, and a sparse global assembly
 
 ```python
 sK = (KE.ravel()[None, :] * rho.ravel()[:, None]).ravel()
@@ -179,7 +179,11 @@ v   = energy_to_nodes(U) - ell    # Hadamard shape gradient, extended to D
 phi = reinitialize(advect(phi, v / |v|max, 8))   # HJ descent step
 ```
 
-Starting from a plate perforated by 15 seeded holes, the energy-driven velocity quickly eats the underloaded material; holes merge, thin members pinch off, and by iteration ~50 the design has collapsed to the canonical cantilever answer: two chords running from the clamped edge to the load point, braced by an interior web - a continuum version of a two-bar truss. Compliance drops from its initial value and settles near \\(J \approx 75\\) with the volume locked at the target. None of those topology changes were "decided" anywhere in the code; they fall out of the level-set transport for free.
+Starting from a plate perforated by ~40 seeded holes, the energy-driven velocity quickly eats the underloaded material; holes merge, thin members pinch off, and by iteration ~500 the design has collapsed to the canonical cantilever answer (see figure below): two chords running from the clamped edge to the load point, braced by an interior web - a continuum version of a two-bar truss. Compliance drops from its initial value and settles near \\(J \approx 75\\) with the volume locked at the target. None of those topology changes were "decided" anywhere in the code; they fall out of the level-set transport for free.
+
+![hadamard_topo_opt](/images/hadamard_topo_opt.png){:height="50%" width="100%"}
+
+The full python script to generate this plot is provided at the end of this note.
 
 ## 11. Limitations
 
@@ -192,3 +196,270 @@ This is a tutorial code, and it cuts the corners that production implementations
 3. S. Osher, J.A. Sethian, *Fronts propagating with curvature-dependent speed*, J. Comput. Phys. 79 (1988) 12-49.
 4. J. Céa, *Conception optimale ou identification de formes: calcul rapide de la dérivée directionnelle de la fonction coût*, RAIRO Modél. Math. Anal. Numér. 20 (1986) 371-402.
 5. G. Allaire, *Conception optimale de structures*, Springer, 2007 - the standard textbook treatment of Hadamard's method.
+
+## Full python implementation
+
+```python
+"""
+Hadamard's boundary variation method for shape/topology optimization
+===============================================================================
+a minimal but mathematically faithful tutorial (NumPy/SciPy only).
+
+THE IDEA IN 5 STEPS
+-------------------
+we minimize the compliance (work of the load = "softness") of an elastic
+structure Omega inside a box D, under a volume constraint:
+
+    min_{Omega in D}   J(Omega) = int_{Gamma_N} g . u ds
+    s.t.               |Omega| = V_target,
+    where u solves linear elasticity on Omega.
+
+(1) HADAMARD'S BOUNDARY VARIATION.
+    perturb the shape by a smooth vector field theta:
+        Omega_theta = (Id + theta)(Omega).
+    J is "shape differentiable" if  J(Omega_theta) = J(Omega) + dJ(Omega)(theta)
+    + o(theta), with dJ linear in theta. Hadamard's structure theorem says the
+    derivative only sees the NORMAL displacement of the boundary:
+        dJ(Omega)(theta) = int_{Gamma} v * (theta . n) ds
+    for some scalar field v on Gamma ("the shape gradient").
+
+(2) THE SHAPE DERIVATIVE OF COMPLIANCE.
+    for compliance, with the optimized boundary traction-free, a classical
+    adjoint computation (the problem is self-adjoint) gives
+        dJ(Omega)(theta) = - int_{Gamma} (A e(u) : e(u)) (theta . n) ds,
+    where A e(u):e(u) is twice the elastic energy density. adding the volume
+    constraint through a Lagrange multiplier ell, the Lagrangian
+    L = J + ell |Omega| has
+        dL(Omega)(theta) = int_{Gamma} (ell - A e(u):e(u)) (theta . n) ds.
+
+(3) STEEPEST DESCENT = NORMAL VELOCITY.
+    choosing theta . n = v_n with
+        v_n = A e(u):e(u) - ell
+    makes dL = -int v_n^2 < 0: a descent direction. physically: GROW the
+    boundary where the material works hard (high energy density), SHRINK it
+    where material is cheap to remove (energy below the "price" ell).
+
+(4) LEVEL-SET TRANSPORT (Allaire-Jouve-Toader / Osher-Sethian).
+    represent Omega = {phi < 0}. moving the boundary with normal speed v_n
+    is exactly the Hamilton-Jacobi equation
+        d(phi)/dt + v_n |grad phi| = 0,
+    solved with an upwind (Godunov) scheme. this is what allows topology
+    changes (holes merging/disappearing) while each instant is still a pure
+    Hadamard boundary motion.
+
+(5) ERSATZ MATERIAL.
+    to avoid remeshing, the void D \\ Omega is filled with a very soft
+    material (factor eps_void). the elasticity problem is always solved on
+    the full box D with a Q4 (4-node bilinear quadrilateral) finite element mesh.
+
+reference: G. Allaire, F. Jouve, A.-M. Toader, "structural optimization using
+sensitivity analysis and a level-set method", J. Comput. Phys. 194 (2004).
+"""
+
+import numpy as np
+import scipy.sparse as sp
+import scipy.sparse.linalg as spla
+import matplotlib.pyplot as plt
+
+# ============================================================================
+# parameters
+# ============================================================================
+nelx, nely = 80, 40   # elements in x, y  (box D = [0,80]x[0,40], h=1)
+h          = 1.0      # mesh size
+nu         = 0.3      # Poisson ratio (E = 1)
+eps_void   = 1e-3     # ersatz material stiffness in the void
+vol_target = 0.45     # target volume fraction |Omega| / |D|
+n_iter     = 500      # optimization iterations
+n_advect   = 8        # HJ time steps per iteration (pseudo-time)
+reinit_every = 5      # reinitialize phi to a signed distance function
+lag, mu    = 0.5, 2.0 # augmented Lagrangian: multiplier + penalty
+
+# ============================================================================
+# finite elements: Q4 stiffness matrix, mesh connectivity (plane stress)
+# (classical "88-line" layout: node n = (nely+1)*ix + iy, y pointing down)
+# ============================================================================
+def lk(nu):
+    k = np.array([1/2 - nu/6, 1/8 + nu/8, -1/4 - nu/12, -1/8 + 3*nu/8,
+                  -1/4 + nu/12, -1/8 - nu/8, nu/6, 1/8 - 3*nu/8])
+    return 1.0/(1 - nu**2) * np.array(
+        [[k[0], k[1], k[2], k[3], k[4], k[5], k[6], k[7]],
+         [k[1], k[0], k[7], k[6], k[5], k[4], k[3], k[2]],
+         [k[2], k[7], k[0], k[5], k[6], k[3], k[4], k[1]],
+         [k[3], k[6], k[5], k[0], k[7], k[2], k[1], k[4]],
+         [k[4], k[5], k[6], k[7], k[0], k[1], k[2], k[3]],
+         [k[5], k[4], k[3], k[2], k[1], k[0], k[7], k[6]],
+         [k[6], k[3], k[4], k[1], k[2], k[7], k[0], k[5]],
+         [k[7], k[2], k[1], k[4], k[3], k[6], k[5], k[0]]])
+
+KE   = lk(nu)
+ndof = 2 * (nelx + 1) * (nely + 1)
+elx, ely = np.meshgrid(np.arange(nelx), np.arange(nely), indexing="ij")
+n1 = ((nely + 1) * elx + ely).ravel()       # upper-left node of element
+n2 = ((nely + 1) * (elx + 1) + ely).ravel() # upper-right node
+edofMat = np.column_stack([2*n1+2, 2*n1+3, 2*n2+2, 2*n2+3,
+                           2*n2,   2*n2+1, 2*n1,   2*n1+1])
+iK = np.kron(edofMat, np.ones((1, 8), dtype=int)).ravel()
+jK = np.kron(edofMat, np.ones((8, 1), dtype=int)).ravel()
+
+# boundary conditions: cantilever. left edge clamped, unit downward point
+# load at the middle of the right edge (this is Gamma_N; it is NOT optimized).
+fixed = np.arange(2 * (nely + 1)) # all dofs at ix = 0
+free  = np.setdiff1d(np.arange(ndof), fixed)
+F = np.zeros(ndof)
+load_node = (nely + 1) * nelx + nely // 2
+F[2 * load_node + 1] = -1.0
+
+def solve_elasticity(rho):
+    """FEM solve on the whole box D with element-wise stiffness factor rho."""
+    sK = (KE.ravel()[None, :] * rho.ravel()[:, None]).ravel()
+    K  = sp.coo_matrix((sK, (iK, jK)), shape=(ndof, ndof)).tocsc()
+    U  = np.zeros(ndof)
+    U[free] = spla.spsolve(K[free][:, free], F[free])
+    return U
+
+# ============================================================================
+# level set machinery. phi is defined on nodes, shape (nelx+1, nely+1).
+# material Omega = {phi < 0}.
+# ============================================================================
+def upwind_diffs(p):
+    """one-sided differences with edge replication (Neumann-like)."""
+    q = np.pad(p, 1, mode="edge")
+    Dxm = (p - q[:-2, 1:-1]) / h     # backward in x
+    Dxp = (q[2:, 1:-1] - p) / h      # forward  in x
+    Dym = (p - q[1:-1, :-2]) / h
+    Dyp = (q[1:-1, 2:] - p) / h
+    return Dxm, Dxp, Dym, Dyp
+
+def godunov_norms(p):
+    Dxm, Dxp, Dym, Dyp = upwind_diffs(p)
+    gp = np.sqrt(np.maximum(Dxm, 0)**2 + np.minimum(Dxp, 0)**2 +
+                 np.maximum(Dym, 0)**2 + np.minimum(Dyp, 0)**2)
+    gm = np.sqrt(np.minimum(Dxm, 0)**2 + np.maximum(Dxp, 0)**2 +
+                 np.minimum(Dym, 0)**2 + np.maximum(Dyp, 0)**2)
+    return gp, gm
+
+def advect(phi, v, steps):
+    """Hamilton-Jacobi transport  phi_t + v |grad phi| = 0  (Godunov upwind).
+
+    this is the discrete counterpart of Hadamard's boundary motion: the zero
+    level set moves with normal velocity v (n = grad phi / |grad phi| points
+    out of Omega since phi < 0 inside).
+    """
+    dt = 0.5 * h / max(np.abs(v).max(), 1e-12) # CFL condition
+    for _ in range(steps):
+        gp, gm = godunov_norms(phi)
+        phi = phi - dt * (np.maximum(v, 0) * gp + np.minimum(v, 0) * gm)
+    return phi
+
+def reinitialize(phi, iters=40):
+    """restore |grad phi| = 1 (signed distance) without moving {phi = 0},
+    by integrating  phi_t + sign(phi)(|grad phi| - 1) = 0  to steady state.
+    keeps the advection well-conditioned (level sets neither flatten nor
+    bunch up)."""
+    s = phi / np.sqrt(phi**2 + h**2)
+    for _ in range(iters):
+        gp, gm = godunov_norms(phi)
+        g = np.where(s > 0, gp, gm)
+        phi = phi - 0.5 * h * s * (g - 1.0)
+    return phi
+
+def density(phi):
+    """element-wise material fraction from nodal phi (smeared interface),
+    then ersatz interpolation rho in [eps_void, 1]."""
+    eps = 1.5 * h                                  # smearing half-width
+    chi = np.clip(0.5 - phi / (2 * eps), 0.0, 1.0) # ~ Heaviside(-phi)
+    # average the 4 corner values of each element
+    frac = 0.25 * (chi[:-1, :-1] + chi[1:, :-1] + chi[:-1, 1:] + chi[1:, 1:])
+    return eps_void + (1 - eps_void) * frac, frac
+
+# initial shape: material everywhere except a periodic array of holes
+# (the level-set method can remove/merge holes but not nucleate them in 2D,
+# so we seed the topology by hand as in Allaire et al.)
+X, Y = np.meshgrid(np.arange(nelx + 1), np.arange(nely + 1), indexing="ij")
+phi = -np.cos(8 * np.pi * X / nelx) * np.cos(8 * np.pi * Y / nely) - 0.1
+phi = reinitialize(phi, 60)
+
+def protect(phi):
+    """keep a little material around the load point and the clamped edge so
+    the load always has something to pull on."""
+    r2 = (X - nelx)**2 + (Y - nely // 2)**2
+    phi = np.where(r2 <= 9.0, np.minimum(phi, -0.5), phi)
+    phi[0:2, :] = np.minimum(phi[0:2, :], -0.5)
+    return phi
+
+phi = protect(phi)
+
+# ============================================================================
+# optimization loop:  solve -> shape gradient -> advect -> reinitialize
+# ============================================================================
+history, snapshots = [], {}
+snap_at = {0, 5, 20, 50, n_iter - 1}
+
+for it in range(n_iter):
+    rho, frac = density(phi)
+    U = solve_elasticity(rho)
+    J = F @ U # compliance
+    vol = frac.mean() # volume fraction
+    history.append((J, vol))
+
+    # element energy density  A e(u):e(u)  (with ersatz factor), -> nodes
+    Ue = U[edofMat]
+    ee = rho.ravel() * np.einsum("ij,jk,ik->i", Ue, KE, Ue)
+    ee_el = ee.reshape(nelx, nely)
+    ee_nd = np.zeros((nelx + 1, nely + 1))
+    cnt   = np.zeros((nelx + 1, nely + 1))
+    for dx in (0, 1):
+        for dy in (0, 1):
+            ee_nd[dx:nelx+dx, dy:nely+dy] += ee_el
+            cnt[dx:nelx+dx, dy:nely+dy] += 1
+    ee_nd /= cnt
+    # clip the load-point singularity so it does not dominate the velocity,
+    # and normalize by the mean energy so the multiplier ell is O(1)
+    ee_nd = np.minimum(ee_nd, np.quantile(ee_nd, 0.999))
+    ee_nd = ee_nd / max(ee_nd.mean(), 1e-12)
+
+    # augmented-Lagrangian multiplier for the volume constraint
+    ell = lag + mu * (vol - vol_target)
+    lag = ell
+
+    # Hadamard steepest descent: normal velocity v_n = A e(u):e(u) - ell.
+    # (>0 grows Omega, <0 shrinks it; see header, steps (2)-(3).)
+    v = ee_nd - ell
+    v = v / max(np.abs(v).max(), 1e-12) # normalize speed
+
+    phi = advect(phi, v, n_advect)
+    phi = protect(phi)
+    if (it + 1) % reinit_every == 0:
+        phi = reinitialize(phi)
+
+    if it in snap_at:
+        snapshots[it] = phi.copy()
+    if it % 10 == 0 or it == n_iter - 1:
+        print(f"iter {it:3d}   J = {J:7.3f}   vol = {vol:.3f}   ell = {ell:5.3f}")
+
+# ============================================================================
+# plots
+# ============================================================================
+hist = np.array(history)
+fig = plt.figure(figsize=(13, 7))
+for k, it in enumerate(sorted(snapshots)):
+    ax = fig.add_subplot(2, 3, k + 1)
+    ax.contourf(snapshots[it].T, levels=[-1e9, 0], colors=["#444444"])
+    ax.contour(snapshots[it].T, levels=[0], colors="k", linewidths=0.8)
+    ax.set_title(f"iteration {it}", fontsize=10)
+    ax.set_aspect("equal"); ax.invert_yaxis(); ax.set_xticks([]); ax.set_yticks([])
+
+ax = fig.add_subplot(2, 3, 6)
+ax.plot(hist[:, 0], "b-", label="compliance J")
+ax.set_xlabel("iteration"); ax.set_ylabel("J", color="b")
+ax2 = ax.twinx()
+ax2.plot(hist[:, 1], "r--", label="volume")
+ax2.axhline(vol_target, color="r", ls=":", lw=0.8)
+ax2.set_ylabel("volume fraction", color="r")
+ax.set_title("convergence", fontsize=10)
+
+fig.suptitle("Hadamard boundary variation / level-set topology optimization "
+             "(cantilever, compliance minimization)", fontsize=12)
+fig.tight_layout()
+plt.show()
+```
