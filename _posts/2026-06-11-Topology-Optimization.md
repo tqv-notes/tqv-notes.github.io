@@ -142,7 +142,7 @@ $$
 \nabla^+ = \sqrt{ \max(D^{-x},0)^2 + \min(D^{+x},0)^2 + \max(D^{-y},0)^2 + \min(D^{+y},0)^2 },
 $$
 
-and \\(\nabla^-\\) with the maxes and mins swapped. The update is
+and \\(\nabla^-\\) with the maxes and mins swapped. The update is (with ```gp ``` for \\(\nabla^+\\) and ```gm``` for \\(\nabla^-\\)):
 
 ```python
 phi = phi - dt * (np.maximum(v, 0) * gp + np.minimum(v, 0) * gm)
