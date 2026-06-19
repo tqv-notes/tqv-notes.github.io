@@ -11,7 +11,7 @@ This post explains the technical content of the tutorial code piece by piece: th
 
 ## 1. The model problem
 
-We work in a rectangular box \\(D = [0,80] \times [0,40]\\) holding a cantilever: the left edge is clamped, and a unit point load \\(g\\) pulls down at the middle of the right edge. The structure is an open set \\(\Omega \subset D\\), and the displacement \\(u\\) solves linear elasticity on \\(\Omega\\):
+We work in a rectangular box \\(D = [0,80] \times [0,40]\\) holding a cantilever (see figure below): the left edge is clamped, and a unit point load \\(g\\) pulls down at the middle of the right edge. The structure is an open set \\(\Omega \subset D\\), and the displacement \\(u\\) solves linear elasticity on \\(\Omega\\):
 
 $$
 -\,\mathrm{div}\big(A\,e(u)\big) = 0 \ \text{in } \Omega, \qquad
@@ -22,13 +22,15 @@ $$
 
 where \\(e(u) = \tfrac12(\nabla u + \nabla u^T)\\) is the strain, \\(A\\) the Hooke tensor (plane stress, \\(E=1\\), \\(\nu = 0.3\\)), \\(\Gamma_D\\) the clamped edge, \\(\Gamma_N\\) the loaded part, and \\(\Gamma\\) the *free boundary* - the only part the optimizer may move.
 
+![cantilever_problem](/images/cantilever_problem.png){:height="10%" width="20%"}
+
 The objective is compliance, the work done by the load:
 
 $$
 J(\Omega) = \int_{\Gamma_N} g \cdot u \, ds = \int_\Omega A\,e(u) : e(u)\, dx,
 $$
 
-minimized subject to a volume constraint \\(\|\Omega\| = V_{\text{target}}\\). Minimizing compliance means maximizing stiffness for a fixed amount of material. (Note: \\(A:B\\) is the [Frobenius inner product](https://en.wikipedia.org/wiki/Frobenius_inner_product) between tensors/matrices/vectors \\(A\\) and \\(B\\)).
+minimized subject to a volume constraint \\(\|\Omega\| = V_{\text{target}}\\). Minimizing compliance means maximizing stiffness for a fixed amount of material. (Here, \\(A:B\\) is the [Frobenius inner product](https://en.wikipedia.org/wiki/Frobenius_inner_product) between tensors/matrices/vectors \\(A\\) and \\(B\\)).
 
 ## 2. Hadamard's boundary variation
 
