@@ -22,7 +22,7 @@ $$
 
 where \\(e(u) = \tfrac12(\nabla u + \nabla u^T)\\) is the strain, \\(A\\) the Hooke tensor (plane stress, \\(E=1\\), \\(\nu = 0.3\\)), \\(\Gamma_D\\) the clamped edge, \\(\Gamma_N\\) the loaded part, and \\(\Gamma\\) the *free boundary* - the only part the optimizer may move.
 
-![cantilever_problem](/images/cantilever_problem.png){:height="10%" width="20%"}
+![cantilever_problem](/images/cantilever_problem.png){:height="40%" width="80%"}
 
 The objective is compliance, the work done by the load:
 
