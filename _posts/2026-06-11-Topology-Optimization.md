@@ -7,7 +7,7 @@ categories: media
 
 Topology optimization asks a deceptively simple question: given a design domain, boundary conditions, and a material budget, what is the stiffest structure you can build? The density-based SIMP method is the best-known answer (see for example, the classic ["99-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/matlab-1-.pdf) or the updated ["88-line" tutorial](https://www.topopt.mek.dtu.dk/-/media/subsites/topopt/apps/dokumenter-og-filer-til-apps/topopt88.pdf)), but there is an older and mathematically richer one: treat the *shape itself* as the optimization variable and differentiate with respect to it. That is Hadamard's boundary variation method, dating back to 1907, turned into a practical algorithm by the level-set framework of [Allaire, Jouve and Toader (2004)](http://www.cmap.polytechnique.fr/~allaire/ajt-jcp.pdf) and [Wang, Wang and Guo (2003)](https://www.sciencedirect.com/science/article/abs/pii/S0045782502005595).
 
-This post explains the technical content of the tutorial code piece by piece: the shape derivative, why it lives only on the boundary, how a Hamilton-Jacobi equation turns it into an algorithm, and the numerical details that make the loop stable.
+This post, which originated from my work on (photonics) inverse design, explains the technical content of the tutorial code piece by piece: the shape derivative, why it lives only on the boundary, how a Hamilton-Jacobi equation turns it into an algorithm, and the numerical details that make the loop stable.
 
 ## 1. The model problem
 
