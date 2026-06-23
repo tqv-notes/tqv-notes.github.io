@@ -44,6 +44,8 @@ $$
 \end{aligned}
 $$
 
+A C++ implementation of SPGP can be found in the github repo [SPGP tutorial](https://github.com/tqv-notes/gaussian_process_tutorials/blob/main/gp_cpp/spgp.cpp).
+
 # Deep Gaussian Processes
 
 Deep Gaussian Processes assume that data is generated via a composition of multiple Gaussian Processes as:
