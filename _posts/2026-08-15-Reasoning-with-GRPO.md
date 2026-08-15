@@ -17,8 +17,8 @@ At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The m
 
 $$
 \begin{aligned}
-J_{GRPO}(\theta) &= \mathcal{E}_{q \sim P(q), o \sim \pi_{\theta}(\cdot|q)} \left[ r(q, o)\right]\\
-                 &= \left[ \frac{1}{G} \sum_{i=1}^G min\left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)} A_i, \text{clip} \left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)},1-\epsilon, 1+\epsilon \right) A_i \right) \right] - \beta \mathcal{D}_{KL}(\pi \| \pi_{ref})
+J_{GRPO}(\theta) &= \mathbb{E}_{q \sim P(q), o \sim \pi_{\theta}(\cdot|q)} \left[ r(q, o)\right]\\
+                 &= \left[ \frac{1}{G} \sum_{i=1}^G min\left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)} A_i, \text{clip} \left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)},1-\epsilon, 1+\epsilon \right) A_i \right) \right] - \beta \mathbb{D}_{KL}(\pi \| \pi_{ref})
 \end{aligned}
 $$
 
@@ -26,7 +26,7 @@ where,
 
 $$ A_i = \frac{ r_i - \text{mean}\left( \{ r_1, r_2, ..., r_G \} \right) }{ \text{std}\left( \{ r_1, r_2, ..., r_G \} \right) } $$
 
-$$ \mathcal{D}_{KL}(\pi | \pi_{ref}) = \frac{\pi_{ref}(o_i|q)}{\pi_{\theta}(o_i|q)} - \log\left( \frac{\pi_{ref}(o_i|q)}{\pi_{\theta}(o_i|q)}\right) - 1 $$
+$$ \mathbb{D}_{KL}(\pi | \pi_{ref}) = \frac{\pi_{ref}(o_i|q)}{\pi_{\theta}(o_i|q)} - \log\left( \frac{\pi_{ref}(o_i|q)}{\pi_{\theta}(o_i|q)}\right) - 1 $$
 
 ### GRPO pseudocode
 
