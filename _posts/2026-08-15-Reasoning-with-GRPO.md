@@ -14,3 +14,47 @@ The training process of DeepSeek R1 consists of 4 steps:
 - Diverse RL: this secondary RL step aims to further align with human preferences using a hybrid reward approach (rule-based systems + language model evaluation).
 
 At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The main idea of this algorithm is that instead of training a separate value/critic model to estimate how good an answer is, generate several answers to the same question and judge each answer relative to the others.
+
+# GRPO pseudocode
+
+Initialize policy model `pi_theta`
+Initialize reference model `pi_ref = pi_theta`
+
+for each training step:
+
+    # 1. Sample a batch of prompts
+    prompts = sample_prompts()
+
+    for each prompt x in prompts:
+
+        # 2. Generate a group of G responses
+        responses = [y1, y2, ..., yG] = generate_G_responses(pi_theta, x)
+
+        # 3. Evaluate each response
+        rewards = [r1, r2, ..., rG] = reward_function(x, responses)
+
+        # 4. Compute relative advantages
+        mean_r = mean(rewards)
+        std_r  = std(rewards)
+
+        for i = 1 ... G:
+            Ai = (ri - mean_r) / (std_r + epsilon)
+
+        # 5. Compute GRPO policy loss
+        for each response yi:
+
+            ratio_i = pi_theta(yi | x) / pi_old(yi | x)
+
+            clipped_ratio_i = clip(ratio_i,1 - epsilon_clip,1 + epsilon_clip)
+
+            policy_loss_i =-min(ratio_i * Ai,clipped_ratio_i * Ai)
+
+            # KL penalty against reference model
+            KL_i = KL(pi_theta || pi_ref)
+
+            total_loss_i = policy_loss_i + beta * KL_i
+
+    # 6. Update the policy parameters
+    theta = theta - learning_rate * grad_theta(total_loss)
+
+return pi_theta
