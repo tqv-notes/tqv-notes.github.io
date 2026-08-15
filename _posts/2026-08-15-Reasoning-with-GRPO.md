@@ -22,7 +22,11 @@ J_{GRPO}(\theta) &= \mathcal{E}_{q \sim P(q), o \sim \pi_{\theta}(\cdot|q)} \lef
 \end{aligned}
 $$
 
-where $$ \mathcal{D}_{KL}(\pi \| \pi_{ref}) = \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)} - \log\left( \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)}\right) - 1 $$.
+where,
+
+$$ A_i = \frac{ r_i - \text{mean}\left( \{ r_1, r_2, ..., r_G \} \right) }{ \text{std}\left( \{ r_1, r_2, ..., r_G \} \right) } $$
+
+$$ \mathcal{D}_{KL}(\pi \| \pi_{ref}) = \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)} - \log\left( \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)}\right) - 1 $$.
 
 ### GRPO pseudocode
 
