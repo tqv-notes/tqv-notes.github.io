@@ -18,6 +18,7 @@ At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The m
 # GRPO pseudocode
 
 Initialize policy model `pi_theta`
+
 Initialize reference model `pi_ref = pi_theta`
 
 for each training step:
