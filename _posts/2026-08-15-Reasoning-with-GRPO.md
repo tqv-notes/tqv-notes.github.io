@@ -17,31 +17,31 @@ At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The m
 
 # GRPO pseudocode
 
-Initialize policy model `pi_theta`
+initialize policy model `pi_theta`
 
-Initialize reference model `pi_ref = pi_theta`
+initialize reference model `pi_ref = pi_theta`
 
 for each training step:
 
-    # 1. Sample a batch of prompts
+    # 1. sample a batch of prompts
     prompts = sample_prompts()
 
     for each prompt x in prompts:
 
-        # 2. Generate a group of G responses
+        # 2. generate a group of G responses
         responses = [y1, y2, ..., yG] = generate_G_responses(pi_theta, x)
 
-        # 3. Evaluate each response
+        # 3. evaluate each response
         rewards = [r1, r2, ..., rG] = reward_function(x, responses)
 
-        # 4. Compute relative advantages
+        # 4. compute relative advantages
         mean_r = mean(rewards)
         std_r  = std(rewards)
 
         for i = 1 ... G:
             Ai = (ri - mean_r) / (std_r + epsilon)
 
-        # 5. Compute GRPO policy loss
+        # 5. compute GRPO policy loss
         for each response yi:
 
             ratio_i = pi_theta(yi | x) / pi_old(yi | x)
@@ -55,7 +55,7 @@ for each training step:
 
             total_loss_i = policy_loss_i + beta * KL_i
 
-    # 6. Update the policy parameters
+    # 6. update the policy parameters
     theta = theta - learning_rate * grad_theta(total_loss)
 
 return pi_theta
