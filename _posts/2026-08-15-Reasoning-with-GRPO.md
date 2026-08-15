@@ -13,9 +13,18 @@ The training process of DeepSeek R1 consists of 4 steps:
 - Rejection Sampling: in this step, V3 model is used to filter out responses from the main model.
 - Diverse RL: this secondary RL step aims to further align with human preferences using a hybrid reward approach (rule-based systems + language model evaluation).
 
-At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The main idea of this algorithm is that instead of training a separate value/critic model to estimate how good an answer is, generate several answers to the same question and judge each answer relative to the others.
+At the heart of both reasoning and diverse RL steps is the GRPO algorithm. The main idea of this algorithm is that instead of training a separate value/critic model to estimate how good an answer is, generate several answers to the same question and judge each answer relative to the others. More precisely, for each question \\(q\\), GRPO samples a group of output \\( { o_1, o_2, ..., o_G } \\) from the old policy \\( \pi_{\theta_{old}} \\) and then optimizes the policy model \\(\pi_{\theta}\\) by maximizing the following cost function:
 
-# GRPO pseudocode
+$$
+\begin{aligned}
+J_{GRPO}(\theta) &= \mathcal{E}_{q \sim P(q), o \sim \pi_{\theta}(\cdot|q)} \left[ r(q, o)\right]\\
+                 &= \left[ \frac{1}{G} \sum_{i=1}^G min\left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)} A_i, \text{clip} \left( \frac{\pi_{\theta}(o_i|q)}{\pi_{\theta_{old}}(o_i|q)},1-\epsilon, 1+\epsilon \right) A_i \right) \right] - \beta \mathcal{D}_{KL}(\pi \| \pi_{ref})
+\end{aligned}
+$$
+
+where \\( \mathcal{D}_{KL}(\pi \| \pi_{ref}) = \frac{\pi_{ref}(o_i|q)}}{\pi_{\theta}(o_i|q)}} - log\left( \frac{\pi_{ref}(o_i|q)}}{\pi_{\theta}(o_i|q)}}\right) - 1 \\)
+
+## GRPO pseudocode
 
 initialize policy model `pi_theta`
 
