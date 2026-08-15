@@ -24,7 +24,7 @@ $$
 
 where $$ \mathcal{D}_{KL}(\pi \| \pi_{ref}) = \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)} - log\left( \frac{\pi_{ref}(o_i\|q)}{\pi_{\theta}(o_i\|q)}\right) - 1 $$.
 
-## GRPO pseudocode
+### GRPO pseudocode
 
 initialize policy model `pi_theta`
 
