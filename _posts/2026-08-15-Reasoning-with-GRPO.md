@@ -30,9 +30,10 @@ $$ \mathbb{D}_{KL}(\pi | \pi_{ref}) = \frac{\pi_{ref}(o_i|q)}{\pi_{\theta}(o_i|q
 
 ### GRPO pseudocode
 
-initialize policy model `pi_theta`
+```
+initialize policy model pi_theta
 
-initialize reference model `pi_ref = pi_theta`
+initialize reference model pi_ref = pi_theta
 
 for each training step:
 
@@ -72,6 +73,7 @@ for each training step:
     theta = theta - learning_rate * grad_theta(total_loss)
 
 return pi_theta
+```
 
 ### Model fine-tuning with GRPO
 
