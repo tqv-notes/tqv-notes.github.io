@@ -89,4 +89,34 @@ First, we need to add necessary toolbox for this task:
 # install the vLLM wheel matching the CUDA reported above.
 VLLM_WHEEL = "https://github.com/vllm-project/vllm/releases/download/v0.23.0/vllm-0.23.0+cu129-cp38-abi3-manylinux_2_28_x86_64.whl"
 !pip install {VLLM_WHEEL}
+
+# install validation
+import unsloth
+import torch, transformers, trl, datasets, platform
+import vllm
+
+print(f"python       {platform.python_version()}")
+print(f"torch        {torch.__version__}")
+print(f"transformers {transformers.__version__}")
+print(f"trl          {trl.__version__}")
+print(f"datasets     {datasets.__version__}")
+print(f"vllm         {vllm.__version__}")
+print(f"gpu          {torch.cuda.get_device_name(0)}")
+print(f"vram         {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
+print(f"bf16         {torch.cuda.is_bf16_supported()}")
+print(f"torch cuda   {torch.version.cuda}  -  available {torch.cuda.is_available()}")
+```
+
+It should output this configuration (on google colab with L4 GPU):
+```python
+python       3.12.13
+torch        2.11.0+cu128
+transformers 5.15.0
+trl          0.24.0
+datasets     4.3.0
+vllm         0.23.0
+gpu          NVIDIA L4
+vram         23.7 GB
+bf16         True
+torch cuda   12.8  -  available True
 ```
