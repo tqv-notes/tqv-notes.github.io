@@ -171,3 +171,247 @@ model = FastModel.get_peft_model(
     random_state = CFG.seed,
 )
 ```
+
+Load and pre-process the Grade School Math 8K [gsm8k](https://huggingface.co/datasets/openai/gsm8k) dataset from OpenAI:
+```python
+import re
+from datasets import load_dataset
+
+REASONING_START, REASONING_END = "<reasoning>", "</reasoning>"
+ANSWER_START,    ANSWER_END    = "<answer>",    "</answer>"
+
+SYSTEM_PROMPT = (
+    "You are given a problem. Think step by step, then give the final answer.\n"
+    "Respond in exactly this format:\n"
+    f"{REASONING_START}\n...\n{REASONING_END}\n{ANSWER_START}\n...\n{ANSWER_END}"
+)
+
+def extract_xml_answer(text: str) -> str:
+    return text.split(ANSWER_START)[-1].split(ANSWER_END)[0].strip()
+
+def extract_hash_answer(text: str) -> str | None:
+    return text.split("####")[1].strip() if "####" in text else None
+
+_NUM = re.compile(r"-?\d+(?:\.\d+)?")
+
+def normalize_number(s: str) -> str | None:
+    """
+    GSM8K gold answers and model outputs disagree on cosmetics, not maths.
+    '1,000' / '$1000' / '1000.0' / 'The answer is 1000.' must all compare equal.
+    """
+    if s is None:
+        return None
+    s = s.replace(",", "").replace("$", "").replace("%", "").strip()
+    m = _NUM.findall(s)
+    if not m:
+        return None
+    try:
+        v = float(m[-1]) # last number = the stated answer
+    except ValueError:
+        return None
+    return str(int(v)) if v == int(v) else str(v)
+
+def build_dataset(split: str = "train"):
+    ds = load_dataset("openai/gsm8k", "main")[split]
+    ds = ds.map(lambda x: {
+        "prompt": [{"role": "system", "content": SYSTEM_PROMPT},
+                   {"role": "user",   "content": x["question"]}],
+        "answer": normalize_number(extract_hash_answer(x["answer"])),
+    })
+    # rows where parsing failed would silently reward-match against None.
+    return ds.filter(lambda x: x["answer"] is not None)
+
+train_dataset = build_dataset("train").shuffle(seed=CFG.seed)
+eval_dataset  = build_dataset("test").shuffle(seed=CFG.seed).select(range(200))
+print(train_dataset)
+print(train_dataset[0]["prompt"][1]["content"][:200], "->", train_dataset[0]["answer"])
+```
+
+Define reward models:
+```python
+STRICT_RE = re.compile(rf"^{REASONING_START}\n.+?\n{REASONING_END}\n{ANSWER_START}\n.+?\n{ANSWER_END}\s*$", re.DOTALL)
+SOFT_RE   = re.compile(rf"{REASONING_START}.+?{REASONING_END}\s*{ANSWER_START}.+?{ANSWER_END}", re.DOTALL)
+
+def format_reward(completions, **kwargs) -> list[float]:
+    """0.5 for the exact layout, 0.2 for a loose match, 0 otherwise."""
+    out = []
+    for c in completions:
+        text = c[0]["content"]
+        if STRICT_RE.match(text):
+            out.append(0.5)
+        elif SOFT_RE.search(text):
+            out.append(0.2)
+        else:
+            out.append(0.0)
+    return out
+
+_step = {"n": 0}
+
+def correctness_reward(prompts, completions, answer, **kwargs) -> list[float]:
+    responses  = [c[0]["content"] for c in completions]
+    predicted  = [normalize_number(extract_xml_answer(r)) for r in responses]
+    rewards    = [2.0 if (p is not None and p == a) else 0.0 for p, a in zip(predicted, answer)]
+
+    _step["n"] += 1
+    if _step["n"] % 20 == 1:
+        frac_same = sum(r == rewards[0] for r in rewards) / len(rewards)
+        print(f"\n{'='*60}\nstep~{_step['n']}  Q: {prompts[0][-1]['content'][:90]}")
+        print(f"gold={answer[0]}  pred={predicted[0]}  group_reward={rewards}")
+        if frac_same == 1.0:
+            print("  [!] degenerate group: all rewards equal -> zero advantage")
+        print(f"{'-'*60}\n{responses[0][:400]}")
+    return rewards
+
+REWARDS = [format_reward, correctness_reward]
+```
+
+Load baseline model and perform evaluation:
+```python
+from vllm import SamplingParams
+
+def evaluate(lora=None, n=100, temperature=0.0):
+    subset = eval_dataset.select(range(n))
+    prompts = [tokenizer.apply_chat_template(p, tokenize=False,
+                                             add_generation_prompt=True)
+               for p in subset["prompt"]]
+    sp = SamplingParams(temperature=temperature, max_tokens=512, seed=CFG.seed)
+    outs = model.fast_generate(prompts, sampling_params=sp,
+                               **({"lora_request": lora} if lora else {}))
+    texts = [o.outputs[0].text for o in outs]
+    correct = sum(normalize_number(extract_xml_answer(t)) == a
+                  for t, a in zip(texts, subset["answer"]))
+    formatted = sum(bool(SOFT_RE.search(t)) for t in texts)
+    return {"accuracy": correct / n, "format_rate": formatted / n}
+
+baseline = evaluate(n=100)
+print("\nBEFORE GRPO:", baseline)
+```
+
+Fine-tune the baseline model with GRPO algorithm and perform evaluation:
+```python
+from trl import GRPOConfig, GRPOTrainer
+
+training_args = GRPOConfig(
+    
+    # optimisation parameters
+    learning_rate = 5e-6,
+    adam_beta1 = 0.9,
+    adam_beta2 = 0.99,
+    weight_decay = 0.1,
+    warmup_ratio = 0.1,
+    lr_scheduler_type = "cosine",
+    optim = "adamw_8bit",
+    max_grad_norm = 0.1,
+
+    # batch parameters
+    per_device_train_batch_size = CFG.per_device_batch,
+    gradient_accumulation_steps = CFG.grad_accum,
+    num_generations = CFG.num_generations,
+    max_prompt_length = CFG.max_prompt_length,
+    max_completion_length = CFG.max_seq_length - CFG.max_prompt_length,
+    max_steps = CFG.max_steps,
+    seed = CFG.seed,
+
+    # generation
+    use_vllm = True,
+    vllm_mode = "colocate",
+    temperature = 1.0,
+    top_p = 1.0,
+
+    # GRPO objective
+    beta = 0.04,                 # KL-to-reference coefficient (R1 keeps this)
+    loss_type = "grpo",          # token-mean-then-sequence-mean, per the paper
+    scale_rewards = "group",     # advantage divided by within-group std
+    num_iterations = 1,          # mu=1 -> strictly on-policy
+
+    mask_truncated_completions = True,
+
+    # bookkeeping
+    logging_steps = 1,
+    save_steps = CFG.max_steps,
+    report_to = "none",   # "trackio" or "none"
+    output_dir = "outputs",
+    log_completions = True,
+    num_completions_to_print = 2,
+)
+
+trainer = GRPOTrainer(
+    model = model,
+    processing_class = tokenizer,
+    reward_funcs = REWARDS,
+    reward_weights = [1.0, 1.0],   # correctness already carries 2.0 internally
+    args = training_args,
+    train_dataset = train_dataset,
+)
+
+trainer.train()
+model.save_lora("grpo_saved_lora")
+
+after = evaluate(lora=model.load_lora("grpo_saved_lora"), n=100)
+print("\nAFTER GRPO:", after)
+print(f"accuracy    {baseline['accuracy']:.1%}  ->  {after['accuracy']:.1%}")
+print(f"format rate {baseline['format_rate']:.1%}  ->  {after['format_rate']:.1%}")
+```
+
+Test text generation:
+```python
+sp = SamplingParams(temperature=0.7, top_p=0.95, max_tokens=768, seed=CFG.seed)
+lora = model.load_lora("grpo_saved_lora")
+text_prompts = [
+    "What is 15 + 27?",
+    "Explain the Pythagorean theorem in simple terms.",
+    "Write a short Python function that returns the factorial of a number.",
+    "A train travels 120 km in 2 hours. What is its average speed?",
+    "What is the capital of France?",
+    ]
+
+for q in text_prompts:
+    text = tokenizer.apply_chat_template(
+        [{"role": "system", "content": SYSTEM_PROMPT},
+         {"role": "user",   "content": q}],
+        tokenize=False, add_generation_prompt=True)
+    print("=" * 70)
+    print("Q:", q, "\n")
+    print(model.fast_generate([text], sampling_params=sp, lora_request=lora)[0].outputs[0].text)
+```
+
+Upload model to the Hugging Face Hub:
+```python
+from google.colab import userdata
+from huggingface_hub import login
+
+login(token=userdata.get("HF_TOKEN"))
+REPO = "quangvu197/Gemma-3-1b-GRPO-LORA"
+
+model.push_to_hub(REPO)
+tokenizer.push_to_hub(REPO)
+
+model.push_to_hub_gguf(
+    REPO,
+    tokenizer,
+    quantization_method = ["q4_k_m", "q8_0", "q5_k_m"],
+)
+```
+
+Reload model from Hugging Face Hub and test text generation
+```python
+# load model from hugging face and test
+
+from unsloth import FastModel
+
+model, tokenizer = FastModel.from_pretrained(
+    model_name = "quangvu197/Gemma-3-1b-GRPO-LORA",
+    max_seq_length = 2048,
+    load_in_4bit = False,
+)
+
+messages = [{"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": "What is 15 + 27?"}]
+
+inputs = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
+                                       return_tensors="pt", return_dict=True).to(model.device)
+
+out = model.generate(**inputs, max_new_tokens=512, temperature=0.7, top_p=0.95, do_sample=True)
+
+print(tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))
+```
