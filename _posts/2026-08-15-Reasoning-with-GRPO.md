@@ -72,3 +72,21 @@ for each training step:
     theta = theta - learning_rate * grad_theta(total_loss)
 
 return pi_theta
+
+### Model fine-tuning with GRPO
+
+First, we need to add necessary toolbox for this task:
+```python
+# see what CUDA this runtime actually has, before installing anything.
+!nvidia-smi | head -4
+!nvcc --version | tail -2
+
+# install unsloth without vllm (no unsloth extra pulls it in anyway).
+!pip install --upgrade pip
+!pip install unsloth unsloth_zoo
+!pip install "trl>=0.24.0" "datasets>=3.0.0"
+
+# install the vLLM wheel matching the CUDA reported above.
+VLLM_WHEEL = "https://github.com/vllm-project/vllm/releases/download/v0.23.0/vllm-0.23.0+cu129-cp38-abi3-manylinux_2_28_x86_64.whl"
+!pip install {VLLM_WHEEL}
+```
