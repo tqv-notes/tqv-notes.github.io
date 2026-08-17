@@ -120,3 +120,54 @@ vram         23.7 GB
 bf16         True
 torch cuda   12.8  -  available True
 ```
+
+Define model configuration and load Gemma 3 model
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Cfg:
+    model_name: str = "unsloth/gemma-3-1b-it"   # unsloth mirror: pre-patched, no gated repo
+    max_seq_length: int = 1024
+    max_prompt_length: int = 256
+    lora_rank: int = 32
+
+    num_generations: int = 6      # G in the GRPO objective -- the group size
+    per_device_batch: int = 6     # must make generation_batch divisible by G
+    grad_accum: int = 4           # -> 6*4 = 24 completions = 4 prompts per update
+    max_steps: int = 250
+    seed: int = 3407
+
+CFG = Cfg()
+assert (CFG.per_device_batch * CFG.grad_accum) % CFG.num_generations == 0, \
+    "generation_batch_size must be divisible by num_generations"
+    
+print(f"{CFG.per_device_batch * CFG.grad_accum // CFG.num_generations} unique prompts per optimizer step")
+
+from unsloth import FastModel
+
+model, tokenizer = FastModel.from_pretrained(
+    model_name             = CFG.model_name,
+    max_seq_length         = CFG.max_seq_length,
+    load_in_4bit           = True,     # QLoRA. False -> LoRA in bf16, still fits on L4
+    fast_inference         = True,     # vLLM-backed generation; the whole ballgame for GRPO
+    max_lora_rank          = CFG.lora_rank,
+    gpu_memory_utilization = 0.6,    # vLLM's slice. Lower if OOM, raise for bigger groups
+)
+
+# GEMMA 3 + FastModel + fast_inference GOTCHA:
+model = FastModel.get_peft_model(
+    model,
+    r = CFG.lora_rank,
+    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj",
+                      "gate_proj", "up_proj", "down_proj"],
+    finetune_vision_layers     = False,   # required, see above
+    finetune_language_layers   = True,
+    finetune_attention_modules = True,
+    finetune_mlp_modules       = True,
+    lora_alpha = CFG.lora_rank * 2,   # alpha = 2r is the more common modern default
+    lora_dropout = 0.0,               # 0.0 is Unsloth's fast path
+    use_gradient_checkpointing = "unsloth",
+    random_state = CFG.seed,
+)
+```
