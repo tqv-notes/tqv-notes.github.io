@@ -377,6 +377,24 @@ for q in text_prompts:
     print(model.fast_generate([text], sampling_params=sp, lora_request=lora)[0].outputs[0].text)
 ```
 
+Here is an example of question, reasoning and answer:
+
+```
+Q: A train travels 120 km in 2 hours. What is its average speed? 
+
+Rendering prompts: 100%
+ 1/1 [00:00<00:00, 101.40it/s]
+Processed prompts: 100%|██████████| 1/1 [00:00<00:00,  1.37it/s, est. speed input: 104.04 toks/s, output: 117.73 toks/s]<reasoning>
+The train travels a distance of 120 km in 2 hours. To find the average speed, we can calculate the distance traveled divided by the time taken.
+Average speed = distance / time
+Average speed = 120 km / 2 hours = 60 km/hour
+
+</reasoning>
+<answer>
+60 km/hour
+</answer>
+```
+
 Upload model to the Hugging Face Hub:
 ```python
 from google.colab import userdata
