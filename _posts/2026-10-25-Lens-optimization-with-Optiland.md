@@ -51,7 +51,75 @@ print(f"  saved the lens as {OUT / '7mmF4_initial.json'} and .zmx")
 
 ![mtf_initial](/images/1_mtf_initial.png){:height="40%" width="80%" style="display:block; margin-left:auto; margin-right:auto;"}
 
+The lens design optimization is done using the so-called 'Glass Expert' algorithm which searches for better-performing glasses by exploring nearest neighbors in the material space, followed by continuous local refinement of lens parameter.
+
+```python
+class DLSGlassExpert(optimization.GlassExpert):
+    """GlassExpert that uses damped least squares for each local optimization.
+
+    The glass search is still performed by GlassExpert; only the inner
+    optimizer is replaced with Optiland's damped least-squares method.
+    """
+
+    evals = 150
+
+    def optimize(self, **_: Any) -> Any:
+        """Run one damped least-squares optimization of the current glasses."""
+        try:
+            return optimization.minimize(
+                self.problem, "dls", maxiter=self.evals, aim_policy="frozen"
+            )
+        except (ValueError, RuntimeError) as exc:
+            # A candidate glass may prevent the rays from passing through.
+            print(f"(failed: {exc}) ", end="")
+            return SimpleNamespace(
+                fun=float("inf"),
+                x=[v.value for v in self.problem.variables],
+            )
+
+
+if not SKIP_GLASS_SUBSTITUTION:
+    section("4. Glass substitution (Hammer)")
+
+    # Exclude precision-moulding glasses and variant suffixes.
+    glasses = [
+        g for g in glasses_selection(0.45, 0.65, catalogs=["cdgm"])
+        if not (g.startswith("D-") or g.endswith(("-25", "GT")))
+    ]
+    glass_surfaces = [s for s in range(2, image) if is_glass(lens, s)]
+
+    for surface in glass_surfaces:
+        problem.add_variable(
+            lens, "material", surface_number=surface, glass_selection=glasses
+        )
+
+    print(
+        f"{len(glass_surfaces)} glasses may change, among {len(glasses)} CDGM "
+        f"glasses; {NEIGHBOURS} candidates per glass and pass, "
+        f"{HAMMER_EVALS} merit evaluations each"
+    )
+    t0 = time.perf_counter()
+    hammer = DLSGlassExpert(problem)
+    hammer.evals = HAMMER_EVALS
+    hammer.run(num_neighbours=NEIGHBOURS, verbose=True)
+
+    # Finish with a full local optimization after the glass search.
+    optimization.minimize(problem, "dls", maxiter=LOCAL_EVALS,
+                          aim_policy="frozen")
+    print(f"glass substitution: {(time.perf_counter() - t0) / 60:.1f} min")
+    print("glasses:", ", ".join(
+        f"{s}: {lens.surfaces[s].material_post.name}" for s in glass_surfaces
+    ))
+else:
+    print("Glass substitution skipped (SKIP_GLASS_SUBSTITUTION=True).")
+
+```
+
+Here is the cross-section of the final design of this optimization:
+
 ![layout_final](/images/3_layout_final.png){:height="40%" width="80%" style="display:block; margin-left:auto; margin-right:auto;"}
+
+and the spot diagram and MTF of this optimized optical system are shown here:
 
 ![spot_final](/images/4_spot_final.png){:height="40%" width="80%" style="display:block; margin-left:auto; margin-right:auto;"}
 
