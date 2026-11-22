@@ -51,6 +51,14 @@ print(f"  saved the lens as {OUT / '7mmF4_initial.json'} and .zmx")
 
 ![mtf_initial](/images/1_mtf_initial.png){:height="40%" width="80%" style="display:block; margin-left:auto; margin-right:auto;"}
 
+The spot diagram information is summarized in this table:
+
+     field  RMS spot [um]  MTF T @145  MTF S @145
+      0.00           3.72       0.415       0.415
+     31.75           4.79       0.378       0.325
+     44.91           5.27       0.133       0.223
+     55.00          10.05       0.090       0.147
+
 The lens design optimization is done using the so-called 'Glass Expert' algorithm which searches for better-performing glasses by exploring nearest neighbors in the material space, followed by continuous local refinement of lens parameter.
 
 ```python
@@ -125,4 +133,12 @@ and the spot diagram and MTF of this optimized optical system are shown here:
 
 ![mtf_final](/images/5_mtf_final.png){:height="40%" width="80%" style="display:block; margin-left:auto; margin-right:auto;"}
 
+The spot diagram information for the final lens is shown as follows:
 
+     field  RMS spot [um]  MTF T @145  MTF S @145
+      0.00           1.34       0.586       0.586
+     31.75           2.03       0.420       0.408
+     44.91           2.53       0.368       0.413
+     55.00           3.49       0.279       0.378
+
+From this table, we can see that we can be seen from the spot diagram the lens resolution has increased significantly: the on-axis RMS spot radius started off at 3.72 um and is now 1.34 um and the spot radius for the corner field also improved from 10.05 um to 3.49 um.
