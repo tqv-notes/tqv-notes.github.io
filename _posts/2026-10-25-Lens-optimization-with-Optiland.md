@@ -9,9 +9,7 @@ In this blog post, I will share a tutorial on the lens optimization with Optilan
 
 For direct comparison with commercial optical software alternatives (here is Zemax), I will use input data from this [blog](https://www.opticalensdesign.com/post/lens-design-process-with-zemax-optimization-part-1). The 7mmF4_110deg_11ELT_01.zmx file can be downloaded from that blog post (need Zemax software to decrypt it) or via this [link](https://github.com/tqv-notes/optiland/blob/master/demo/input/zemax_files/7mmF4_110deg_11ELT_01.zmx). The full script for this tutorial is provided [here](https://github.com/tqv-notes/optiland/blob/master/demo/optimization_tutorial.py).
 
-In this tutorial, the input file is used as the starting point of the optimization. 
-
-To visualize the optical layout from this file, we can use this script: 
+In this tutorial, the input file is used as the starting point of the optimization. To visualize the optical layout from this file, we can use this script: 
 
 ```python
 lens = load_lens(START_FILE)
